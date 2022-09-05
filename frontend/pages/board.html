@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../styles/reset.css">
+	<link rel="stylesheet" href="../styles/board.css">
+	<script defer type="module" src="../scripts/board.js"></script>
+	<title>DM Kanban - Quadro</title>
+</head>
+<body>
+	<nav>
+		<img class="logo" src="../assets/logo.png">
+	</nav>
+	<div class="quadro">
+		<div id="coluna-1" class="coluna">
+			<h2>A fazer</h2>
+			<div id="draggable-1" draggable="true" class="draggable">
+				<textarea class="nome__card" type="text" placeholder="Nome da tarefa"></textarea>
+				<textarea class="conteudo__card" placeholder="digite o conteúdo da tarefa"></textarea>
+			</div>
+			<div id="draggable-2" draggable="true" class="draggable">
+				<textarea class="nome__card" type="text" placeholder="Nome da tarefa"></textarea>
+				<textarea class="conteudo__card" placeholder="digite o conteúdo da tarefa"></textarea>
+			</div>
+			<div id="draggable-3" draggable="true" class="draggable">
+				<textarea class="nome__card" type="text" placeholder="Nome da tarefa"></textarea>
+				<textarea class="conteudo__card" placeholder="digite o conteúdo da tarefa"></textarea>
+			</div>
+		</div>
+		<div id="coluna-2" class="coluna">
+			<h2>Fazendo</h2>
+		</div>
+		<div id="coluna-3" class="coluna">
+			<h2>Em Teste</h2>
+		</div>
+		<div id="coluna-4" class="coluna">
+			<h2>Feito</h2>
+		</div>
+	</div>
+
+
+</body>
+</html>
