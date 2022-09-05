@@ -1,0 +1,83 @@
+body{
+	width: 100vw;
+	background-color: #202AD0;
+}
+
+nav{
+	position: sticky;
+	top: 0;
+	width: 100%;
+	height: 90px;
+	display: flex;
+	padding: 20px;
+	align-items: center;
+	box-sizing: border-box;
+	background-color: #FFFFFF;
+	box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.quadro{
+
+	width: 100vw;
+	display: flex;
+	color: black;
+	font-weight: bold;
+	align-items: flex-start;
+	font-family: sans-serif;
+	background-color: #202AD0;
+  }
+
+.coluna {
+	width: 20vw;
+	padding: 10px;
+	display: flex;
+	margin: 20px;
+	min-height: 200px;
+	border-radius: 5px;
+	align-items: center;
+	flex-direction: column;
+	background-color: #FFFFFF;
+}
+
+.draggable {
+	width: 90%;
+	cursor:grab;
+	padding: 10px;
+	margin-top: 10px;
+	min-height: 100px;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	font-weight: normal;
+	background-color: #FF9A98;
+}
+
+.dropzone {
+	flex-grow: 1;
+	padding: 10px;
+	flex-basis: 100%;
+	background-color: #ffffff;
+}
+
+.nome__card{
+	width: 100%;
+	color: black;
+	font-size: 16px;
+	padding: 5px 10px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	background-color: transparent;
+}
+.nome__card::placeholder{
+	color: #4D4D4D;
+	text-align: center;
+}
+
+.conteudo__card{
+	width: 100%;
+	color: black;
+	font-size: 12px;
+	min-height: 50px;
+	font-weight: bold;
+	padding: 5px 10px;
+	background-color: transparent;
+}
