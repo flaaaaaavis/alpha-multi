@@ -49,7 +49,7 @@ export const TaskService = {
         
 
     },
-    async deleteTask(id) {
+    async deleteTarefa(id) {
 
         try {
 
