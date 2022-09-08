@@ -1,34 +1,37 @@
 body{
-	width: 100vw;
 	background-color: #202AD0;
 }
 
 nav{
-	position: sticky;
 	top: 0;
-	width: 100%;
 	height: 90px;
 	display: flex;
 	padding: 20px;
+	position: sticky;
 	align-items: center;
 	box-sizing: border-box;
+	justify-content: center;
 	background-color: #FFFFFF;
 	box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 }
 
 .quadro{
-
-	width: 100vw;
 	display: flex;
 	color: black;
 	font-weight: bold;
+	overflow-x: auto;
 	align-items: flex-start;
 	font-family: sans-serif;
+	height: calc(100vh - 90px);
 	background-color: #202AD0;
+	scroll-snap-type: x mandatory;
+
+
   }
 
 .coluna {
-	width: 20vw;
+	transition: 0.4s;
+	min-width: 80vw;
 	padding: 10px;
 	display: flex;
 	margin: 20px;
@@ -37,9 +40,23 @@ nav{
 	align-items: center;
 	flex-direction: column;
 	background-color: #FFFFFF;
+	border: 4px solid transparent;
+	scroll-snap-align: start;
+	scroll-margin: 20px;
 }
 
-.draggable {
+.coluna:hover{
+	transition: 0.4s;
+	border: 4px solid #E48900;
+}
+
+.coluna input{
+	width: 90%;
+	font-size: 26px;
+	text-align: center;
+}
+
+.arrastavel {
 	width: 90%;
 	cursor:grab;
 	padding: 10px;
@@ -48,7 +65,13 @@ nav{
 	border-radius: 5px;
 	margin-bottom: 10px;
 	font-weight: normal;
+	transition: 0.4s;
 	background-color: #FF9A98;
+}
+
+.arrastavel:focus, .arrastavel:focus-within, .arrastavel:active{
+	transition: 0.4s;
+	background-color: #68E699;
 }
 
 .dropzone {
@@ -56,6 +79,7 @@ nav{
 	padding: 10px;
 	flex-basis: 100%;
 	background-color: #ffffff;
+
 }
 
 .nome__card{
@@ -69,7 +93,7 @@ nav{
 }
 .nome__card::placeholder{
 	color: #4D4D4D;
-	text-align: center;
+	text-align: end;
 }
 
 .conteudo__card{
@@ -80,4 +104,39 @@ nav{
 	font-weight: bold;
 	padding: 5px 10px;
 	background-color: transparent;
+}
+
+.add-card{
+	width: 40px;
+	height: 40px;
+	margin: 20px 0;
+	font-size: 26px;
+	cursor: pointer;
+	color: #FFFFFF;
+	border-radius: 5px;
+	background-color: #202AD0;
+
+}
+
+.add-coluna{
+	min-width: 40px;
+	height: 40px;
+	margin: 40px;
+	margin-top: 65px;
+	font-size: 26px;
+	cursor: pointer;
+	color: #FFFFFF;
+	border-radius: 5px;
+	background-color: #E48900;
+	scroll-snap-align: start;
+	scroll-margin: 20px;
+
+}
+
+@media screen and (min-width: 768px) {
+	.coluna {
+		min-width: 300px;
+		max-width: 300px;
+
+	}
 }
