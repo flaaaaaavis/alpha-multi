@@ -60,12 +60,12 @@ nav{
 	width: 90%;
 	cursor:grab;
 	padding: 10px;
+	transition: 0.4s;
 	margin-top: 10px;
 	min-height: 100px;
 	border-radius: 5px;
 	margin-bottom: 10px;
 	font-weight: normal;
-	transition: 0.4s;
 	background-color: #FF9A98;
 }
 
@@ -89,11 +89,12 @@ nav{
 	padding: 5px 10px;
 	font-weight: bold;
 	margin-bottom: 10px;
+	text-align: center;
 	background-color: transparent;
 }
 .nome__card::placeholder{
 	color: #4D4D4D;
-	text-align: end;
+	text-align: center;
 }
 
 .conteudo__card{
@@ -137,6 +138,5 @@ nav{
 	.coluna {
 		min-width: 300px;
 		max-width: 300px;
-
 	}
 }

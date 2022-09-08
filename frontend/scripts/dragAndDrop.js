@@ -9,7 +9,6 @@ export default class DragAndDrop{
 
 	static onDrop(event) {
 		const myColumn = event.target.id;
-		console.log(myColumn);
 		if(myColumn != ''){
 			const query = `#${myColumn} button`;
 			const button = document.querySelector(query);
@@ -18,6 +17,19 @@ export default class DragAndDrop{
 			const dropzone = event.target;
 			if (dropzone.classList.contains("coluna")) {
 				dropzone.insertBefore(arrastavel, button);
+			}
+		}
+	}
+
+	static droppedOnColumnElement(event){
+		const myColumn = event.currentTarget.parentElement;
+		if(myColumn.id != ''){
+			const card = event.currentTarget;
+			const id = event.dataTransfer.getData("text");
+			console.log(id)
+			const arrastavel = document.getElementById(id);
+			if (myColumn.classList.contains("coluna")) {
+				myColumn.insertBefore(arrastavel, card);
 			}
 		}
 	}

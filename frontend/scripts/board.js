@@ -19,6 +19,7 @@ function activateDnd(){
 	addColumnButton.addEventListener('click', (event) => {
 		createColumn(event.target);
 	})
+
 	drag.forEach((element) => {
 		element.addEventListener("dragstart", (event) => {
 			DragAndDrop.onDragStart(event);
@@ -35,6 +36,7 @@ function activateDnd(){
 	});
 }
 
+/* Criar o card ao apertar o botão */
 function createCard(target){
 	const parent = target.parentElement;
 
@@ -53,12 +55,16 @@ function createCard(target){
 	card.addEventListener("dragstart", (event) => {
 		DragAndDrop.onDragStart(event);
 	});
+	card.addEventListener("drop", (event) => {
+		DragAndDrop.droppedOnColumnElement(event);
+	});
 
 	card.append(cardName, cardContent);
 	parent.insertBefore(card, target);
 	cardCounter++;
 }
 
+/* Cria a coluna ao apertar o botão */
 function createColumn(target){
 	console.log(target);
 	const board = document.querySelector('.quadro');
