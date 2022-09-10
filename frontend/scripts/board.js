@@ -2,31 +2,34 @@ import DragAndDrop from './dragAndDrop.js';
 import CardCreator from './CardCreator.js';
 
 let columnCount = 4;
-let tapedTwice = false;
 /* Ativa as funções drag and drop */
 function activateDnd(){
-	const addColumnButton = document.querySelector(".add-coluna");
-	const addCardButton = document.querySelectorAll(".add-card");
+	const addColumnButton = document.querySelector(".adicionar-coluna");
+	const addCardButton = document.querySelectorAll(".adicionar-card");
 	const columnName = document.querySelectorAll(".coluna input");
 	const drag = document.querySelectorAll(".arrastavel");
 	const drop = document.querySelectorAll(".coluna");
 
+	/* Cria um novo card na coluna */
 	addCardButton.forEach((element) => {
 		element.addEventListener('click', (event) => {
 			CardCreator.createCard(event.currentTarget)
 		})
 	})
 
+	/* Cria uma nova coluna */
 	addColumnButton.addEventListener('click', (event) => {
 		createColumn(event.target);
 	})
 
+	/* Quando um card é arrastado executa a função de arrastar */
 	drag.forEach((element) => {
 		element.addEventListener("dragstart", (event) => {
 			DragAndDrop.onDragStart(event);
 		});
 	});
 
+	/* Quando um card é colocado em uma coluna confere o que deve ser feito */
 	drop.forEach((element) => {
 		element.addEventListener("dragover", (event) => {
 			DragAndDrop.onDragOver(event);
@@ -36,9 +39,9 @@ function activateDnd(){
 		});
 	});
 
+	/* Atualiza o nome das colunas no select de coluna do mobile */
 	columnName.forEach((element) => {
 		element.addEventListener('change', () => {
-			console.log('x');
 			CardCreator.fillAllSelects();
 		})
 	})
@@ -46,9 +49,7 @@ function activateDnd(){
 
 /* Cria a coluna ao apertar o botão */
 function createColumn(target){
-	console.log(target);
 	const board = document.querySelector('.quadro');
-
 	const column = document.createElement('div');
 	column.className = 'coluna';
 	column.id = `coluna-${columnCount}`;
@@ -68,7 +69,7 @@ function createColumn(target){
 		CardCreator.fillAllSelects();
 	})
 	const button = document.createElement('button');
-	button.className = 'add-card';
+	button.className = 'adicionar-card';
 	button.innerText = '+';
 
 	button.addEventListener('click', (event) => {

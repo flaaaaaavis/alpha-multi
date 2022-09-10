@@ -7,22 +7,6 @@ export default class DragAndDrop{
 		event.preventDefault();
 	}
 
-/* 	static onDragMobile(event){
-		let touchLocation = event.targetTouches[0];
-		const card = event.currentTarget;
-		card.style.position = 'relative';
-		//card.style.width = '300px';
-		card.style.left = (touchLocation.pageX - 150) + 'px';
-		card.style.top = touchLocation.pageY + 'px';
-	}
-
-	static onDragMobileEnds(event){
-		console.log(event)
-		const card = event.currentTarget;
-		card.style.position = 'static';
-		card.style.width = '95%';
-	} */
-
 	static onDrop(event) {
 		const myColumn = event.target.id;
 		if(myColumn != ''){
