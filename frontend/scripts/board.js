@@ -1,8 +1,8 @@
 import DragAndDrop from './dragAndDrop.js';
+import CardCreator from './CardCreator.js';
 
-let cardCounter = 0;
 let columnCount = 4;
-
+let tapedTwice = false;
 /* Ativa as funções drag and drop */
 function activateDnd(){
 	const addColumnButton = document.querySelector(".add-coluna");
@@ -12,7 +12,7 @@ function activateDnd(){
 
 	addCardButton.forEach((element) => {
 		element.addEventListener('click', (event) => {
-			createCard(event.currentTarget)
+			CardCreator.createCard(event.currentTarget)
 		})
 	})
 
@@ -34,34 +34,6 @@ function activateDnd(){
 			DragAndDrop.onDrop(event);
 		});
 	});
-}
-
-/* Criar o card ao apertar o botão */
-function createCard(target){
-	const parent = target.parentElement;
-
-	const card = document.createElement('div');
-	card.className = 'arrastavel';
-	card.id = `arrastavel-${cardCounter}`;
-	card.draggable = true;
-
-	const cardName = document.createElement('textarea');
-	cardName.className = 'nome__card';
-	cardName.placeholder = 'Nome da tarefa';
-
-	const cardContent = document.createElement("textarea");
-	cardContent.className = 'conteudo__card';
-	cardContent.placeholder = 'digite o conteúdo da tarefa';
-	card.addEventListener("dragstart", (event) => {
-		DragAndDrop.onDragStart(event);
-	});
-	card.addEventListener("drop", (event) => {
-		DragAndDrop.droppedOnColumnElement(event);
-	});
-
-	card.append(cardName, cardContent);
-	parent.insertBefore(card, target);
-	cardCounter++;
 }
 
 /* Cria a coluna ao apertar o botão */
@@ -89,11 +61,27 @@ function createColumn(target){
 
 	button.addEventListener('click', (event) => {
 		createCard(event.currentTarget)
-	})
+	});
+
+
 
 	column.append(name, button);
 	board.insertBefore(column, target);
 }
+
+function tapHandler(event) {
+    if(!tapedTwice) {
+        tapedTwice = true;
+        setTimeout( function() { tapedTwice = false; }, 300 );
+        return false;
+    }
+    event.preventDefault();
+    //action on double tap goes below
+    const select = event.currentTarget.childNodes[2];
+	select.classList.toggle('hidden');
+
+ }
+
 
 activateDnd();
 
