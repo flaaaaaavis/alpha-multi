@@ -30,7 +30,7 @@ export default class CardCreator{
 		const cardMenu = document.createElement('div');
 		cardMenu.className = 'arrastavel__menu hidden';
 		const select = document.createElement('select');
-		select.className = '.select';
+		select.className = 'select';
 
 		this.fillSelect(select);
 /* 		const columns = document.querySelectorAll('.coluna');
@@ -86,16 +86,39 @@ export default class CardCreator{
 
 	static fillSelect(select){
 		select.innerHTML = '';
+
 		const selectText = document.createElement('option');
 		selectText.innerText = 'Mover para';
 		selectText.value = '';
 		select.append(selectText);
 		const columns = document.querySelectorAll('.coluna');
 		columns.forEach((element) => {
+			const name = document.querySelector(`#${element.id} input`).value;
 			const option = document.createElement('option');
-			option.innerText = element.id;
+			option.innerText = name;
 			option.value = element.id;
 			select.append(option);
 		});
+	}
+
+	static fillAllSelects(){
+		const targets = document.querySelectorAll('.select');
+
+		targets.forEach((element) => {
+			console.log(element);
+			element.innerHTML = '';
+			const selectText = document.createElement('option');
+			selectText.innerText = 'Mover para';
+			selectText.value = '';
+			element.append(selectText);
+			const columns = document.querySelectorAll('.coluna');
+			columns.forEach((coluna) => {
+				const name = document.querySelector(`#${coluna.id} input`).value;
+				const option = document.createElement('option');
+				option.innerText = name;
+				option.value = coluna.id;
+				element.append(option);
+			});
+		})
 	}
 }

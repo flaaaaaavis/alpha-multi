@@ -7,6 +7,7 @@ let tapedTwice = false;
 function activateDnd(){
 	const addColumnButton = document.querySelector(".add-coluna");
 	const addCardButton = document.querySelectorAll(".add-card");
+	const columnName = document.querySelectorAll(".coluna input");
 	const drag = document.querySelectorAll(".arrastavel");
 	const drop = document.querySelectorAll(".coluna");
 
@@ -34,6 +35,13 @@ function activateDnd(){
 			DragAndDrop.onDrop(event);
 		});
 	});
+
+	columnName.forEach((element) => {
+		element.addEventListener('change', () => {
+			console.log('x');
+			CardCreator.fillAllSelects();
+		})
+	})
 }
 
 /* Cria a coluna ao apertar o botão */
@@ -55,6 +63,10 @@ function createColumn(target){
 	const name = document.createElement('input');
 	name.placeholder = 'nome da coluna';
 	name.value = 'Nova coluna';
+	name.addEventListener('change', () => {
+		console.log('x');
+		CardCreator.fillAllSelects();
+	})
 	const button = document.createElement('button');
 	button.className = 'add-card';
 	button.innerText = '+';
@@ -63,25 +75,11 @@ function createColumn(target){
 		createCard(event.currentTarget)
 	});
 
-
-
 	column.append(name, button);
 	board.insertBefore(column, target);
+
+	CardCreator.fillAllSelects();
 }
-
-function tapHandler(event) {
-    if(!tapedTwice) {
-        tapedTwice = true;
-        setTimeout( function() { tapedTwice = false; }, 300 );
-        return false;
-    }
-    event.preventDefault();
-    //action on double tap goes below
-    const select = event.currentTarget.childNodes[2];
-	select.classList.toggle('hidden');
-
- }
-
 
 activateDnd();
 
