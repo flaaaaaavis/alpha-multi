@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import CategoryService from './categoria-servico';
 
 const jsonBodyParser = express.json();
