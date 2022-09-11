@@ -47,7 +47,7 @@ CategoryRouter.route('/:category_uuid').patch(jsonBodyParser, async (req, res) =
         }
     }
 
-    const { projeto_id, nome, ordem } = req.body;
+    const { projeto_id, nome, ordem, id } = req.body;
 
     const categoria = {
         projeto_id: projeto_id,
