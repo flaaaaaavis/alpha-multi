@@ -1,5 +1,5 @@
-import { pool } from "../db";
-import config from "../config";
+import { pool } from "../db.js";
+import config from "../config.js";
 
 export const CategoryService = {
     async getCategoriasPorProjeto(projeto_id) {

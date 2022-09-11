@@ -1,5 +1,5 @@
 import express from 'express';
-import CategoryService from './categoria-servico';
+import { CategoryService } from './categoria-servico.js';
 
 const jsonBodyParser = express.json();
 const CategoryRouter = express.Router();
