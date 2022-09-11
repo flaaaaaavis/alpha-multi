@@ -1,5 +1,5 @@
-import { pool } from "../db";
-import config from "../config";
+import { pool } from "../db.js";
+import config from "../config.js";
 
 export const TaskService = {
     async getTarefasPorColuna(coluna_id) {
@@ -49,7 +49,7 @@ export const TaskService = {
         
 
     },
-    async deleteTask(id) {
+    async deleteTarefa(id) {
 
         try {
 
