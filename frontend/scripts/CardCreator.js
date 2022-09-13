@@ -231,6 +231,7 @@ export default class CardCreator {
 		select.addEventListener("change", (e) => {
 			realCard.value = select.value;
 			this.cardSelect(e, realCard);
+			modal.classList.add("hidden");
 		});
 	}
 }
