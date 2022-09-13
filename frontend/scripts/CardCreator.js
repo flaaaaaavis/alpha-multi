@@ -11,9 +11,7 @@ export default class CardCreator {
 
 	/* Cria a estrutura básica do card */
 	static createCard(target, send) {
-		console.log(target);
 		const targetButton = document.getElementById(target);
-		console.log(targetButton);
 		const parent = targetButton.parentElement;
 
 		const card = document.createElement("div");
@@ -37,6 +35,19 @@ export default class CardCreator {
 
 		this.cardDrag(card);
 
+		const cardContent = document.createElement("textarea");
+		cardContent.className = "conteudo__card";
+		cardContent.placeholder = "Conteúdo da tarefa";
+
+		cardContent.addEventListener("change", () => {
+			const change = {
+				tipo: "mudança de conteudo - card",
+				id: card.id,
+				conteudo: cardContent.value,
+			};
+			ws.send(JSON.stringify(change));
+		});
+
 		const cardOptions = document.createElement("div");
 		cardOptions.className = "card__opcoes";
 
@@ -47,6 +58,11 @@ export default class CardCreator {
 			e.preventDefault();
 			if (confirm("Tem certeza que deseja excluir esse card?") == true) {
 				card.remove();
+				const remove = {
+					tipo: "excluir card",
+					id: card.id,
+				};
+				ws.send(JSON.stringify(remove));
 			}
 		});
 
@@ -55,7 +71,7 @@ export default class CardCreator {
 		const select = document.createElement("select");
 		select.className = "select";
 
-		this.fillSelect(select);
+		this.fillSelect(select, parent.id);
 
 		select.addEventListener("change", (e) => {
 			this.cardSelect(e, card);
@@ -69,7 +85,7 @@ export default class CardCreator {
 			cardMenu.classList.toggle("hidden");
 		});
 		cardOptions.append(deleteBtn, moveBtn);
-		card.append(cardName, cardOptions, cardMenu);
+		card.append(cardName, cardContent, cardOptions, cardMenu);
 		parent.insertBefore(card, targetButton);
 
 		if (send) {
@@ -96,6 +112,7 @@ export default class CardCreator {
 		});
 		card.addEventListener("drop", (event) => {
 			DragAndDrop.droppedOnColumnElement(event);
+			CardCreator.fillAllSelects();
 		});
 	}
 
@@ -114,24 +131,34 @@ export default class CardCreator {
 			document
 				.querySelector(`#${card.id} .arrastavel__menu`)
 				.classList.toggle("hidden");
+
+			const move = {
+				tipo: "mover tarefa",
+				card: card.id,
+				coluna: myOption,
+			};
+			ws.send(JSON.stringify(move));
 		}
 	}
 
 	/* Preenche o menu de select do card (mobile) */
-	static fillSelect(select) {
+	static fillSelect(select, id) {
 		select.innerHTML = "";
-
 		const selectText = document.createElement("option");
 		selectText.innerText = "Mover para";
 		selectText.value = "";
 		select.append(selectText);
 		const columns = document.querySelectorAll(".coluna");
 		columns.forEach((element) => {
-			const name = document.querySelector(`#${element.id} input`).value;
-			const option = document.createElement("option");
-			option.innerText = name;
-			option.value = element.id;
-			select.append(option);
+			if (element.id !== id) {
+				const name = document.querySelector(
+					`#${element.id} input`
+				).value;
+				const option = document.createElement("option");
+				option.innerText = name;
+				option.value = element.id;
+				select.append(option);
+			}
 		});
 	}
 
@@ -141,19 +168,23 @@ export default class CardCreator {
 
 		targets.forEach((element) => {
 			element.innerHTML = "";
+			const atualLocation =
+				element.parentElement.parentElement.parentElement;
 			const selectText = document.createElement("option");
 			selectText.innerText = "Mover para";
 			selectText.value = "";
 			element.append(selectText);
 			const columns = document.querySelectorAll(".coluna");
 			columns.forEach((coluna) => {
-				const name = document.querySelector(
-					`#${coluna.id} input`
-				).value;
-				const option = document.createElement("option");
-				option.innerText = name;
-				option.value = coluna.id;
-				element.append(option);
+				if (coluna.id !== atualLocation.id) {
+					const name = document.querySelector(
+						`#${coluna.id} input`
+					).value;
+					const option = document.createElement("option");
+					option.innerText = name;
+					option.value = coluna.id;
+					element.append(option);
+				}
 			});
 		});
 	}
