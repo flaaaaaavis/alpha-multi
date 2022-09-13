@@ -1,5 +1,4 @@
 import { pool } from "../db.js";
-import config from "../config.js";
 
 export const TaskService = {
     async getTarefasPorColuna(coluna_id) {
@@ -20,7 +19,7 @@ export const TaskService = {
 
         try {
 
-            const query = `INSERT INTO tarefas (coluna_id, data_criacao, nome, ordem, tags, anotacoes) VALUES ($1, CURRENT_TIMESTAMP, $3, $4, $5, $6)`;
+            const query = `INSERT INTO tarefas (coluna_id, data_criacao, nome, ordem, tags, anotacoes) VALUES ($1, CURRENT_TIMESTAMP, $2, $3, $4, $5)`;
             const values = [tarefa.coluna_id, tarefa.nome, tarefa.ordem, tarefa.tags, tarefa.anotacoes];
             const data = await pool.query(query, values)
             return data.rows;

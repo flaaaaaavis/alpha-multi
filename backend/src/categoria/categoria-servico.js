@@ -1,5 +1,4 @@
 import { pool } from "../db.js";
-import config from "../config.js";
 
 export const CategoryService = {
     async getCategoriasPorProjeto(projeto_id) {
@@ -20,7 +19,7 @@ export const CategoryService = {
 
         try {
 
-            const query = `INSERT INTO categorias (projeto_id, data_criacao, nome, ordem) VALUES ($1, CURRENT_TIMESTAMP, $3, $4)`;
+            const query = `INSERT INTO categorias (projeto_id, data_criacao, nome, ordem) VALUES ($1, CURRENT_TIMESTAMP, $2, $3)`;
             const values = [categoria.projeto_id, categoria.nome, categoria.ordem];
             const data = await pool.query(query, values)
             return data.rows;

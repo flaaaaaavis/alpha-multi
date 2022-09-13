@@ -1,5 +1,4 @@
 import { pool } from "../db.js";
-import config from "../config.js";
 
 export const ProjectService = {
     async getProjetosPorId(projeto_id) {
