@@ -109,7 +109,7 @@ function createColumn(target, send) {
 
 	const name = document.createElement("input");
 	name.placeholder = "nome da coluna";
-	name.value = "Nova coluna";
+	name.value = `Nova coluna ${columnCount}`;
 	name.addEventListener("change", () => {
 		CardCreator.fillAllSelects();
 		const newName = {
