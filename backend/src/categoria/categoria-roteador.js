@@ -28,8 +28,15 @@ CategoryRouter.route('/').post(jsonBodyParser, async (req, res) => {
 
     const dbRes = await CategoryService.insertCategoria(categoria)
 
-    if (dbRes) res.status(201).json(dbRes);
-    res.status(500).json({message:"Internal Server Error"})
+    if (dbRes) {
+
+        res.status(201).json(dbRes);
+
+    } else {
+
+        res.status(500).json({message:"Internal Server Error"});
+
+    }    
         
 });
 
@@ -57,8 +64,16 @@ CategoryRouter.route('/:category_uuid').patch(jsonBodyParser, async (req, res) =
 
     const dbRes = await CategoryService.updateCategoria(id, categoria);
 
-    if (dbRes) res.status(201).json(dbRes);
-    res.status(500).json({message:"Internal Server Error"})
+    if (dbRes) {
+
+        res.status(201).json(dbRes);
+
+    } else {
+
+        res.status(500).json({message:"Internal Server Error"})
+
+   }
+    
 })
 
 .delete(jsonBodyParser, async (req, res) => {
@@ -71,9 +86,17 @@ CategoryRouter.route('/:category_uuid').patch(jsonBodyParser, async (req, res) =
 
     const dbRes = await CategoryService.deleteCategoria(id);
 
-    if (dbRes) res.status(201).json(dbRes);
-    res.status(500).json({message:"Internal Server Error"})
+    if (dbRes) {
+        
+        res.status(201).json(dbRes);
+    
+    } else {
+        
+        res.status(500).json({message:"Internal Server Error"})
+    
+    }
+    
    
-  });
+});
 
 export default CategoryRouter;

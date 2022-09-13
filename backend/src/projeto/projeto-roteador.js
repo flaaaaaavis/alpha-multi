@@ -26,8 +26,15 @@ ProjectRouter.route('/').post(jsonBodyParser, async (req, res) => {
 
     const dbRes = await ProjectService.insertProjeto(projeto)
 
-    if (dbRes) res.status(201).json(dbRes);
-    res.status(500).json({message:"Internal Server Error"})
+    if (dbRes) { 
+
+        res.status(201).json(dbRes);
+
+     } else  {
+
+        res.status(500).json({message:"Internal Server Error"});
+
+    }
         
 });
 
@@ -53,8 +60,16 @@ ProjectRouter.route('/:project_uuid').patch(jsonBodyParser, async (req, res) => 
 
     const dbRes = await ProjectService.updateProjeto(id, projeto);
 
-    if (dbRes) res.status(201).json(dbRes);
-    res.status(500).json({message:"Internal Server Error"})
+    if (dbRes) {
+
+        res.status(201).json(dbRes);
+
+    } else {
+
+        res.status(500).json({message:"Internal Server Error"})
+
+    }
+    
 })
 
 .delete(jsonBodyParser, async (req, res) => {
@@ -67,8 +82,15 @@ ProjectRouter.route('/:project_uuid').patch(jsonBodyParser, async (req, res) => 
 
     const dbRes = await ProjectService.deleteProjeto(id);
 
-    if (dbRes) res.status(201).json(dbRes);
-    res.status(500).json({message:"Internal Server Error"})
+    if (dbRes) {
+
+        res.status(201).json(dbRes);
+
+    } else {
+
+        res.status(500).json({message:"Internal Server Error"})
+
+    }
    
   });
 

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="../styles/reset.css">
+		<link rel="stylesheet" href="../styles/menu.css">
+
+		<title>DM Kanban</title>
+
+	</head>
+
+	<body>
+		<nav class="menu">
+			<header class="menu--header">
+				<div class="menu--header__top">
+					<section>
+						<h2>Kenji Animadinho</h2>
+						<p>kenji@email.com</p>
+					</section>
+					<img src="../assets/icons/close.png" alt="Fechar menu">
+				</div>
+				<div class="menu--header__account">
+					<a href="">Alterar e-mail</a>
+					<a href="">Alterar senha</a>
+					<a href="">Excluir conta</a>
+					<a href="">Sair</a>
+				</div>
+			</header>
+
+			<main class="menu--main">
+				<div>
+					<h3>Este quadro</h3>
+					<hr>
+
+					<ul class="menu--main__accordion">
+						<li class="menu--accordion__item" id="members">
+							<a href="#members" class="item__title">Participantes</a>
+							<hr>
+
+							<ul class="menu--accordion__item-content">
+								<li class="menu--accordion__sub-item">
+									<form>
+										<input type="email" name="" id="" placeholder="Adicionar participante">
+										<button>Adicionar</button>
+									</form>
+								</li>
+								<li class="menu--accordion__sub-item">Kenjinho</li>
+								<li class="menu--accordion__sub-item">Animado</li>
+							</ul>
+						</li>
+					</ul>
+					<a href="">Excluir quadro</a>
+				</div>
+				<ul class="menu--main__accordion">
+					<li class="menu--accordion__item" id="your-boards">
+						<a href="#your-boards" class="item__title">Seus quadros</a>
+						<hr>
+
+						<ul class="menu--accordion__item-content">
+							<li class="menu--accordion__sub-item">Quadro 1</li>
+							<li class="menu--accordion__sub-item">Quadro 2</li>
+						</ul>
+					</li>
+				</ul>
+
+			</main>
+		</nav>
+
+		<script src="../scripts/menu.js"></script>
+	</body>
+</html>

@@ -1,0 +1,94 @@
+.menu {
+	width: 275px;
+	height: 100vh;
+	position: fixed;
+}
+
+.menu--header__top {
+	width: 100%;
+	height: 15vh;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+
+	background-color: aqua;
+}
+
+.menu--header section {
+	width: 90%;
+}
+
+.menu--header section h2 {
+	font-size: 28px;
+	font-weight: 400;
+	line-height: 34px;
+	letter-spacing: 0em;
+	text-align: left;
+}
+
+.menu--header img {
+	width: 15px;
+	height: 15px;
+}
+
+.menu--main {
+	width: 100%;
+}
+
+.menu--main__account {
+	height: 20vh;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	background-color: blueviolet;
+}
+
+.menu--main__accordion {
+	width: 100%;
+	border-radius: 0.2rem;
+	overflow: hidden;
+}
+
+.menu--accordion__item {
+	list-style: none;
+	overflow: hidden;
+}
+
+.item__title {
+	display: block;
+	padding: 1rem 1.2rem;
+	position: relative;
+}
+
+.menu--accordion__item-content {
+	overflow: hidden;
+	transition: max-height 0.3s;
+	max-height: 0;
+}
+
+.menu--accordion__sub-item {
+	display: block;
+	padding: 1rem 1.6rem;
+	font-size: 0.9rem;
+	position: relative;
+}
+
+.menu--accordion__sub-item ::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 0.4rem;
+	height: 100%;
+	transform: translatex(-0.4rem);
+	transition: 0.3s;
+	opacity: 0;
+}
+
+.menu--accordion__item:target .menu--accordion__item-content {
+  	max-height: 10em;
+}
