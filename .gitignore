@@ -1,3 +1,9 @@
+# Padronização
+.editorconfig
+.eslintrc.js
+.prettier.js
+.stylelintrc.json
+
 # Logs
 logs
 *.log
