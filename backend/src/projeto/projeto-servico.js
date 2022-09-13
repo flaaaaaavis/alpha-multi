@@ -1,4 +1,5 @@
 import { pool } from "../db.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const ProjectService = {
     async getProjetosPorId(projeto_id) {
@@ -19,8 +20,8 @@ export const ProjectService = {
 
         try {
 
-            const query = `INSERT INTO projetos (nome, data_criacao, ultimo_acesso) VALUES ($1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
-            const values = [projeto.nome];
+            const query = `INSERT INTO projetos (id, nome, data_criacao, ultimo_acesso) VALUES ($1, $2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+            const values = [uuidv4(), projeto.nome];
             const data = await pool.query(query, values)
             return data.rows;
 
