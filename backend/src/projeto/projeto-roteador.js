@@ -38,7 +38,7 @@ ProjectRouter.route('/').post(jsonBodyParser, async (req, res) => {
         
 });
 
-ProjectRouter.route('/:project_uuid').patch(jsonBodyParser, async (req, res) => {
+ProjectRouter.route('/').patch(jsonBodyParser, async (req, res) => {
 
     if (!req.body) {
         return res.status(400).json({ Error: `Missing request body` });

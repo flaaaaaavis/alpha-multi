@@ -20,10 +20,11 @@ export const ProjectService = {
 
         try {
 
+            const id = uuidv4()
             const query = `INSERT INTO projetos (id, nome, data_criacao, ultimo_acesso) VALUES ($1, $2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
-            const values = [uuidv4(), projeto.nome];
-            const data = await pool.query(query, values)
-            return data.rows;
+            const values = [id, projeto.nome];
+            await pool.query(query, values)
+            return id;
 
         } catch(e) {
 
@@ -53,7 +54,7 @@ export const ProjectService = {
 
         try {
 
-            const data = await pool.query(`DELETE FROM projetos WHERE id = ${id}`)
+            const data = await pool.query("DELETE FROM projetos WHERE id = '"+id+"'")
             return data.rows;
 
         } catch(e) {
