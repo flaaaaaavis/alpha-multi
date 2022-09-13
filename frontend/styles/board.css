@@ -15,6 +15,14 @@ nav{
 	box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 }
 
+.title-1{
+	font-size: 26px;
+	color:#202AD0;
+	font-weight: 600;
+	text-align: center;
+}
+
+/* Onde ficam as colunas e cards */
 .quadro{
 	display: flex;
 	color: black;
@@ -22,27 +30,26 @@ nav{
 	overflow-x: auto;
 	align-items: flex-start;
 	font-family: sans-serif;
+	scroll-behavior: smooth;
 	height: calc(100vh - 90px);
 	background-color: #202AD0;
 	scroll-snap-type: x mandatory;
-
-
   }
 
+  /* Design das colunas */
 .coluna {
-	transition: 0.4s;
-	min-width: 80vw;
-	padding: 10px;
+	margin: 20px 0 20px 10px;
 	display: flex;
-	margin: 20px;
+	min-width: 80vw;
+	transition: 0.4s;
 	min-height: 200px;
 	border-radius: 5px;
 	align-items: center;
+	scroll-margin: 20px;
 	flex-direction: column;
 	background-color: #FFFFFF;
 	border: 4px solid transparent;
 	scroll-snap-align: start;
-	scroll-margin: 20px;
 }
 
 .coluna:hover{
@@ -50,28 +57,26 @@ nav{
 	border: 4px solid #E48900;
 }
 
+/* Nome da coluna */
 .coluna input{
 	width: 90%;
 	font-size: 26px;
 	text-align: center;
 }
 
+/* Card que pode ser arrastado */
 .arrastavel {
-	width: 90%;
+	width: 95%;
 	cursor:grab;
+	position: relative;
 	padding: 10px;
+	display: flex;
+	transition: 0.4s;
 	margin-top: 10px;
-	min-height: 100px;
 	border-radius: 5px;
-	margin-bottom: 10px;
 	font-weight: normal;
-	transition: 0.4s;
+	flex-direction: column;
 	background-color: #FF9A98;
-}
-
-.arrastavel:focus, .arrastavel:focus-within, .arrastavel:active{
-	transition: 0.4s;
-	background-color: #68E699;
 }
 
 .dropzone {
@@ -79,7 +84,6 @@ nav{
 	padding: 10px;
 	flex-basis: 100%;
 	background-color: #ffffff;
-
 }
 
 .nome__card{
@@ -89,11 +93,12 @@ nav{
 	padding: 5px 10px;
 	font-weight: bold;
 	margin-bottom: 10px;
+	text-align: center;
 	background-color: transparent;
 }
 .nome__card::placeholder{
 	color: #4D4D4D;
-	text-align: end;
+	text-align: center;
 }
 
 .conteudo__card{
@@ -106,7 +111,35 @@ nav{
 	background-color: transparent;
 }
 
-.add-card{
+/* Menu que mostra para onde um card pode ser arrastado */
+.arrastavel__menu{
+	position: absolute;
+	bottom: -30px;
+	z-index: 2;
+	right: 0;
+}
+
+.arrastavel__menu select{
+	height: 30px;
+	width: 150px;
+	border-radius: 5px;
+}
+
+.card__opcoes{
+	display: flex;
+	justify-content: flex-end;
+}
+
+.card__botao{
+	width: 25px;
+	height: 25px;
+	align-self: end;
+	cursor: pointer;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+.adicionar-card{
 	width: 40px;
 	height: 40px;
 	margin: 20px 0;
@@ -118,10 +151,10 @@ nav{
 
 }
 
-.add-coluna{
+.adicionar-coluna{
 	min-width: 40px;
 	height: 40px;
-	margin: 40px;
+	margin: 0 20px;
 	margin-top: 65px;
 	font-size: 26px;
 	cursor: pointer;
@@ -133,10 +166,22 @@ nav{
 
 }
 
+
+
+.hidden{
+	display: none;
+}
+
 @media screen and (min-width: 768px) {
 	.coluna {
 		min-width: 300px;
 		max-width: 300px;
+	}
+	.arrastavel__menu{
+		display: none;
+	}
 
+	.card__move{
+		display: none;
 	}
 }

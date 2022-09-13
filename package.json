@@ -6,6 +6,11 @@
 		"stylelint-config-standard": "^25.0.0"
 	},
 	"dependencies": {
-		"dotenv": "^16.0.2"
-	}
+		"cors": "^2.8.5",
+		"dotenv": "^16.0.2",
+		"express": "^4.18.1",
+		"pg": "^8.8.0",
+		"ws": "^8.8.1"
+	},
+	"type": "module"
 }

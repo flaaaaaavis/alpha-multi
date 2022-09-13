@@ -1,5 +1,5 @@
 import express from 'express';
-import TaskService from './task-service';
+import { TaskService } from './tarefa-servico.js';
 
 const jsonBodyParser = express.json();
 const TaskRouter = express.Router();

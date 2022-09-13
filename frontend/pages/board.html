@@ -1,34 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="../styles/reset.css">
-	<link rel="stylesheet" href="../styles/board.css">
-	<script defer type="module" src="../scripts/board.js"></script>
-	<title>DM Kanban - Quadro</title>
-</head>
-<body>
-	<nav>
-		<img class="logo" src="../assets/logo.png">
-	</nav>
-	<div class="quadro">
-		<div id="coluna-1" class="coluna">
-			<input value="A fazer" placeholder="A fazer"></input>
-			<button class="add-card">+</button>
-		</div>
-		<div id="coluna-2" class="coluna">
-			<input value="Fazendo" placeholder="Fazendo"></input>
-			<button class="add-card">+</button>
-		</div>
-		<div id="coluna-3" class="coluna">
-			<input value="Feito" placeholder="Feito"></input>
-			<button class="add-card">+</button>
-		</div>
-		<button class="add-coluna">+</button>
-	</div>
-
-
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../styles/reset.css" />
+		<link rel="stylesheet" href="../styles/board.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
+		<script defer type="module" src="../scripts/board.js"></script>
+		<title>DM Kanban - Quadro</title>
+	</head>
+	<body>
+		<nav>
+			<!-- <img class="logo" src="../assets/logo.png"> -->
+			<input
+				class="title-1"
+				type="text"
+				id="nome-projeto"
+				value="Novo quadro"
+			/>
+		</nav>
+		<div class="quadro"></div>
+		<!--     <div class="modal">
+      <div class="card-modal">
+        <main class="card-modal__main">
+          <input
+            class="title-1 card-modal__descricao"
+            type="text"
+            placeholder="Nome do cartão"
+            value="Nome do cartão"
+          />
+          <p class="text-1">Descrição</p>
+          <textarea class="card-modal__descricao"></textarea>
+          <button class="card-modal__botao botao-secundario">Salvar</button>
+        </main>
+        <aside class="card-modal__aside">
+          <span class="close">x</span>
+          <h2 class="title-2">Configurações</h2>
+          <button class="card-modal__move">Mover para:</button>
+        </aside>
+      </div>
+    </div> -->
+	</body>
 </html>

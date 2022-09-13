@@ -17,13 +17,13 @@ CREATE TABLE  public.projetos (
 ) WITH (
   OIDS=FALSE
 );
-CREATE TABLE  public.colunas (
+CREATE TABLE  public.categorias (
 	"id" serial NOT NULL,
 	"projeto_id" varchar NOT NULL,
 	"nome" varchar(30) NOT NULL,
 	"data_criacao" TIMESTAMP NOT NULL,
 	"ordem" integer NOT NULL,
-	CONSTRAINT "colunas_pk" PRIMARY KEY ("id")
+	CONSTRAINT "categorias_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
@@ -55,8 +55,8 @@ CREATE TABLE  public.acesso (
 ) WITH (
   OIDS=FALSE
 );
-ALTER TABLE "colunas" ADD CONSTRAINT "colunas_fk0" FOREIGN KEY ("projeto_id") REFERENCES "projetos"("id");
-ALTER TABLE "tarefas" ADD CONSTRAINT "tarefas_fk0" FOREIGN KEY ("coluna_id") REFERENCES "colunas"("id");
+ALTER TABLE "categorias" ADD CONSTRAINT "categorias_fk0" FOREIGN KEY ("projeto_id") REFERENCES "projetos"("id");
+ALTER TABLE "tarefas" ADD CONSTRAINT "tarefas_fk0" FOREIGN KEY ("coluna_id") REFERENCES "categorias"("id");
 ALTER TABLE "projetos_usuarios" ADD CONSTRAINT "projetos_usuarios_fk0" FOREIGN KEY ("usuario_id") REFERENCES "usuarios"("id");
 ALTER TABLE "projetos_usuarios" ADD CONSTRAINT "projetos_usuarios_fk1" FOREIGN KEY ("projeto_id") REFERENCES "projetos"("id");
 ALTER TABLE "projetos_usuarios" ADD CONSTRAINT "projetos_usuarios_fk2" FOREIGN KEY ("acesso_id") REFERENCES "acesso"("id");
