@@ -5,8 +5,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="../styles/reset.css" />
-		<link rel="stylesheet" href="../styles/board.css" />
 		<link rel="stylesheet" href="../styles/modal.css" />
+		<link rel="stylesheet" href="../styles/board.css" />
 		<script defer type="module" src="../scripts/board.js"></script>
 		<title>DM Kanban - Quadro</title>
 	</head>
@@ -21,25 +21,31 @@
 			/>
 		</nav>
 		<div class="quadro"></div>
-		<!--     <div class="modal">
-      <div class="card-modal">
-        <main class="card-modal__main">
-          <input
-            class="title-1 card-modal__descricao"
-            type="text"
-            placeholder="Nome do cartão"
-            value="Nome do cartão"
-          />
-          <p class="text-1">Descrição</p>
-          <textarea class="card-modal__descricao"></textarea>
-          <button class="card-modal__botao botao-secundario">Salvar</button>
-        </main>
-        <aside class="card-modal__aside">
-          <span class="close">x</span>
-          <h2 class="title-2">Configurações</h2>
-          <button class="card-modal__move">Mover para:</button>
-        </aside>
-      </div>
-    </div> -->
+		<div class="modal hidden">
+			<div class="card-modal">
+				<main class="card-modal__main">
+					<input
+						class="title-1 card-modal__nome"
+						type="text"
+						placeholder="Nome do cartão"
+						value="Nome do cartão"
+					/>
+					<textarea
+						class="card-modal__conteudo"
+						placeholder="Descrição da tarefa"
+					></textarea>
+				</main>
+				<aside class="card-modal__aside">
+					<header>
+						<h2 class="title-2">CONFIGURAÇÕES</h2>
+						<span class="close title-2">X</span>
+					</header>
+					<select class="card-modal__move">
+						<option value="">Mover para</option>
+					</select>
+					<button class="deletar-card">Apagar cartão</button>
+				</aside>
+			</div>
+		</div>
 	</body>
 </html>

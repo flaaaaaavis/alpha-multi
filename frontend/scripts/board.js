@@ -10,21 +10,50 @@ ws.addEventListener("open", () => {
 ws.addEventListener("message", ({ data }) => {
 	const dados = JSON.parse(data);
 
-	if (dados.tipo == "mover tarefa") {
-		moveCard(dados);
-	} else if (dados.tipo == "nova coluna") {
-		const addColumnButton = document.querySelector(".adicionar-coluna");
-		createColumn(addColumnButton, false);
-	} else if (dados.tipo == "nova tarefa") {
-		const target = document.querySelector(`#${dados.botao}`);
-		CardCreator.createCard(target.id, false);
-	} else if (dados.tipo == "mudança de nome - card") {
-		const card = document.querySelector(`#${dados.id} .nome__card`);
-		card.innerText = dados.nome;
-	} else if (dados.tipo == "mudança de nome - coluna") {
-		const coluna = document.querySelector(`#${dados.id} input`);
-		coluna.value = dados.nome;
+	switch (dados.tipo) {
+		case "mover tarefa":
+			moveCard(dados);
+			break;
+		case "nova coluna":
+			const addColumnButton = document.querySelector(".adicionar-coluna");
+			createColumn(addColumnButton, false);
+			CardCreator.fillAllSelects();
+			break;
+		case "nova tarefa":
+			const target = document.querySelector(`#${dados.botao}`);
+			CardCreator.createCard(target.id, false);
+			break;
+		case "mudança de nome - card":
+			const card = document.querySelector(`#${dados.id} .nome__card`);
+			card.innerText = dados.nome;
+			break;
+		case "mudança de nome - coluna":
+			const coluna = document.querySelector(`#${dados.id} input`);
+			coluna.value = dados.nome;
+			CardCreator.fillAllSelects();
+			break;
+		case "mudança de nome - quadro":
+			const quadro = document.getElementById("nome-projeto");
+			quadro.value = dados.nome;
+			break;
+		case "mudança de conteudo - card":
+			console.log("entrou");
+			const card2 = document.querySelector(`#${dados.id} p`);
+			card2.innerText = dados.conteudo;
+			break;
+		case "excluir card":
+			const card3 = document.getElementById(dados.id);
+			card3.remove();
 	}
+});
+
+const project = document.getElementById("nome-projeto");
+project.addEventListener("change", () => {
+	const newName = {
+		tipo: "mudança de nome - quadro",
+		nome: project.value,
+	};
+	ws.send(JSON.stringify(newName));
 });
 
 function moveCard(data) {
@@ -51,51 +80,6 @@ projectTitle.addEventListener("change", () => {
 		console.log(Project.project);
 	}
 });
-
-/* Ativa as funções drag and drop */
-function activateDnd() {
-	const addColumnButton = document.querySelector(".adicionar-coluna");
-	const addCardButton = document.querySelectorAll(".adicionar-card");
-	const columnName = document.querySelectorAll(".coluna input");
-	const drag = document.querySelectorAll(".arrastavel");
-	const drop = document.querySelectorAll(".coluna");
-
-	/* Cria um novo card na coluna */
-	addCardButton.forEach((element) => {
-		element.addEventListener("click", (event) => {
-			CardCreator.createCard(event.currentTarget);
-		});
-	});
-
-	/* Cria uma nova coluna */
-	addColumnButton.addEventListener("click", (event) => {
-		createColumn(event.target, true);
-	});
-
-	/* Quando um card é arrastado executa a função de arrastar */
-	drag.forEach((element) => {
-		element.addEventListener("dragstart", (event) => {
-			DragAndDrop.onDragStart(event);
-		});
-	});
-
-	/* Quando um card é colocado em uma coluna confere o que deve ser feito */
-	drop.forEach((element) => {
-		element.addEventListener("dragover", (event) => {
-			DragAndDrop.onDragOver(event);
-		});
-		element.addEventListener("drop", (event) => {
-			DragAndDrop.onDrop(event);
-		});
-	});
-
-	/* Atualiza o nome das colunas no select de coluna do mobile */
-	columnName.forEach((element) => {
-		element.addEventListener("change", () => {
-			CardCreator.fillAllSelects();
-		});
-	});
-}
 
 function createBoard() {
 	const board = document.querySelector(".quadro");
@@ -163,5 +147,8 @@ function createColumn(target, send) {
 	CardCreator.fillAllSelects();
 }
 
-//activateDnd();
 createBoard();
+const addColumnButton = document.querySelector(".adicionar-coluna");
+addColumnButton.addEventListener("click", (event) => {
+	createColumn(event.target, true);
+});

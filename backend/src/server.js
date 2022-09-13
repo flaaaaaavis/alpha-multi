@@ -2,6 +2,7 @@ import { app } from "./app.js";
 import config from "./config.js";
 import { pool } from "./db.js";
 const { PORT } = config;
+import { v4 } from "uuid";
 
 import http from "http";
 //const express = require("express");
@@ -16,6 +17,10 @@ const wss = new WebSocketServer({ server });
 
 wss.on("connection", (ws) => {
 	console.log("novo cliente conectado");
+	ws.id = v4();
+	wss.clients.forEach((client) => {
+		console.log("Client.ID: " + client.id);
+	});
 
 	ws.on("message", (data) => {
 		const mensagem = JSON.parse(data);
