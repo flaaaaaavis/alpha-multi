@@ -6,6 +6,14 @@ export default class CardCreator {
 		this.ws = ws;
 	}
 
+	static cardFirstOpened = true;
+	static clickedCard = {
+		id: "",
+		titulo: "",
+		conteudo: "",
+		coluna: "",
+	};
+
 	/* conta os cards que já foram criados para utilizar como id (devo modificar no futuro) */
 	static cardCounter = 0;
 
@@ -20,72 +28,25 @@ export default class CardCreator {
 		card.draggable = true;
 
 		const cardName = document.createElement("h2");
-		cardName.contentEditable = true;
 		cardName.className = "nome__card";
 		cardName.innerText = "Nome da tarefa";
 
-		cardName.addEventListener("input", () => {
-			const change = {
-				tipo: "mudança de nome - card",
-				id: card.id,
-				nome: cardName.innerText,
-			};
-			ws.send(JSON.stringify(change));
-		});
-
 		this.cardDrag(card);
 
-		const cardContent = document.createElement("textarea");
+		const cardContent = document.createElement("p");
 		cardContent.className = "conteudo__card";
-		cardContent.placeholder = "Conteúdo da tarefa";
+		cardContent.innerText = "Conteúdo da tarefa";
 
-		cardContent.addEventListener("change", () => {
-			const change = {
-				tipo: "mudança de conteudo - card",
-				id: card.id,
-				conteudo: cardContent.value,
-			};
-			ws.send(JSON.stringify(change));
+		card.addEventListener("click", () => {
+			this.clickedCard.id = card.id;
+			this.clickedCard.titulo = cardName.innerText;
+			this.clickedCard.conteudo = cardContent.innerText;
+			this.clickedCard.coluna = parent.id;
+			card.value = parent.id;
+			this.startCardModal();
 		});
 
-		const cardOptions = document.createElement("div");
-		cardOptions.className = "card__opcoes";
-
-		const deleteBtn = document.createElement("img");
-		deleteBtn.src = "../assets/delete.png";
-		deleteBtn.className = "card__delete card__botao";
-		deleteBtn.addEventListener("click", (e) => {
-			e.preventDefault();
-			if (confirm("Tem certeza que deseja excluir esse card?") == true) {
-				card.remove();
-				const remove = {
-					tipo: "excluir card",
-					id: card.id,
-				};
-				ws.send(JSON.stringify(remove));
-			}
-		});
-
-		const cardMenu = document.createElement("div");
-		cardMenu.className = "arrastavel__menu hidden";
-		const select = document.createElement("select");
-		select.className = "select";
-
-		this.fillSelect(select, parent.id);
-
-		select.addEventListener("change", (e) => {
-			this.cardSelect(e, card);
-		});
-		cardMenu.append(select);
-
-		const moveBtn = document.createElement("img");
-		moveBtn.src = "../assets/mover.png";
-		moveBtn.className = "card__move card__botao";
-		moveBtn.addEventListener("click", () => {
-			cardMenu.classList.toggle("hidden");
-		});
-		cardOptions.append(deleteBtn, moveBtn);
-		card.append(cardName, cardContent, cardOptions, cardMenu);
+		card.append(cardName, cardContent);
 		parent.insertBefore(card, targetButton);
 
 		if (send) {
@@ -127,10 +88,7 @@ export default class CardCreator {
 			const query = document.querySelector(`#${myOption} button`);
 			const newColumn = document.getElementById(myOption);
 			newColumn.insertBefore(card, query);
-			this.fillSelect(select);
-			document
-				.querySelector(`#${card.id} .arrastavel__menu`)
-				.classList.toggle("hidden");
+			this.fillSelect(select, myOption);
 
 			const move = {
 				tipo: "mover tarefa",
@@ -164,12 +122,11 @@ export default class CardCreator {
 
 	/* Atualiza o menu de select de todos os cards */
 	static fillAllSelects() {
-		const targets = document.querySelectorAll(".select");
+		const targets = document.querySelectorAll(".card-modal__move");
 
 		targets.forEach((element) => {
 			element.innerHTML = "";
-			const atualLocation =
-				element.parentElement.parentElement.parentElement;
+			const atualLocation = this.clickedCard.coluna;
 			const selectText = document.createElement("option");
 			selectText.innerText = "Mover para";
 			selectText.value = "";
@@ -186,6 +143,94 @@ export default class CardCreator {
 					element.append(option);
 				}
 			});
+		});
+	}
+
+	static startCardModal() {
+		/* Show modal */
+		const modal = document.querySelector(".modal");
+		modal.classList.remove("hidden");
+		modal.addEventListener("click", (e) => {
+			if (e.target == modal) {
+				modal.classList.add("hidden");
+			}
+		});
+		const title = document.querySelector(".card-modal__nome");
+		title.value = this.clickedCard.titulo;
+		const content = document.querySelector(".card-modal__conteudo");
+		content.value = this.clickedCard.conteudo;
+		if (this.cardFirstOpened) {
+			this.modalChanges();
+		}
+	}
+
+	static modalChanges() {
+		const realCard = document.getElementById(this.clickedCard.id);
+		/* Close modal */
+		const modal = document.querySelector(".modal");
+		const closeButton = document.querySelector(".close");
+		closeButton.addEventListener("click", () => {
+			modal.classList.add("hidden");
+		});
+
+		/* mudar titulo do card */
+		const cardModal = document.querySelector(".card-modal");
+		cardModal.value = this.clickedCard.id;
+		const title = document.querySelector(".card-modal__nome");
+		title.value = this.clickedCard.titulo;
+		title.addEventListener("change", () => {
+			const cardTitle = document.querySelector(
+				`#${this.clickedCard.id} h2`
+			);
+			console.log(cardTitle);
+			cardTitle.innerText = title.value;
+			const change = {
+				tipo: "mudança de nome - card",
+				id: this.clickedCard.id,
+				nome: title.value,
+			};
+			ws.send(JSON.stringify(change));
+		});
+
+		/* Mudar conteudo do card */
+		const content = document.querySelector(".card-modal__conteudo");
+		content.value = this.clickedCard.conteudo;
+		content.addEventListener("change", () => {
+			const cardContent = document.querySelector(
+				`#${this.clickedCard.id} p`
+			);
+			cardContent.innerText = content.value;
+			const change = {
+				tipo: "mudança de conteudo - card",
+				id: this.clickedCard.id,
+				conteudo: content.value,
+			};
+			ws.send(JSON.stringify(change));
+		});
+
+		/* Excluir card */
+		const deleteBtn = document.querySelector(".deletar-card");
+		deleteBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			if (confirm("Tem certeza que deseja excluir esse card?") == true) {
+				realCard.remove();
+				const remove = {
+					tipo: "excluir card",
+					id: this.clickedCard.id,
+				};
+				ws.send(JSON.stringify(remove));
+				modal.classList.add("hidden");
+			}
+		});
+
+		const select = document.querySelector(".card-modal__move");
+		if (this.cardFirstOpened) {
+			this.fillSelect(select, realCard.value);
+			this.cardFirstOpened = false;
+		}
+		select.addEventListener("change", (e) => {
+			realCard.value = select.value;
+			this.cardSelect(e, realCard);
 		});
 	}
 }

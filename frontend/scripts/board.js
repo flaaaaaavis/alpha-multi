@@ -37,8 +37,9 @@ ws.addEventListener("message", ({ data }) => {
 			quadro.value = dados.nome;
 			break;
 		case "mudança de conteudo - card":
-			const card2 = document.querySelector(`#${dados.id} textarea`);
-			card2.value = dados.conteudo;
+			console.log("entrou");
+			const card2 = document.querySelector(`#${dados.id} p`);
+			card2.innerText = dados.conteudo;
 			break;
 		case "excluir card":
 			const card3 = document.getElementById(dados.id);

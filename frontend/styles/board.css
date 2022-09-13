@@ -105,7 +105,7 @@ nav{
 	width: 100%;
 	color: black;
 	font-size: 12px;
-	min-height: 50px;
+
 	font-weight: bold;
 	padding: 5px 10px;
 	background-color: transparent;
@@ -169,8 +169,6 @@ nav{
 
 }
 
-
-
 .hidden{
 	display: none;
 }
@@ -185,6 +183,10 @@ nav{
 	}
 
 	.card__move{
+		display: none;
+	}
+
+	.hidden{
 		display: none;
 	}
 }
