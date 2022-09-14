@@ -143,8 +143,6 @@ function createColumn(target, send) {
 		ws.send(JSON.stringify(newColumn));
 	}
 	columnCount++;
-
-	CardCreator.fillAllSelects();
 }
 
 createBoard();
