@@ -11,7 +11,6 @@ export default class CardCreator {
 		id: "",
 		titulo: "",
 		conteudo: "",
-		coluna: "",
 	};
 
 	/* conta os cards que já foram criados para utilizar como id (devo modificar no futuro) */
@@ -41,8 +40,8 @@ export default class CardCreator {
 			this.clickedCard.id = card.id;
 			this.clickedCard.titulo = cardName.innerText;
 			this.clickedCard.conteudo = cardContent.innerText;
-			this.clickedCard.coluna = parent.id;
-			card.value = parent.id;
+			const select = document.querySelector(".card-modal__move");
+			this.fillSelect(select, parent.id);
 			this.startCardModal();
 		});
 
@@ -59,7 +58,7 @@ export default class CardCreator {
 				conteudo: "Adicione o conteúdo",
 				membros: [],
 			};
-			card.value = JSON.stringify(cardObject);
+			//card.value = JSON.stringify(cardObject);
 			ws.send(JSON.stringify(cardObject));
 		}
 
@@ -78,22 +77,21 @@ export default class CardCreator {
 	}
 
 	/* Cria o menu de select do card (Mobile) */
-	static cardSelect(e, card) {
-		let myParent = card.parentElement;
-		let id = myParent.id;
-		const myOption = e.target.value;
-		const select = e.currentTarget;
+	static cardSelect(card) {
+		const select = document.querySelector(".card-modal__move");
+		let atualColumn = card.parentElement.id;
+		const targetColumn = select.value;
 
-		if (myOption.trim() != "" && myOption != id) {
-			const query = document.querySelector(`#${myOption} button`);
-			const newColumn = document.getElementById(myOption);
+		if (targetColumn.trim() != "" && targetColumn != atualColumn) {
+			const query = document.querySelector(`#${targetColumn} button`);
+			const newColumn = document.getElementById(targetColumn);
 			newColumn.insertBefore(card, query);
-			this.fillSelect(select, myOption);
+			card.value = targetColumn;
 
 			const move = {
 				tipo: "mover tarefa",
 				card: card.id,
-				coluna: myOption,
+				coluna: targetColumn,
 			};
 			ws.send(JSON.stringify(move));
 		}
@@ -121,7 +119,7 @@ export default class CardCreator {
 	}
 
 	/* Atualiza o menu de select de todos os cards */
-	static fillAllSelects() {
+	/* static fillAllSelects() {
 		const targets = document.querySelectorAll(".card-modal__move");
 
 		targets.forEach((element) => {
@@ -144,7 +142,7 @@ export default class CardCreator {
 				}
 			});
 		});
-	}
+	} */
 
 	static startCardModal() {
 		/* Show modal */
@@ -160,78 +158,86 @@ export default class CardCreator {
 		const content = document.querySelector(".card-modal__conteudo");
 		content.value = this.clickedCard.conteudo;
 		if (this.cardFirstOpened) {
-			this.modalChanges();
+			this.modalEvents(true);
+		} else {
+			this.modalEvents(false);
 		}
 	}
 
-	static modalChanges() {
-		const realCard = document.getElementById(this.clickedCard.id);
+	static modalEvents(activate) {
+		let realCard = document.getElementById(this.clickedCard.id);
 		/* Close modal */
 		const modal = document.querySelector(".modal");
 		const closeButton = document.querySelector(".close");
-		closeButton.addEventListener("click", () => {
-			modal.classList.add("hidden");
-		});
 
 		/* mudar titulo do card */
 		const cardModal = document.querySelector(".card-modal");
 		cardModal.value = this.clickedCard.id;
 		const title = document.querySelector(".card-modal__nome");
 		title.value = this.clickedCard.titulo;
-		title.addEventListener("change", () => {
-			const cardTitle = document.querySelector(
-				`#${this.clickedCard.id} h2`
-			);
-			console.log(cardTitle);
-			cardTitle.innerText = title.value;
-			const change = {
-				tipo: "mudança de nome - card",
-				id: this.clickedCard.id,
-				nome: title.value,
-			};
-			ws.send(JSON.stringify(change));
-		});
 
 		/* Mudar conteudo do card */
 		const content = document.querySelector(".card-modal__conteudo");
 		content.value = this.clickedCard.conteudo;
-		content.addEventListener("change", () => {
-			const cardContent = document.querySelector(
-				`#${this.clickedCard.id} p`
-			);
-			cardContent.innerText = content.value;
-			const change = {
-				tipo: "mudança de conteudo - card",
-				id: this.clickedCard.id,
-				conteudo: content.value,
-			};
-			ws.send(JSON.stringify(change));
-		});
 
 		/* Excluir card */
 		const deleteBtn = document.querySelector(".deletar-card");
-		deleteBtn.addEventListener("click", (e) => {
-			e.preventDefault();
-			if (confirm("Tem certeza que deseja excluir esse card?") == true) {
-				realCard.remove();
-				const remove = {
-					tipo: "excluir card",
-					id: this.clickedCard.id,
-				};
-				ws.send(JSON.stringify(remove));
-				modal.classList.add("hidden");
-			}
-		});
 
 		const select = document.querySelector(".card-modal__move");
-		if (this.cardFirstOpened) {
-			this.fillSelect(select, realCard.value);
-			this.cardFirstOpened = false;
+		this.fillSelect(select, realCard.parentElement.id);
+
+		if (activate) {
+			closeButton.addEventListener("click", () => {
+				modal.classList.add("hidden");
+			});
+
+			deleteBtn.addEventListener("click", (e) => {
+				e.preventDefault();
+				if (
+					confirm("Tem certeza que deseja excluir esse card?") == true
+				) {
+					realCard.remove();
+					const remove = {
+						tipo: "excluir card",
+						id: this.clickedCard.id,
+					};
+					ws.send(JSON.stringify(remove));
+					modal.classList.add("hidden");
+				}
+			});
+
+			content.addEventListener("change", () => {
+				const cardContent = document.querySelector(
+					`#${this.clickedCard.id} p`
+				);
+				cardContent.innerText = content.value;
+				const change = {
+					tipo: "mudança de conteudo - card",
+					id: this.clickedCard.id,
+					conteudo: content.value,
+				};
+				ws.send(JSON.stringify(change));
+			});
+
+			title.addEventListener("change", () => {
+				const cardTitle = document.querySelector(
+					`#${this.clickedCard.id} h2`
+				);
+				cardTitle.innerText = title.value;
+				const change = {
+					tipo: "mudança de nome - card",
+					id: this.clickedCard.id,
+					nome: title.value,
+				};
+				ws.send(JSON.stringify(change));
+			});
+
+			select.addEventListener("change", () => {
+				realCard = document.getElementById(this.clickedCard.id);
+				this.cardSelect(realCard);
+				this.fillSelect(select, realCard.parentElement);
+				modal.classList.add("hidden");
+			});
 		}
-		select.addEventListener("change", (e) => {
-			realCard.value = select.value;
-			this.cardSelect(e, realCard);
-			modal.classList.add("hidden");
-		});
 	}
 }
