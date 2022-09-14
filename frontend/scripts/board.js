@@ -150,8 +150,6 @@ function createColumn(send) {
 		ws.send(JSON.stringify(newColumn));
 	}
 	columnCount++;
-
-	CardCreator.fillAllSelects();
 }
 
 function menuControl() {

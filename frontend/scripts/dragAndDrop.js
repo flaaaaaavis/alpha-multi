@@ -18,13 +18,13 @@ export default class DragAndDrop {
 			const query = `#${myColumn} button`;
 			const button = document.querySelector(query);
 			const id = event.dataTransfer.getData("text");
-			const arrastavel = document.getElementById(id);
+			const dragger = document.getElementById(id);
 			const dropzone = event.target;
 			if (dropzone.classList.contains("coluna")) {
-				dropzone.insertBefore(arrastavel, button);
+				dropzone.insertBefore(dragger, button);
 				const move = {
 					tipo: "mover tarefa",
-					card: arrastavel.id,
+					card: dragger.id,
 					coluna: button.parentElement.id,
 				};
 
