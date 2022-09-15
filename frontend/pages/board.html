@@ -4,14 +4,18 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 		<link rel="stylesheet" href="../styles/reset.css" />
 		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/board.css" />
+
 		<script defer type="module" src="../scripts/board.js"></script>
+
 		<title>DM Kanban - Quadro</title>
 	</head>
 	<body>
-		<nav>
+
+		<header id="board--header">
 			<!-- <img class="logo" src="../assets/logo.png"> -->
 			<input
 				class="title-1"
@@ -19,8 +23,95 @@
 				id="nome-projeto"
 				value="Novo quadro"
 			/>
-		</nav>
+		</header>
+
+		<button id="menu--button__open">
+			<img src="../assets/icons/menu.png" alt="Menu lateral" title="Abrir menu lateral">
+		</button>
+
+		<menu id="sidebar-menu" class="menu--container">
+			<nav class="menu">
+				<header class="menu--header">
+					<div class="menu--header__top">
+						<section>
+							<h2>Kenji Animadinho</h2>
+							<p>kenji@email.com</p>
+						</section>
+						<img id="closeMenuButton" src="../assets/icons/close.png" alt="Fechar menu">
+					</div>
+					<div class="menu--header__account">
+						<a href="">
+							<img src="../assets/icons/mail_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+							Alterar e-mail
+						</a>
+						<a href="">
+							<img src="../assets/icons/lock_reset_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+							Alterar senha
+						</a>
+						<a href="">
+							<img src="../assets/icons/delete.png" alt="">
+							Excluir conta
+						</a>
+						<a href="">
+							<img src="../assets/icons/logout_FILL0_wght400_GRAD0_opsz48 (1).svg" alt="">
+							Sair
+						</a>
+					</div>
+				</header>
+				<main class="menu--main">
+					<section>
+						<h3 id="this-board__title">Este quadro</h3>
+						<hr>
+
+						<ul class="menu--main__accordion">
+							<li class="menu--accordion__item" id="members">
+								<a href="#members" class="item__title this-board__item">
+									<img src="../assets/icons/group.png" alt="">
+									Participantes
+								</a>
+
+								<ul class="menu--accordion__item-content">
+									<li class="menu--accordion__sub-item">
+										<form>
+											<input type="email" name="" id="" placeholder="Adicionar participante">
+											<button>Adicionar</button>
+										</form>
+									</li>
+									<li class="menu--accordion__sub-item">Kenjinho</li>
+									<li class="menu--accordion__sub-item">Animado</li>
+								</ul>
+							</li>
+						</ul>
+						<a href="" class="this-board__item">
+							<img src="../assets/icons/delete.png" alt="">
+							Excluir quadro
+						</a>
+					</section>
+					<ul class="menu--main__accordion">
+						<li class="menu--accordion__item" id="your-boards">
+							<span id="your-boards__title">
+								<a href="#your-boards" class="item__title" >Seus quadros</a>
+								<img src="../assets/icons/add.png" id="your-boards__new-board-button" alt="Criar novo quadro">
+							</span>
+							<hr>
+
+							<ul class="menu--accordion__item-content">
+								<li class="menu--accordion__sub-item this-board__item">Quadro 1</li>
+								<li class="menu--accordion__sub-item this-board__item">Quadro 2</li>
+								<li class="menu--accordion__sub-item this-board__item">Quadro 3</li>
+								<li class="menu--accordion__sub-item this-board__item">Quadro 4</li>
+								<li class="menu--accordion__sub-item this-board__item">Quadro 5</li>
+							</ul>
+						</li>
+					</ul>
+
+				</main>
+			</nav>
+
+		</menu>
+
 		<div class="quadro"></div>
+
 		<div class="modal hidden">
 			<div class="card-modal">
 				<main class="card-modal__main">
@@ -30,6 +121,7 @@
 						placeholder="Nome do cartão"
 						value="Nome do cartão"
 					/>
+					<p>Descrição</p>
 					<textarea
 						class="card-modal__conteudo"
 						placeholder="Descrição da tarefa"
@@ -37,15 +129,24 @@
 				</main>
 				<aside class="card-modal__aside">
 					<header>
-						<h2 class="title-2">CONFIGURAÇÕES</h2>
-						<span class="close title-2">X</span>
+						<h2 class="title-2">Configurações</h2>
+						<span class="close title-2">
+							<img src="../assets/icons/close.png" alt="Fechar card">
+						</span>
 					</header>
-					<select class="card-modal__move">
-						<option value="">Mover para</option>
-					</select>
-					<button class="deletar-card">Apagar cartão</button>
+					<ul>
+						<li>
+							<select class="card-modal__move">
+								<option value="">Mover para</option>
+							</select>
+						</li>
+						<li>
+							<button class="deletar-card">Apagar cartão</button>
+						</li>
+					</ul>
 				</aside>
 			</div>
 		</div>
+
 	</body>
 </html>

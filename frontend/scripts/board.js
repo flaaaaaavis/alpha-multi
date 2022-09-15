@@ -85,14 +85,17 @@ function createBoard() {
 
 	const addColumnBtn = document.createElement("button");
 	addColumnBtn.className = "adicionar-coluna";
-	addColumnBtn.innerText = "+";
+	addColumnBtn.title = "Criar nova coluna";
+	const img = document.createElement("img");
+	img.src = "../assets/icons/new-column.png";
+	addColumnBtn.append(img);
 	board.append(addColumnBtn);
-	createColumn(addColumnBtn);
-	createColumn(addColumnBtn);
+	createColumn();
+	createColumn();
 }
 
 /* Cria a coluna ao apertar o botão */
-function createColumn(target, send) {
+function createColumn(send) {
 	const board = document.querySelector(".quadro");
 	const column = document.createElement("div");
 	column.className = "coluna";
@@ -118,15 +121,19 @@ function createColumn(target, send) {
 	const button = document.createElement("button");
 	button.className = "adicionar-card";
 	button.id = `add-card-${addCardCount}`;
+	button.title = "Criar novo card";
 	addCardCount++;
-	button.innerText = "+";
+	const img = document.createElement("img");
+	img.src = "../assets/icons/new-card.png";
+	button.appendChild(img);
 
-	button.addEventListener("click", () => {
+	button.addEventListener("click", (event) => {
+		event.preventDefault();
 		CardCreator.createCard(button.id, true);
 	});
 
 	column.append(name, button);
-	board.insertBefore(column, target);
+	board.insertBefore(column, document.querySelector(".adicionar-coluna"));
 	const newColumn = {
 		tipo: "nova coluna",
 		id: column.id,
@@ -138,8 +145,32 @@ function createColumn(target, send) {
 	columnCount++;
 }
 
+function menuControl() {
+	let menu = document.getElementById("sidebar-menu");
+	const openButton = document.getElementById("menu--button__open");
+
+	if (menu.style.display === "none") {
+		menu.style.display = "flex";
+		openButton.style.display = "none";
+	} else {
+		menu.style.display = "none";
+		openButton.style.display = "flex";
+	}
+}
+
+const openButton = document.getElementById("menu--button__open");
+openButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	menuControl();
+});
+const closeButton = document.getElementById("closeMenuButton");
+closeButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	menuControl();
+});
+
 createBoard();
 const addColumnButton = document.querySelector(".adicionar-coluna");
 addColumnButton.addEventListener("click", (event) => {
-	createColumn(event.target, true);
+	createColumn(true);
 });

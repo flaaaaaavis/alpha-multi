@@ -1,117 +1,479 @@
-body{
-	background-color: #202AD0;
+:root {
+	--white: #FFFFFF;
+	--light-grey: #D9D9D9;
+	--grey: #4C4C4C;
+	--black: #000;
+	--blue: #212AD1;
+	--light-blue: #91F6F0;
+	--green: #68E79A;
+	--yellow: #FFE787;
+	--orange: #F26F21;
+	--pink: #FF6865;
+	--light-pink: #FF9A98;
 }
 
-nav{
+body {
+	height: fit-content;
+	overflow-x: hidden;
+
+	background-color: #202AD0;
+	background-image: url('../assets/logos/background.svg');
+	background-repeat: repeat;
+	background-size: auto;
+}
+
+img {
+	cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  	width: 5px;
+  	height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  	background: var(--light-grey);
+  	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  	background: var(--grey);
+}
+
+#board--header {
+	max-width: 100vw;
+	height: 70px;
 	top: 0;
-	height: 90px;
+	padding: 0 20px;
+
 	display: flex;
-	padding: 20px;
-	position: sticky;
-	align-items: center;
-	box-sizing: border-box;
 	justify-content: center;
-	background-color: #FFFFFF;
+	align-items: center;
+
+	background-color: var(--white);
 	box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 }
 
-.title-1{
-	font-size: 26px;
-	color:#202AD0;
-	font-weight: 600;
+/* ------------------- MENU --------------------- */
+
+.menu--container {
+	width: 100%;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	position: absolute;
+
+	display: none;
+
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.menu {
+	width: 100vw;
+	height: 100vh;
+	padding: 0;
+
+	display: flex;
+	flex-direction: column;
+
+	background-color: var(--white);
+}
+@media (min-width: 481px) {
+	.menu {
+		width: 275px;
+	}
+}
+
+.menu--header__top {
+	width: 100%;
+	height: 15vh;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.menu--header__top section {
+	width: 90%;
+	height: 100%;
+	margin-left: 5%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+}
+
+.menu--header__top section h2 {
+	font-size: 28px;
+	font-weight: 400;
+	line-height: 34px;
+	letter-spacing: 0em;
+	text-align: left;
+}
+
+.menu--header__top section p {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 300;
+	font-size: 15px;
+	line-height: 18px;
+	display: flex;
+	align-items: center;
+}
+
+.menu--header__top img {
+	width: 15px;
+	height: 15px;
+	margin: 10px 10px 0 0;
+}
+
+.menu--header__account {
+	width: 100%;
+	height: 20vh;
+	padding-left: 10px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 19px;
+	letter-spacing: 0em;
+}
+
+.menu--header__account a {
+	display: flex;
+	flex-direction: row;
+	column-gap: 15px;
+	justify-content: left;
+	align-items: center;
+}
+
+.menu--header__account img {
+	height: 1.5em;
+}
+
+.menu--main {
+	width: 100%;
+	height: 65vh;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: flex-start;
+}
+
+.menu--main section, .menu--main ul {
+	width: 100%;
+}
+
+.menu--main section img {
+	height: 1.2em;
+}
+
+#this-board__title, #your-boards__title {
+	margin-top: 10px;
+	margin-left: 6%;
+
+	font-style: normal;
+	font-weight: 400;
+	font-size: 20px;
+	line-height: 24px;
+	color: #000000;
+}
+
+#your-boards__title {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.menu--main hr {
+	width: 100%;
+	height: 0.5px;
+	margin-top: 5px;
+	background: var(--grey);
+}
+
+.menu--main form {
+	height: fit-content;
+	margin: 10px 10px 15px 0;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.menu--main form input {
+	width: 80%;
+	height: 24px;
+	padding-left: 15px;
+	border-bottom: 0.5px solid #000000;
+}
+
+.menu--main form input::placeholder {
+	font-style: normal;
+	font-weight: 300;
+	font-size: 14px;
+	line-height: 17px;
+	color: var(--grey);
+}
+
+.menu--main form button {
+	width: 30%;
+	height: 24px;
+
+	font-style: normal;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 14px;
+	color: #FFFFFF;
 	text-align: center;
+
+	background: var(--pink);
+	border-radius: 5px;
+}
+
+.this-board__item {
+	margin-left: 10%;
+	margin-top: 20px;
+
+	display: flex;
+	flex-direction: row;
+	column-gap: 10px;
+	align-items: center;
+
+	font-style: normal;
+	font-weight: 300;
+	font-size: 20px;
+	line-height: 24px;
+	color: #000000;
+}
+
+.menu--main__accordion {
+	width: 100%;
+	border-radius: 0.2rem;
+	overflow: hidden;
+}
+
+.menu--accordion__item {
+	list-style: none;
+	overflow: hidden;
+}
+
+.item__title {
+	position: relative;
+}
+
+.menu--accordion__item-content {
+	overflow: hidden;
+	transition: max-height 0.3s;
+	max-height: 0;
+}
+
+.menu--accordion__sub-item {
+	margin-top: 10px;
+	margin-left: 12%;
+
+	font-style: normal;
+	font-weight: 300;
+	font-size: 15px;
+	line-height: 18px;
+	color: #000000;
+}
+
+.menu--accordion__item:target .menu--accordion__item-content {
+  	max-height: 10em;
+}
+
+#your-boards__new-board-button {
+	height: 20px;
+}
+
+/* ------------------- MENU --------------------- */
+
+.title-1 {
+	font-style: normal;
+	font-weight: 400;
+	font-size: 32px;
+	line-height: 38px;
+	text-align: center;
+	color: var(--black);
+}
+
+#menu--button__open {
+	width: 60px;
+	height: 60px;
+	top: 90px;
+	left: 20px;
+	position: absolute;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border-radius: 10px;
+	background-color: var(--white);
+	filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+}
+@media (min-width: 481px) {
+	#menu--button__open {
+		width: 60px;
+		height: 60px;
+		top: 5px;
+		left: 0;
+
+		filter: none;
+	}
+}
+
+#menu--button__open img {
+	width: 40px;
+	height: 36px;
 }
 
 /* Onde ficam as colunas e cards */
-.quadro{
-	display: flex;
-	color: black;
-	font-weight: bold;
+.quadro {
+	min-height: calc(100vh - 150px);
+	height: fit-content;
+	margin-top: 80px;
+	padding-left: 55px;
 	overflow-x: auto;
+
+	display: flex;
 	align-items: flex-start;
-	font-family: sans-serif;
+	column-gap: 30px;
+
+	background-color: transparent;
+
 	scroll-behavior: smooth;
-	height: calc(100vh - 90px);
-	background-color: #202AD0;
 	scroll-snap-type: x mandatory;
-  }
+}
+@media (min-width: 481px) {
+	.quadro {
+		min-height: calc(100vh - 70px);
+		margin-top: 0;
+		margin-left: 20px;
+	}
+}
 
   /* Design das colunas */
 .coluna {
-	display: flex;
-	min-width: 80vw;
-	transition: 0.4s;
-	border-radius: 4px;
-	align-items: center;
-	scroll-margin: 20px;
-	flex-direction: column;
+	min-width: 300px;
+	min-height: 200px;
 	margin: 20px 0 20px 10px;
+	border-radius: 5px;
+
+	display: flex;
+	flex-direction: column;
+	row-gap: 20px;
+	align-items: center;
+
+	transition: 0.4s;
+	scroll-margin: 20px;
 	scroll-snap-align: start;
-	background-color: #FFFFFF;
+
+	background-color: var(--white);
+}
+@media (min-width: 481px) {
+	.coluna {
+		min-width: 340px;
+		max-width: 340px;
+	}
 }
 
-.coluna:hover{
+.coluna:hover {
 	transition: 0.4s;
 }
 
 /* Nome da coluna */
-.coluna input{
-	width: 90%;
-	margin: 10px 0;
-	font-size: 18px;
-	font-weight: 600;
+.coluna > input {
+	width: 70%;
+	height: 50px;
+	margin-top: 30px;
+	padding-bottom: 10px;
+
+	font-style: normal;
+	font-weight: 300;
+	font-size: 24px;
+	line-height: 29px;
 	text-align: center;
+	color: var(--blue);
+
+	background: linear-gradient(to right, black 25%, rgba(255, 255, 255, 0) 0%);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	background-size: 10px 1px;
 }
 
 /* Card que pode ser arrastado */
 .arrastavel {
-	width: 95%;
-	cursor:grab;
-	position: relative;
-	padding: 10px;
-	display: flex;
-	transition: 0.4s;
+	width: 90%;
+	height: 100px;
 	margin-top: 10px;
-	border-radius: 4px;
-	font-weight: normal;
+	padding: 10px;
+	position: relative;
+
+	cursor: grab;
+
+	display: flex;
 	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
 	background-color: #FF9A98;
+	border-radius: 5px;
+
+	transition: 0.4s;
 }
 
 .dropzone {
 	flex-grow: 1;
 	padding: 10px;
 	flex-basis: 100%;
-	background-color: #ffffff;
+	background-color: var(--white);
 }
 
-.nome__card{
-	width: 100%;
-	color: black;
-	font-size: 16px;
-	text-align: left;
-	font-weight: bold;
-	padding: 5px;
-	background-color: transparent;
+.nome__card {
+	width: 90%;
+
+	font-style: normal;
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 22px;
+	text-align: center;
+	color: var(--black);
 }
-.nome__card::placeholder{
+
+.nome__card::placeholder {
 	color: #4D4D4D;
 	text-align: center;
 }
 
-.conteudo__card{
-	width: 100%;
-	height: 2rem;
-	color: black;
-	font-size: 14px;
-	padding: 5px;
+.conteudo__card {
+	width: 90%;
+	max-height: 2.2em;
+
+	font-style: normal;
+	font-weight: 300;
+	font-size: 15px;
+	line-height: 18px;
+	color: var(--grey);
+
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	background-color: transparent;
 }
 
 /* Menu que mostra para onde um card pode ser arrastado */
-.arrastavel__menu{
+.arrastavel__menu {
 	position: absolute;
 	bottom: -30px;
 	z-index: 2;
@@ -121,18 +483,18 @@ nav{
 	border: 1px solid black;
 }
 
-.arrastavel__menu select{
+.arrastavel__menu select {
 	height: 30px;
 	width: 150px;
 	border-radius: 5px;
 }
 
-.card__opcoes{
+.card__opcoes {
 	display: flex;
 	justify-content: flex-end;
 }
 
-.card__botao{
+.card__botao {
 	width: 25px;
 	height: 25px;
 	align-self: end;
@@ -141,41 +503,35 @@ nav{
 	margin-left: 5px;
 }
 
-.adicionar-card{
-	width: 40px;
-	height: 40px;
-	margin: 10px 0;
-	font-size: 26px;
-	cursor: pointer;
-	color: #FFFFFF;
-	border-radius: 5px;
-	background-color: #202AD0;
+.adicionar-card {
+	height: fit-content;
+	width: 2.5em;
+	margin: 20px 0;
 
+	cursor: pointer;
 }
 
-.adicionar-coluna{
-	min-width: 40px;
-	height: 40px;
-	margin: 0 20px;
-	margin-top: 65px;
-	font-size: 26px;
+.adicionar-card img {
+	width: 100%;
+}
+
+.adicionar-coluna {
+	min-width: 2.5em;
+	margin: 90px 100px 0 70px;
+
 	cursor: pointer;
-	color: #FFFFFF;
-	border-radius: 5px;
-	background-color: #E48900;
+
 	scroll-snap-align: start;
 	scroll-margin: 20px;
-
 }
 
-.hidden{
+.hidden {
 	display: none;
 }
 
-@media screen and (min-width: 768px) {
-	.coluna {
-		min-width: 250px;
-	}
+/* @media (min-width: 481px) {} */
+
+@media screen and (min-width: 769px) {
 	.arrastavel__menu{
 		display: none;
 	}
