@@ -37,7 +37,6 @@ ws.addEventListener("message", ({ data }) => {
 			quadro.value = dados.nome;
 			break;
 		case "mudança de conteudo - card":
-			console.log("entrou");
 			const card2 = document.querySelector(`#${dados.id} p`);
 			card2.innerText = dados.conteudo;
 			break;
@@ -59,7 +58,6 @@ project.addEventListener("change", () => {
 function moveCard(data) {
 	const card = document.getElementById(data.card);
 	const coluna = document.getElementById(data.coluna);
-	console.log(coluna);
 	let alvo;
 	if (data.acima) {
 		alvo = document.getElementById(data.acima);
@@ -77,7 +75,6 @@ const projectTitle = document.getElementById("nome-projeto");
 projectTitle.addEventListener("change", () => {
 	if (projectTitle.value.trim() != "") {
 		Project.changeName(projectTitle.value.trim());
-		console.log(Project.project);
 	}
 });
 
@@ -111,7 +108,6 @@ function createColumn(target, send) {
 	name.placeholder = "nome da coluna";
 	name.value = `Nova coluna ${columnCount}`;
 	name.addEventListener("change", () => {
-		CardCreator.fillAllSelects();
 		const newName = {
 			tipo: "mudança de nome - coluna",
 			id: column.id,
@@ -125,11 +121,8 @@ function createColumn(target, send) {
 	addCardCount++;
 	button.innerText = "+";
 
-	button.addEventListener("click", (event) => {
+	button.addEventListener("click", () => {
 		CardCreator.createCard(button.id, true);
-		/* 		project.forEach((element) => {
-
-		}) */
 	});
 
 	column.append(name, button);

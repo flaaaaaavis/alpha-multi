@@ -57,9 +57,10 @@ nav{
 /* Nome da coluna */
 .coluna input{
 	width: 90%;
-	font-size: 26px;
-	text-align: center;
 	margin: 10px 0;
+	font-size: 18px;
+	font-weight: 600;
+	text-align: center;
 }
 
 /* Card que pode ser arrastado */
@@ -173,8 +174,7 @@ nav{
 
 @media screen and (min-width: 768px) {
 	.coluna {
-		min-width: 300px;
-		max-width: 300px;
+		min-width: 250px;
 	}
 	.arrastavel__menu{
 		display: none;

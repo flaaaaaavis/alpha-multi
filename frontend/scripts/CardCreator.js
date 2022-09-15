@@ -72,7 +72,6 @@ export default class CardCreator {
 		});
 		card.addEventListener("drop", (event) => {
 			DragAndDrop.droppedOnColumnElement(event);
-			CardCreator.fillAllSelects();
 		});
 	}
 
@@ -159,6 +158,7 @@ export default class CardCreator {
 		content.value = this.clickedCard.conteudo;
 		if (this.cardFirstOpened) {
 			this.modalEvents(true);
+			this.cardFirstOpened = false;
 		} else {
 			this.modalEvents(false);
 		}
@@ -196,6 +196,7 @@ export default class CardCreator {
 				if (
 					confirm("Tem certeza que deseja excluir esse card?") == true
 				) {
+					realCard = document.getElementById(this.clickedCard.id);
 					realCard.remove();
 					const remove = {
 						tipo: "excluir card",
