@@ -9,22 +9,25 @@ ws.addEventListener("open", () => {
 
 ws.addEventListener("message", ({ data }) => {
 	const dados = JSON.parse(data);
+	let card;
 
 	switch (dados.tipo) {
+		case "arrastando tarefa":
+			card = document.getElementById(dados.id);
+			card.classList.add("arrastando");
+			break;
 		case "mover tarefa":
 			moveCard(dados);
 			break;
 		case "nova coluna":
-			const addColumnButton = document.querySelector(".adicionar-coluna");
-			createColumn(addColumnButton, false);
-			CardCreator.fillAllSelects();
+			createColumn(false);
 			break;
 		case "nova tarefa":
 			const target = document.querySelector(`#${dados.botao}`);
 			CardCreator.createCard(target.id, false);
 			break;
 		case "mudança de nome - card":
-			const card = document.querySelector(`#${dados.id} .nome__card`);
+			card = document.querySelector(`#${dados.id} .nome__card`);
 			card.innerText = dados.nome;
 			break;
 		case "mudança de nome - coluna":
@@ -37,12 +40,22 @@ ws.addEventListener("message", ({ data }) => {
 			quadro.value = dados.nome;
 			break;
 		case "mudança de conteudo - card":
-			const card2 = document.querySelector(`#${dados.id} p`);
-			card2.innerText = dados.conteudo;
+			card = document.querySelector(`#${dados.id} p`);
+			card.innerText = dados.conteudo;
 			break;
 		case "excluir card":
-			const card3 = document.getElementById(dados.id);
-			card3.remove();
+			card = document.getElementById(dados.id);
+			card.remove();
+			break;
+		case "editando tarefa":
+			console.log("entrou");
+			card = document.getElementById(dados.id);
+			card.classList.add("editavel");
+			break;
+		case "fechar modal":
+			card = document.getElementById(dados.id);
+			card.classList.remove("editavel");
+			break;
 	}
 });
 
@@ -56,15 +69,18 @@ project.addEventListener("change", () => {
 });
 
 function moveCard(data) {
-	const card = document.getElementById(data.card);
+	const card = document.getElementById(data.id);
 	const coluna = document.getElementById(data.coluna);
 	let alvo;
 	if (data.acima) {
 		alvo = document.getElementById(data.acima);
 		coluna.insertBefore(card, alvo);
+		card.classList.remove("arrastando");
 	} else {
 		alvo = document.querySelector(`#${data.coluna} button`);
+		console.log(alvo, card);
 		coluna.insertBefore(card, alvo);
+		card.classList.remove("arrastando");
 	}
 }
 
@@ -90,12 +106,13 @@ function createBoard() {
 	img.src = "../assets/icons/new-column.png";
 	addColumnBtn.append(img);
 	board.append(addColumnBtn);
-	createColumn();
-	createColumn();
+	createColumn(false);
+	createColumn(false);
 }
 
 /* Cria a coluna ao apertar o botão */
 function createColumn(send) {
+	console.log("send");
 	const board = document.querySelector(".quadro");
 	const column = document.createElement("div");
 	column.className = "coluna";

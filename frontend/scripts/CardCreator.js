@@ -43,6 +43,12 @@ export default class CardCreator {
 			const select = document.querySelector(".card-modal__move");
 			this.fillSelect(select, parent.id);
 			this.startCardModal();
+
+			const edit = {
+				tipo: "editando tarefa",
+				id: card.id,
+			};
+			ws.send(JSON.stringify(edit));
 		});
 
 		card.append(cardName, cardContent);
@@ -69,9 +75,18 @@ export default class CardCreator {
 	static cardDrag(card) {
 		card.addEventListener("dragstart", (event) => {
 			DragAndDrop.onDragStart(event);
+			card.classList.add("arrastando");
+			const move = {
+				tipo: "arrastando tarefa",
+				id: card.id,
+			};
+			ws.send(JSON.stringify(move));
 		});
 		card.addEventListener("drop", (event) => {
 			DragAndDrop.droppedOnColumnElement(event);
+		});
+		card.addEventListener("dragend", () => {
+			card.classList.remove("arrastando");
 		});
 	}
 
@@ -89,7 +104,7 @@ export default class CardCreator {
 
 			const move = {
 				tipo: "mover tarefa",
-				card: card.id,
+				id: card.id,
 				coluna: targetColumn,
 			};
 			ws.send(JSON.stringify(move));
@@ -117,32 +132,6 @@ export default class CardCreator {
 		});
 	}
 
-	/* Atualiza o menu de select de todos os cards */
-	/* static fillAllSelects() {
-		const targets = document.querySelectorAll(".card-modal__move");
-
-		targets.forEach((element) => {
-			element.innerHTML = "";
-			const atualLocation = this.clickedCard.coluna;
-			const selectText = document.createElement("option");
-			selectText.innerText = "Mover para";
-			selectText.value = "";
-			element.append(selectText);
-			const columns = document.querySelectorAll(".coluna");
-			columns.forEach((coluna) => {
-				if (coluna.id !== atualLocation.id) {
-					const name = document.querySelector(
-						`#${coluna.id} input`
-					).value;
-					const option = document.createElement("option");
-					option.innerText = name;
-					option.value = coluna.id;
-					element.append(option);
-				}
-			});
-		});
-	} */
-
 	static startCardModal() {
 		/* Show modal */
 		const modal = document.querySelector(".modal");
@@ -150,6 +139,11 @@ export default class CardCreator {
 		modal.addEventListener("click", (e) => {
 			if (e.target == modal) {
 				modal.classList.add("hidden");
+				const edit = {
+					tipo: "fechar modal",
+					id: this.clickedCard.id,
+				};
+				ws.send(JSON.stringify(edit));
 			}
 		});
 		const title = document.querySelector(".card-modal__nome");
@@ -188,6 +182,11 @@ export default class CardCreator {
 
 		if (activate) {
 			closeButton.addEventListener("click", () => {
+				const edit = {
+					tipo: "fechar modal",
+					id: this.clickedCard.id,
+				};
+				ws.send(JSON.stringify(edit));
 				modal.classList.add("hidden");
 			});
 
@@ -238,6 +237,11 @@ export default class CardCreator {
 				this.cardSelect(realCard);
 				this.fillSelect(select, realCard.parentElement);
 				modal.classList.add("hidden");
+				const edit = {
+					tipo: "fechar modal",
+					id: this.clickedCard.id,
+				};
+				ws.send(JSON.stringify(edit));
 			});
 		}
 	}

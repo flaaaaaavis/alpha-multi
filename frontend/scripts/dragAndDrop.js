@@ -24,7 +24,7 @@ export default class DragAndDrop {
 				dropzone.insertBefore(dragger, button);
 				const move = {
 					tipo: "mover tarefa",
-					card: dragger.id,
+					id: dragger.id,
 					coluna: button.parentElement.id,
 				};
 
@@ -37,6 +37,8 @@ export default class DragAndDrop {
 		const myColumn = event.currentTarget.parentElement;
 		if (myColumn.id != "") {
 			const card = event.currentTarget;
+
+			card.classList.remove("arrastando");
 
 			const id = event.dataTransfer.getData("text");
 			console.log(id);
