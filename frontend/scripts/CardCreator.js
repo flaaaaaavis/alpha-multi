@@ -1,5 +1,5 @@
 import DragAndDrop from "./dragAndDrop.js";
-import { ws } from "./Websocket.js";
+import { ws, sala } from "./Websocket.js";
 
 export default class CardCreator {
 	constructor() {
@@ -45,6 +45,7 @@ export default class CardCreator {
 			this.startCardModal();
 
 			const edit = {
+				sala: sala,
 				tipo: "editando tarefa",
 				id: card.id,
 			};
@@ -56,6 +57,7 @@ export default class CardCreator {
 
 		if (send) {
 			const cardObject = {
+				sala: sala,
 				tipo: "nova tarefa",
 				local: parent.id,
 				botao: targetButton.id,
@@ -77,6 +79,7 @@ export default class CardCreator {
 			DragAndDrop.onDragStart(event);
 			card.classList.add("arrastando");
 			const move = {
+				sala: sala,
 				tipo: "arrastando tarefa",
 				id: card.id,
 			};
@@ -103,6 +106,7 @@ export default class CardCreator {
 			card.value = targetColumn;
 
 			const move = {
+				sala: sala,
 				tipo: "mover tarefa",
 				id: card.id,
 				coluna: targetColumn,
@@ -140,6 +144,7 @@ export default class CardCreator {
 			if (e.target == modal) {
 				modal.classList.add("hidden");
 				const edit = {
+					sala: sala,
 					tipo: "fechar modal",
 					id: this.clickedCard.id,
 				};
@@ -183,6 +188,7 @@ export default class CardCreator {
 		if (activate) {
 			closeButton.addEventListener("click", () => {
 				const edit = {
+					sala: sala,
 					tipo: "fechar modal",
 					id: this.clickedCard.id,
 				};
@@ -198,6 +204,7 @@ export default class CardCreator {
 					realCard = document.getElementById(this.clickedCard.id);
 					realCard.remove();
 					const remove = {
+						sala: sala,
 						tipo: "excluir card",
 						id: this.clickedCard.id,
 					};
@@ -212,6 +219,7 @@ export default class CardCreator {
 				);
 				cardContent.innerText = content.value;
 				const change = {
+					sala: sala,
 					tipo: "mudança de conteudo - card",
 					id: this.clickedCard.id,
 					conteudo: content.value,
@@ -225,6 +233,7 @@ export default class CardCreator {
 				);
 				cardTitle.innerText = title.value;
 				const change = {
+					sala: sala,
 					tipo: "mudança de nome - card",
 					id: this.clickedCard.id,
 					nome: title.value,
@@ -238,6 +247,7 @@ export default class CardCreator {
 				this.fillSelect(select, realCard.parentElement);
 				modal.classList.add("hidden");
 				const edit = {
+					sala: sala,
 					tipo: "fechar modal",
 					id: this.clickedCard.id,
 				};

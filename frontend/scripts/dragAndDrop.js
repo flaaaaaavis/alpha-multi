@@ -1,4 +1,4 @@
-import { ws } from "./Websocket.js";
+import { ws, sala } from "./Websocket.js";
 
 export default class DragAndDrop {
 	constructor() {
@@ -23,6 +23,7 @@ export default class DragAndDrop {
 			if (dropzone.classList.contains("coluna")) {
 				dropzone.insertBefore(dragger, button);
 				const move = {
+					sala: sala,
 					tipo: "mover tarefa",
 					id: dragger.id,
 					coluna: button.parentElement.id,
@@ -46,6 +47,7 @@ export default class DragAndDrop {
 			if (myColumn.classList.contains("coluna")) {
 				myColumn.insertBefore(arrastavel, card);
 				const move = {
+					sala: sala,
 					tipo: "mover tarefa",
 					card: arrastavel.id,
 					coluna: myColumn.id,

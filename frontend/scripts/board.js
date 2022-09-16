@@ -1,10 +1,11 @@
 import DragAndDrop from "./dragAndDrop.js";
 import CardCreator from "./CardCreator.js";
 import Project from "./Project.js";
-import { ws } from "./Websocket.js";
+import { ws, sala } from "./Websocket.js";
 
 ws.addEventListener("open", () => {
 	console.log("conectado!!!");
+	ws.send(JSON.stringify({ room: sala }));
 });
 
 ws.addEventListener("message", ({ data }) => {
@@ -62,6 +63,7 @@ ws.addEventListener("message", ({ data }) => {
 const project = document.getElementById("nome-projeto");
 project.addEventListener("change", () => {
 	const newName = {
+		sala: sala,
 		tipo: "mudança de nome - quadro",
 		nome: project.value,
 	};
@@ -129,6 +131,7 @@ function createColumn(send) {
 	name.value = `Nova coluna ${columnCount}`;
 	name.addEventListener("change", () => {
 		const newName = {
+			sala: sala,
 			tipo: "mudança de nome - coluna",
 			id: column.id,
 			nome: name.value,
@@ -152,6 +155,7 @@ function createColumn(send) {
 	column.append(name, button);
 	board.insertBefore(column, document.querySelector(".adicionar-coluna"));
 	const newColumn = {
+		sala: sala,
 		tipo: "nova coluna",
 		id: column.id,
 		contagem: columnCount,

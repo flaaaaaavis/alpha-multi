@@ -24,10 +24,16 @@ wss.on("connection", (ws) => {
 
 	ws.on("message", (data) => {
 		const mensagem = JSON.parse(data);
+		if (mensagem.room) {
+			ws.room = mensagem.room;
+		}
 		console.log(mensagem);
 		wss.clients.forEach((client) => {
 			if (client !== ws && client.readyState === WebSocket.OPEN) {
-				client.send(JSON.stringify(mensagem));
+				console.log(client.room, mensagem.sala);
+				if (client.room == mensagem.sala) {
+					client.send(JSON.stringify(mensagem));
+				}
 			}
 		});
 	});
