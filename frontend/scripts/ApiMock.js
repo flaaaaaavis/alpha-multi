@@ -39,10 +39,34 @@ export default class ApiMock {
 		],
 	};
 
+	static users = [
+		{
+			username: "plinio",
+			email: "plinio@email.com",
+			password: "1234",
+		},
+		{
+			username: "juca",
+			email: "juca@email.com",
+			password: "1234",
+		},
+	];
+
 	static getBoard(id) {
 		if (id == this.board.id) {
 			return this.board;
 		}
 		return false;
+	}
+
+	static login(data) {
+		let retorno = false;
+		this.users.forEach((user) => {
+			if (data.email == user.email && data.password == user.password) {
+				console.log("entrou");
+				retorno = true;
+			}
+		});
+		return retorno;
 	}
 }
