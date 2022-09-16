@@ -16,14 +16,19 @@ export default class CardCreator {
 	/* conta os cards que já foram criados para utilizar como id (devo modificar no futuro) */
 	static cardCounter = 0;
 
+	static updateCardCounter(counter) {
+		this.cardCounter = counter;
+		console.log(this.cardCounter);
+	}
+
 	/* Cria a estrutura básica do card */
-	static createCard(target, send) {
+	static createCard(target, send, cardId = `arrastavel-${this.cardCounter}`) {
 		const targetButton = document.getElementById(target);
 		const parent = targetButton.parentElement;
 
 		const card = document.createElement("div");
 		card.className = "arrastavel";
-		card.id = `arrastavel-${this.cardCounter}`;
+		card.id = cardId;
 		card.draggable = true;
 
 		const cardName = document.createElement("h2");
@@ -62,7 +67,7 @@ export default class CardCreator {
 				local: parent.id,
 				botao: targetButton.id,
 				nome: "Nome da Tarefa",
-				id: `arrastavel-${this.cardCounter}`,
+				id: cardId,
 				conteudo: "Adicione o conteúdo",
 				membros: [],
 			};

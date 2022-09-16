@@ -2,11 +2,25 @@ import DragAndDrop from "./dragAndDrop.js";
 import CardCreator from "./CardCreator.js";
 import Project from "./Project.js";
 import { ws, sala } from "./Websocket.js";
+import ApiMock from "./ApiMock.js";
+import Render from "./Render.js";
 
 ws.addEventListener("open", () => {
 	console.log("conectado!!!");
 	ws.send(JSON.stringify({ room: sala }));
 });
+
+function startBoard() {
+	const board = ApiMock.getBoard(sala);
+	if (!board) {
+		Render.createBoard();
+	} else {
+		Render.createBoard();
+		Render.renderData(board);
+	}
+}
+
+startBoard();
 
 ws.addEventListener("message", ({ data }) => {
 	const dados = JSON.parse(data);
@@ -96,7 +110,7 @@ projectTitle.addEventListener("change", () => {
 	}
 });
 
-function createBoard() {
+/* function createBoard() {
 	const board = document.querySelector(".quadro");
 	projectTitle.value = "Novo quadro";
 	board.innerHTML = "";
@@ -110,10 +124,10 @@ function createBoard() {
 	board.append(addColumnBtn);
 	createColumn(false);
 	createColumn(false);
-}
+} */
 
 /* Cria a coluna ao apertar o botão */
-function createColumn(send) {
+/* function createColumn(send) {
 	console.log("send");
 	const board = document.querySelector(".quadro");
 	const column = document.createElement("div");
@@ -164,7 +178,7 @@ function createColumn(send) {
 		ws.send(JSON.stringify(newColumn));
 	}
 	columnCount++;
-}
+} */
 
 function menuControl() {
 	let menu = document.getElementById("sidebar-menu");
@@ -179,7 +193,7 @@ function menuControl() {
 	}
 }
 
-const openButton = document.getElementById("menu--button__open");
+/* const openButton = document.getElementById("menu--button__open");
 openButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	menuControl();
@@ -190,8 +204,8 @@ closeButton.addEventListener("click", (event) => {
 	menuControl();
 });
 
-createBoard();
+//createBoard();
 const addColumnButton = document.querySelector(".adicionar-coluna");
 addColumnButton.addEventListener("click", (event) => {
 	createColumn(true);
-});
+}); */
