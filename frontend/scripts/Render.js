@@ -1,4 +1,5 @@
 import CardCreator from "./CardCreator.js";
+import DragAndDrop from "./dragAndDrop.js";
 import { ws, sala } from "./Websocket.js";
 
 export default class Render {
@@ -22,6 +23,9 @@ export default class Render {
 		const img = document.createElement("img");
 		img.src = "../assets/icons/new-column.png";
 		addColumnBtn.append(img);
+		addColumnBtn.addEventListener("click", () => {
+			this.createColumn(true);
+		});
 		board.append(addColumnBtn);
 		this.createColumn(false);
 		this.createColumn(false);
@@ -82,6 +86,8 @@ export default class Render {
 
 	static renderData(data) {
 		data.columns.forEach((column) => {
+			const title = document.querySelector(`#${column.id} input`);
+			title.value = column.name;
 			column.cards.forEach((card) => {
 				const target = document.querySelector(`#${column.id} button`);
 				CardCreator.createCard(target.id, false, card.id);
@@ -91,6 +97,7 @@ export default class Render {
 				cardName.innerText = card.name;
 				const cardContent = document.querySelector(`#${card.id} p`);
 				cardContent.innerText = card.content;
+				CardCreator.updateCardMembers(card.members, card.id);
 			});
 		});
 		CardCreator.updateCardCounter(data.cardCount);

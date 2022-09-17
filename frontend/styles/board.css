@@ -536,13 +536,35 @@ img {
 	scroll-margin: 20px;
 }
 
+
+
+/* Notificações */
+
+.notifications{
+	display: flex;
+	right: 20px;
+	bottom: 20px;
+	width: 200px;
+	height: 30px;
+	font-weight: 600;
+	position: absolute;
+	text-align: center;
+	border-radius: 5px;
+	align-items: center;
+	justify-content: center;
+	animation-duration: 5s;
+	animation-fill-mode: forwards;
+	background-color: var(--white);
+	animation-name: notificacao-aparece;
+}
+
 .hidden {
 	display: none;
 }
 
 /* @media (min-width: 481px) {} */
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 768px) {
 	.arrastavel__menu{
 		display: none;
 	}

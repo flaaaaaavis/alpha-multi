@@ -12,6 +12,7 @@ loginButton.addEventListener("click", (e) => {
 	const request = ApiMock.login(user);
 	console.log(request);
 	if (request) {
+		localStorage.setItem("@dmkanban-user", JSON.stringify(request));
 		location.replace("./board.html");
 	} else {
 		alert("Usuário ou senha inválidos!");

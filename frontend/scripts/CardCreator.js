@@ -1,4 +1,5 @@
 import DragAndDrop from "./dragAndDrop.js";
+//import ApiMock from "./ApiMock.js";
 import { ws, sala } from "./Websocket.js";
 
 export default class CardCreator {
@@ -11,6 +12,7 @@ export default class CardCreator {
 		id: "",
 		titulo: "",
 		conteudo: "",
+		membros: [],
 	};
 
 	/* conta os cards que já foram criados para utilizar como id (devo modificar no futuro) */
@@ -19,6 +21,11 @@ export default class CardCreator {
 	static updateCardCounter(counter) {
 		this.cardCounter = counter;
 		console.log(this.cardCounter);
+	}
+
+	static updateCardMembers(members, id) {
+		const card = document.getElementById(id);
+		card.members = members;
 	}
 
 	/* Cria a estrutura básica do card */
@@ -169,6 +176,7 @@ export default class CardCreator {
 	}
 
 	static modalEvents(activate) {
+		//const board = ApiMock.getBoard(sala);
 		let realCard = document.getElementById(this.clickedCard.id);
 		/* Close modal */
 		const modal = document.querySelector(".modal");
@@ -179,6 +187,51 @@ export default class CardCreator {
 		cardModal.value = this.clickedCard.id;
 		const title = document.querySelector(".card-modal__nome");
 		title.value = this.clickedCard.titulo;
+
+		/* membros */
+		const cardMembers = document.getElementById("membros--lista-membros");
+		const membersModalList = document.getElementById(
+			"membros-modal--lista"
+		);
+		membersModalList.innerHTML = "";
+		cardMembers.innerHTML = "";
+		realCard.members.forEach((element) => {
+			const member = document.createElement("li");
+			member.innerText = element.username;
+			const tip = document.createElement("span");
+			tip.innerText = element.email;
+			tip.className = "tooltip";
+			member.append(tip);
+			cardMembers.appendChild(member);
+
+			const memberCard = document.createElement("li");
+			memberCard.className = "card-membros";
+			const memberName = document.createElement("p");
+			memberName.className = "text-2";
+			memberName.innerText = `${element.username} (${element.email})`;
+
+			const addMemberButton = document.createElement("button");
+			addMemberButton.className = "adicionar-btn";
+			addMemberButton.innerText = "+";
+
+			addMemberButton.addEventListener("click", () => {
+				console.log(`Adicionou ${element.username} a tarefa!`);
+			});
+
+			memberCard.append(memberName, addMemberButton);
+			membersModalList.appendChild(memberCard);
+		});
+		const addMembers = document.createElement("button");
+		addMembers.innerText = "+";
+		addMembers.className = "adicionar-btn";
+
+		addMembers.addEventListener("click", () => {
+			const membersModal = document.querySelector(".membros--modal");
+			membersModal.classList.toggle("hidden");
+		});
+		cardMembers.append(addMembers);
+
+		/* Membros modal */
 
 		/* Mudar conteudo do card */
 		const content = document.querySelector(".card-modal__conteudo");
