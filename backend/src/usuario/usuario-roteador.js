@@ -103,7 +103,7 @@ UserRouter.route('/login').post(jsonBodyParser, async (req, res) => {
         return res.status(400).json({ Error: `Missing request body` });
     }
     
-    for (let prop of ['coluna_id', 'nome', 'ordem', 'tags']) {
+    for (let prop of ['email', 'senha']) {
         if (req.body[prop] === undefined) {
         return res
             .status(400)
