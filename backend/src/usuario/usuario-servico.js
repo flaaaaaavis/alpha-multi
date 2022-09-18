@@ -8,7 +8,7 @@ export const UserService = {
 
         try {
 
-            const data = await pool.query(`SELECT * FROM usuarios WHERE id = ${id}`)
+            const data = await pool.query(`SELECT * FROM usuarios WHERE id = '${id}'`)
             return data.rows[0];
 
         } catch(e) {
@@ -22,7 +22,7 @@ export const UserService = {
 
         try {
 
-            const data = await pool.query(`SELECT * FROM usuarios WHERE email = ${email}`)
+            const data = await pool.query(`SELECT * FROM usuarios WHERE email = '${email}'`)
             return data.rows[0];
 
         } catch(e) {
@@ -71,7 +71,7 @@ export const UserService = {
 
         try {
 
-            const data = await pool.query(`DELETE FROM usuarios WHERE id = ${id}`)
+            const data = await pool.query(`DELETE FROM usuarios WHERE id = '${id}'`)
             return data.rows;
 
         } catch(e) {
