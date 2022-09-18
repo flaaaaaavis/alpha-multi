@@ -1,8 +1,8 @@
 import express from 'express';
 import jwt from "jsonwebtoken";
-import config from '../config';
-import hashPwd, { comparePwd } from '../hashPwd';
-import { UserService } from './usuario-servico';
+import config from '../config.js';
+import { hashPwd, comparePwd } from '../hashPwd.js';
+import { UserService } from './usuario-servico.js';
 
 const jsonBodyParser = express.json();
 const UserRouter = express.Router();
@@ -10,14 +10,14 @@ const UserRouter = express.Router();
 UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
     
     if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
+        return res.status(400).json({ error: `Missing request body` });
     }
     
     for (let prop of ['usuario', 'email', 'senha']) {
         if (req.body[prop] === undefined) {
         return res
             .status(400)
-            .json({ Error: `Missing '${prop}' property on request body` });
+            .json({ error: `Missing '${prop}' property on request body` });
         }
     }
 
@@ -34,7 +34,7 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
     if (dbRes) {
         res.status(201).json(dbRes);
     } else {
-        res.status(500).json({message:"Internal Server Error"});
+        res.status(500).json({error:"Internal Server Error"});
     }
         
 })
@@ -42,14 +42,14 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
 .patch(jsonBodyParser, async (req, res) => {
 
     if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
+        return res.status(400).json({ error: `Missing request body` });
     }
     
     for (let prop of ['email', 'usuario']) {
         if (req.body[prop] === undefined) {
         return res
             .status(400)
-            .json({ Error: `Missing '${prop}' property on request body` });
+            .json({ error: `Missing '${prop}' property on request body` });
         }
     }
 
@@ -68,7 +68,7 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
 
     } else {
         
-        res.status(500).json({message:"Internal Server Error"})
+        res.status(500).json({error:"Internal Server Error"})
 
     }
     
@@ -77,7 +77,7 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
 .delete(jsonBodyParser, async (req, res) => {
 
     if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
+        return res.status(400).json({ error: `Missing request body` });
     }
 
     const { id } = req.body;
@@ -90,7 +90,7 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
         
     } else {
 
-        res.status(500).json({message:"Internal Server Error"})
+        res.status(500).json({error:"Internal Server Error"})
 
     }
     
@@ -100,13 +100,13 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
 UserRouter.route('/').patch(jsonBodyParser, async (req, res) => {
 
     if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
+        return res.status(400).json({ error: `Missing request body` });
     }
     
     if (req.body['senha'] === undefined) {
         return res
             .status(400)
-            .json({ Error: `Missing 'senha' property on request body` });
+            .json({ error: `Missing 'senha' property on request body` });
     }
 
     const { id , senha } = req.body;
@@ -121,7 +121,7 @@ UserRouter.route('/').patch(jsonBodyParser, async (req, res) => {
 
     } else {
         
-        res.status(500).json({message:"Internal Server Error"})
+        res.status(500).json({error:"Internal Server Error"})
 
     }
     
@@ -130,14 +130,14 @@ UserRouter.route('/').patch(jsonBodyParser, async (req, res) => {
 UserRouter.route('/login').post(jsonBodyParser, async (req, res) => {
 
     if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
+        return res.status(400).json({ error: `Missing request body` });
     }
     
     for (let prop of ['email', 'senha']) {
         if (req.body[prop] === undefined) {
         return res
             .status(400)
-            .json({ Error: `Missing '${prop}' property on request body` });
+            .json({ error: `Missing '${prop}' property on request body` });
         }
     }
 
@@ -145,7 +145,7 @@ UserRouter.route('/login').post(jsonBodyParser, async (req, res) => {
 
     const usuario = await UserService.getUsuarioByEmail(email);
     if (!usuario.id) {
-        return res.status(400).json({ Error: `Email inválido` });
+        return res.status(400).json({ error: `Email inválido` });
     }
     
     if (comparePwd(senha, usuario.senha)) {
@@ -155,7 +155,7 @@ UserRouter.route('/login').post(jsonBodyParser, async (req, res) => {
         return res.json({ auth: true, token})
 
     } else {
-        return res.status(400).json({ Error: `Senha inválida` });
+        return res.status(400).json({ error: `Senha inválida` });
     }
 
 });

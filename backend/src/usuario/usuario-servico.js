@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-const { hashPwd } = require("../hashPwd");
-import { pool } from "../db"
+import { hashPwd } from '../hashPwd.js';
+import { pool } from "../db.js"
 
 
 export const UserService = {
