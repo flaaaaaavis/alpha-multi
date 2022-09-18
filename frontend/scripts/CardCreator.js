@@ -1,5 +1,5 @@
 import DragAndDrop from "./dragAndDrop.js";
-//import ApiMock from "./ApiMock.js";
+import ApiMock from "./ApiMock.js";
 import { ws, sala } from "./Websocket.js";
 
 export default class CardCreator {
@@ -30,7 +30,6 @@ export default class CardCreator {
 	/* Cria a estrutura básica do card */
 	static createCard(target, send, cardId = `arrastavel-${this.cardCounter}`) {
 		const targetButton = document.getElementById(target);
-		console.log(targetButton);
 		const parent = targetButton.parentElement;
 
 		const card = document.createElement("div");
@@ -151,10 +150,13 @@ export default class CardCreator {
 	static startCardModal() {
 		/* Show modal */
 		const modal = document.querySelector(".modal");
+		const membersModal = document.querySelector(".membros--modal");
+
 		modal.classList.remove("hidden");
 		modal.addEventListener("click", (e) => {
 			if (e.target == modal) {
 				modal.classList.add("hidden");
+				membersModal.classList.add("hidden");
 				const edit = {
 					sala: sala,
 					tipo: "fechar modal",
@@ -181,6 +183,7 @@ export default class CardCreator {
 		/* Close modal */
 		const modal = document.querySelector(".modal");
 		const closeButton = document.querySelector(".close");
+		const membersModal = document.querySelector(".membros--modal");
 
 		/* mudar titulo do card */
 		const cardModal = document.querySelector(".card-modal");
@@ -211,6 +214,7 @@ export default class CardCreator {
 				};
 				ws.send(JSON.stringify(edit));
 				modal.classList.add("hidden");
+				membersModal.classList.add("hidden");
 			});
 
 			deleteBtn.addEventListener("click", (e) => {
@@ -227,6 +231,7 @@ export default class CardCreator {
 					};
 					ws.send(JSON.stringify(remove));
 					modal.classList.add("hidden");
+					membersModal.classList.add("hidden");
 				}
 			});
 
@@ -263,6 +268,7 @@ export default class CardCreator {
 				this.cardSelect(realCard);
 				this.fillSelect(select, realCard.parentElement);
 				modal.classList.add("hidden");
+				membersModal.classList.add("hidden");
 				const edit = {
 					sala: sala,
 					tipo: "fechar modal",
@@ -286,35 +292,63 @@ export default class CardCreator {
 			member.innerText = element.username;
 			member.title = element.email;
 			cardMembers.appendChild(member);
-
-			const memberCard = document.createElement("li");
-			memberCard.className = "card-membros";
-			const memberName = document.createElement("p");
-			memberName.className = "text-2";
-			memberName.innerText = `${element.username} (${element.email})`;
-
-			const addMemberButton = document.createElement("button");
-			addMemberButton.className = "adicionar-btn";
-			addMemberButton.innerText = "+";
-
-			addMemberButton.addEventListener("click", () => {
-				console.log(`Adicionou ${element.username} a tarefa!`);
-			});
-
-			memberCard.append(memberName, addMemberButton);
-			membersModalList.appendChild(memberCard);
 		});
+
 		const addMembers = document.createElement("button");
 		addMembers.innerText = "+";
 		addMembers.className = "adicionar-btn";
 
 		addMembers.addEventListener("click", () => {
+			this.renderMembersModal(card);
 			membersModal.classList.toggle("hidden");
 		});
 		cardMembers.append(addMembers);
 		const close = document.querySelector(".close-2");
 		close.addEventListener("click", () => {
 			membersModal.classList.add("hidden");
+		});
+	}
+
+	static renderMembersModal(card) {
+		const boardMembers = ApiMock.board.members;
+		const membersModal = document.querySelector(".membros--modal");
+		const membersModalList = document.getElementById(
+			"membros-modal--lista"
+		);
+		membersModalList.innerHTML = "";
+		boardMembers.forEach((element) => {
+			const memberCard = document.createElement("li");
+			memberCard.className = "card-membros";
+			const memberName = document.createElement("p");
+			memberName.className = "text-2";
+			memberName.innerText = `${element.username} (${element.email})`;
+			memberCard.append(memberName);
+			card.members.forEach((user) => {
+				if (user.username !== element.username) {
+					console.log("add", user.username, element.username);
+					const addMemberButton = document.createElement("button");
+					addMemberButton.className = "adicionar-btn";
+					addMemberButton.innerText = "+";
+					addMemberButton.addEventListener("click", () => {
+						card.members.push(element);
+						membersModal.classList.add("hidden");
+					});
+					memberCard.append(addMemberButton);
+				} else {
+					console.log("remove", user.username, element.username);
+					const removeMemberButton = document.createElement("button");
+					removeMemberButton.className = "remover-btn";
+					removeMemberButton.innerText = "-";
+
+					removeMemberButton.addEventListener("click", () => {
+						card.members.splice(card.members.indexOf(user), 1);
+						membersModal.classList.add("hidden");
+					});
+					memberCard.append(removeMemberButton);
+				}
+			});
+
+			membersModalList.appendChild(memberCard);
 		});
 	}
 }

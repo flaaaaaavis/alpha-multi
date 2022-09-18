@@ -1,10 +1,33 @@
 import CardCreator from "./CardCreator.js";
-import Project from "./Project.js";
 import { ws, sala } from "./Websocket.js";
 import ApiMock from "./ApiMock.js";
 import Render from "./Render.js";
+import Api from "./Api.js";
 
 const user = JSON.parse(localStorage.getItem("@dmkanban-user"));
+let projectId;
+
+const newProject = document.getElementById("your-boards__new-board-button");
+newProject.addEventListener("click", async () => {
+	const project = {
+		nome: "novo projeto",
+	};
+	projectId = await Api.createProject(project);
+	localStorage.setItem("@dm-kanban:id", projectId);
+	console.log(projectId);
+});
+
+const deleteProject = document.getElementById("your-boards--delete");
+deleteProject.addEventListener("click", async (e) => {
+	e.preventDefault();
+	const project = {
+		id: projectId,
+	};
+	const request = await Api.deleteProject(project);
+	console.log(request);
+});
+
+/* Conectar ao websocket */
 
 ws.addEventListener("open", () => {
 	console.log("conectado!!!");
@@ -17,6 +40,7 @@ ws.addEventListener("open", () => {
 	ws.send(JSON.stringify(newUser));
 });
 
+/* renderizar o projeto */
 function startBoard() {
 	const board = ApiMock.getBoard(sala);
 	if (!board) {
@@ -28,6 +52,8 @@ function startBoard() {
 }
 
 startBoard();
+
+/* Respostas do websocket */
 
 ws.addEventListener("message", ({ data }) => {
 	const dados = JSON.parse(data);
@@ -97,7 +123,12 @@ ws.addEventListener("message", ({ data }) => {
 });
 
 const project = document.getElementById("nome-projeto");
-project.addEventListener("change", () => {
+project.addEventListener("change", async () => {
+	const request = await Api.modifyProject({
+		nome: project.value,
+		id: projectId,
+	});
+	console.log(request);
 	const newName = {
 		sala: sala,
 		tipo: "mudança de nome - quadro",
@@ -123,13 +154,6 @@ function moveCard(data) {
 		card.classList.remove("arrastando");
 	}
 }
-
-const projectTitle = document.getElementById("nome-projeto");
-projectTitle.addEventListener("change", () => {
-	if (projectTitle.value.trim() != "") {
-		Project.changeName(projectTitle.value.trim());
-	}
-});
 
 function menuControl() {
 	let menu = document.getElementById("sidebar-menu");

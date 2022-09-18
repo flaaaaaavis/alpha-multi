@@ -1,7 +1,16 @@
 export default class ApiMock {
 	static board = {
 		name: "kanban Board",
-		members: ["plinio", "juca"],
+		members: [
+			{
+				username: "plinio",
+				email: "plinio@email.com",
+			},
+			{
+				username: "juca",
+				email: "juca@email.com",
+			},
+		],
 		id: "123",
 		cardCount: 5,
 		columns: [

@@ -1,6 +1,7 @@
 import CardCreator from "./CardCreator.js";
 import DragAndDrop from "./dragAndDrop.js";
 import { ws, sala } from "./Websocket.js";
+import Api from "./Api.js";
 
 export default class Render {
 	static columnCount = 1;
@@ -8,11 +9,6 @@ export default class Render {
 
 	static createBoard() {
 		const projectTitle = document.getElementById("nome-projeto");
-		projectTitle.addEventListener("change", () => {
-			if (projectTitle.value.trim() != "") {
-				Project.changeName(projectTitle.value.trim());
-			}
-		});
 		const board = document.querySelector(".quadro");
 		projectTitle.value = "Novo quadro";
 		board.innerHTML = "";
@@ -31,12 +27,13 @@ export default class Render {
 		this.createColumn(false);
 	}
 
-	static createColumn(send) {
+	static async createColumn(send) {
 		console.log("send");
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
 		column.id = `coluna-${this.columnCount}`;
+		column.value = this.columnCount;
 		column.addEventListener("drop", (event) => {
 			DragAndDrop.onDrop(event);
 		});
@@ -49,7 +46,17 @@ export default class Render {
 		const name = document.createElement("input");
 		name.placeholder = "nome da coluna";
 		name.value = `Nova coluna ${this.columnCount}`;
-		name.addEventListener("change", () => {
+		name.addEventListener("change", async () => {
+			const id = localStorage.getItem("@dm-kanban:id");
+			const change = {
+				projeto_id: id,
+				nome: name.value,
+				ordem: this.columnCount,
+				id: column.value,
+			};
+			const request = await Api.modifyCategory(change, column.value);
+			console.log(request);
+
 			const newName = {
 				sala: sala,
 				tipo: "mudança de nome - coluna",
@@ -62,12 +69,17 @@ export default class Render {
 		deleteBtn.className = "botao-delete";
 		const btnImg = document.createElement("img");
 		btnImg.src = "../assets/icons/delete.png";
-		deleteBtn.addEventListener("click", () => {
+		deleteBtn.addEventListener("click", async () => {
 			if (
 				confirm(
 					"Tem certeza que deseja excluir a coluna? Ela e todos os dados que ela contém serão perdidos!"
 				) == true
 			) {
+				const change = {
+					id: column.value,
+				};
+				const request = await Api.deleteCategory(change, column.value);
+				console.log(request);
 				column.remove();
 				const removeColumn = {
 					sala: sala,
