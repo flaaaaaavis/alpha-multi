@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from "jsonwebtoken";
 import config from '../config';
-import { comparePwd } from '../hashPwd';
+import hashPwd, { comparePwd } from '../hashPwd';
 import { UserService } from './usuario-servico';
 
 const jsonBodyParser = express.json();
@@ -45,7 +45,7 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
         return res.status(400).json({ Error: `Missing request body` });
     }
     
-    for (let prop of ['email', 'senha']) {
+    for (let prop of ['email', 'usuario']) {
         if (req.body[prop] === undefined) {
         return res
             .status(400)
@@ -96,6 +96,36 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
     
    
 });
+
+UserRouter.route('/').patch(jsonBodyParser, async (req, res) => {
+
+    if (!req.body) {
+        return res.status(400).json({ Error: `Missing request body` });
+    }
+    
+    if (req.body['senha'] === undefined) {
+        return res
+            .status(400)
+            .json({ Error: `Missing 'senha' property on request body` });
+    }
+
+    const { id , senha } = req.body;
+
+    const novaSenha = hashPwd(senha)
+
+    const dbRes = await UserService.updateUsuarioSenha(id, novaSenha);
+
+    if (dbRes) {
+        
+        res.status(201).json(dbRes); 
+
+    } else {
+        
+        res.status(500).json({message:"Internal Server Error"})
+
+    }
+    
+})
 
 UserRouter.route('/login').post(jsonBodyParser, async (req, res) => {
 

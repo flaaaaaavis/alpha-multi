@@ -80,6 +80,22 @@ export const UserService = {
 
         }
 
+    },
+    async updateUsuarioSenha(id, novaSenha) {
+
+        try {           
+
+            const query = `UPDATE usuarios SET senha = ($1) WHERE id = ($2);`;
+            const values = [novaSenha, id];
+            const data = await pool.query(query, values)
+            return data.rows;
+
+        } catch(e) {
+
+            console.log(e)
+
+        }
+
     }
 
 }
