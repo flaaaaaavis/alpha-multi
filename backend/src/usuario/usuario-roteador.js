@@ -97,7 +97,7 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
    
 });
 
-UserRouter.route('/').patch(jsonBodyParser, async (req, res) => {
+UserRouter.route('/senha').patch(jsonBodyParser, async (req, res) => {
 
     if (!req.body) {
         return res.status(400).json({ error: `Missing request body` });
