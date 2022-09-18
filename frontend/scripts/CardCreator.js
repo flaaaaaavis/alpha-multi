@@ -20,7 +20,6 @@ export default class CardCreator {
 
 	static updateCardCounter(counter) {
 		this.cardCounter = counter;
-		console.log(this.cardCounter);
 	}
 
 	static updateCardMembers(members, id) {
@@ -31,6 +30,7 @@ export default class CardCreator {
 	/* Cria a estrutura básica do card */
 	static createCard(target, send, cardId = `arrastavel-${this.cardCounter}`) {
 		const targetButton = document.getElementById(target);
+		console.log(targetButton);
 		const parent = targetButton.parentElement;
 
 		const card = document.createElement("div");
@@ -189,49 +189,8 @@ export default class CardCreator {
 		title.value = this.clickedCard.titulo;
 
 		/* membros */
-		const cardMembers = document.getElementById("membros--lista-membros");
-		const membersModalList = document.getElementById(
-			"membros-modal--lista"
-		);
-		membersModalList.innerHTML = "";
-		cardMembers.innerHTML = "";
-		realCard.members.forEach((element) => {
-			const member = document.createElement("li");
-			member.innerText = element.username;
-			const tip = document.createElement("span");
-			tip.innerText = element.email;
-			tip.className = "tooltip";
-			member.append(tip);
-			cardMembers.appendChild(member);
 
-			const memberCard = document.createElement("li");
-			memberCard.className = "card-membros";
-			const memberName = document.createElement("p");
-			memberName.className = "text-2";
-			memberName.innerText = `${element.username} (${element.email})`;
-
-			const addMemberButton = document.createElement("button");
-			addMemberButton.className = "adicionar-btn";
-			addMemberButton.innerText = "+";
-
-			addMemberButton.addEventListener("click", () => {
-				console.log(`Adicionou ${element.username} a tarefa!`);
-			});
-
-			memberCard.append(memberName, addMemberButton);
-			membersModalList.appendChild(memberCard);
-		});
-		const addMembers = document.createElement("button");
-		addMembers.innerText = "+";
-		addMembers.className = "adicionar-btn";
-
-		addMembers.addEventListener("click", () => {
-			const membersModal = document.querySelector(".membros--modal");
-			membersModal.classList.toggle("hidden");
-		});
-		cardMembers.append(addMembers);
-
-		/* Membros modal */
+		this.renderMembers(realCard);
 
 		/* Mudar conteudo do card */
 		const content = document.querySelector(".card-modal__conteudo");
@@ -312,5 +271,50 @@ export default class CardCreator {
 				ws.send(JSON.stringify(edit));
 			});
 		}
+	}
+
+	static renderMembers(card) {
+		const membersModal = document.querySelector(".membros--modal");
+		const cardMembers = document.getElementById("membros--lista-membros");
+		const membersModalList = document.getElementById(
+			"membros-modal--lista"
+		);
+		membersModalList.innerHTML = "";
+		cardMembers.innerHTML = "";
+		card.members.forEach((element) => {
+			const member = document.createElement("li");
+			member.innerText = element.username;
+			member.title = element.email;
+			cardMembers.appendChild(member);
+
+			const memberCard = document.createElement("li");
+			memberCard.className = "card-membros";
+			const memberName = document.createElement("p");
+			memberName.className = "text-2";
+			memberName.innerText = `${element.username} (${element.email})`;
+
+			const addMemberButton = document.createElement("button");
+			addMemberButton.className = "adicionar-btn";
+			addMemberButton.innerText = "+";
+
+			addMemberButton.addEventListener("click", () => {
+				console.log(`Adicionou ${element.username} a tarefa!`);
+			});
+
+			memberCard.append(memberName, addMemberButton);
+			membersModalList.appendChild(memberCard);
+		});
+		const addMembers = document.createElement("button");
+		addMembers.innerText = "+";
+		addMembers.className = "adicionar-btn";
+
+		addMembers.addEventListener("click", () => {
+			membersModal.classList.toggle("hidden");
+		});
+		cardMembers.append(addMembers);
+		const close = document.querySelector(".close-2");
+		close.addEventListener("click", () => {
+			membersModal.classList.add("hidden");
+		});
 	}
 }

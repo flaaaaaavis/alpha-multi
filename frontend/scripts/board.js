@@ -49,6 +49,10 @@ ws.addEventListener("message", ({ data }) => {
 			card = document.getElementById(dados.id);
 			card.classList.add("arrastando");
 			break;
+		case "apagar coluna":
+			const apagar = document.getElementById(dados.id);
+			apagar.remove();
+			break;
 		case "mover tarefa":
 			moveCard(dados);
 			break;
@@ -103,8 +107,10 @@ project.addEventListener("change", () => {
 });
 
 function moveCard(data) {
+	console.log(data);
 	const card = document.getElementById(data.id);
 	const coluna = document.getElementById(data.coluna);
+	console.log(card, coluna);
 	let alvo;
 	if (data.acima) {
 		alvo = document.getElementById(data.acima);

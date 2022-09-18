@@ -44,6 +44,8 @@ export default class Render {
 			DragAndDrop.onDragOver(event);
 		});
 
+		const header = document.createElement("header");
+		header.className = "coluna--header";
 		const name = document.createElement("input");
 		name.placeholder = "nome da coluna";
 		name.value = `Nova coluna ${this.columnCount}`;
@@ -56,6 +58,29 @@ export default class Render {
 			};
 			ws.send(JSON.stringify(newName));
 		});
+		const deleteBtn = document.createElement("button");
+		deleteBtn.className = "botao-delete";
+		const btnImg = document.createElement("img");
+		btnImg.src = "../assets/icons/delete.png";
+		deleteBtn.addEventListener("click", () => {
+			if (
+				confirm(
+					"Tem certeza que deseja excluir a coluna? Ela e todos os dados que ela contém serão perdidos!"
+				) == true
+			) {
+				column.remove();
+				const removeColumn = {
+					sala: sala,
+					tipo: "apagar coluna",
+					id: column.id,
+				};
+				ws.send(JSON.stringify(removeColumn));
+			}
+		});
+
+		deleteBtn.append(btnImg);
+		header.append(name, deleteBtn);
+
 		const button = document.createElement("button");
 		button.className = "adicionar-card";
 		button.id = `add-card-${this.addCardCount}`;
@@ -70,7 +95,7 @@ export default class Render {
 			CardCreator.createCard(button.id, true);
 		});
 
-		column.append(name, button);
+		column.append(header, button);
 		board.insertBefore(column, document.querySelector(".adicionar-coluna"));
 		const newColumn = {
 			sala: sala,
@@ -89,7 +114,9 @@ export default class Render {
 			const title = document.querySelector(`#${column.id} input`);
 			title.value = column.name;
 			column.cards.forEach((card) => {
-				const target = document.querySelector(`#${column.id} button`);
+				const target = document.querySelector(
+					`#${column.id} .adicionar-card`
+				);
 				CardCreator.createCard(target.id, false, card.id);
 				const cardName = document.querySelector(
 					`#${card.id} .nome__card`

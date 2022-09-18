@@ -49,7 +49,7 @@ export default class DragAndDrop {
 				const move = {
 					sala: sala,
 					tipo: "mover tarefa",
-					card: arrastavel.id,
+					id: arrastavel.id,
 					coluna: myColumn.id,
 					acima: card.id,
 				};
