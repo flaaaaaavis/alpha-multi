@@ -1,5 +1,6 @@
 import DragAndDrop from "./dragAndDrop.js";
-import { ws } from "./Websocket.js";
+import ApiMock from "./ApiMock.js";
+import { ws, sala } from "./Websocket.js";
 
 export default class CardCreator {
 	constructor() {
@@ -11,19 +12,29 @@ export default class CardCreator {
 		id: "",
 		titulo: "",
 		conteudo: "",
+		membros: [],
 	};
 
 	/* conta os cards que já foram criados para utilizar como id (devo modificar no futuro) */
 	static cardCounter = 0;
 
+	static updateCardCounter(counter) {
+		this.cardCounter = counter;
+	}
+
+	static updateCardMembers(members, id) {
+		const card = document.getElementById(id);
+		card.members = members;
+	}
+
 	/* Cria a estrutura básica do card */
-	static createCard(target, send) {
+	static createCard(target, send, cardId = `arrastavel-${this.cardCounter}`) {
 		const targetButton = document.getElementById(target);
 		const parent = targetButton.parentElement;
 
 		const card = document.createElement("div");
 		card.className = "arrastavel";
-		card.id = `arrastavel-${this.cardCounter}`;
+		card.id = cardId;
 		card.draggable = true;
 
 		const cardName = document.createElement("h2");
@@ -43,6 +54,13 @@ export default class CardCreator {
 			const select = document.querySelector(".card-modal__move");
 			this.fillSelect(select, parent.id);
 			this.startCardModal();
+
+			const edit = {
+				sala: sala,
+				tipo: "editando tarefa",
+				id: card.id,
+			};
+			ws.send(JSON.stringify(edit));
 		});
 
 		card.append(cardName, cardContent);
@@ -50,11 +68,12 @@ export default class CardCreator {
 
 		if (send) {
 			const cardObject = {
+				sala: sala,
 				tipo: "nova tarefa",
 				local: parent.id,
 				botao: targetButton.id,
 				nome: "Nome da Tarefa",
-				id: `arrastavel-${this.cardCounter}`,
+				id: cardId,
 				conteudo: "Adicione o conteúdo",
 				membros: [],
 			};
@@ -69,10 +88,19 @@ export default class CardCreator {
 	static cardDrag(card) {
 		card.addEventListener("dragstart", (event) => {
 			DragAndDrop.onDragStart(event);
+			card.classList.add("arrastando");
+			const move = {
+				sala: sala,
+				tipo: "arrastando tarefa",
+				id: card.id,
+			};
+			ws.send(JSON.stringify(move));
 		});
 		card.addEventListener("drop", (event) => {
 			DragAndDrop.droppedOnColumnElement(event);
-			CardCreator.fillAllSelects();
+		});
+		card.addEventListener("dragend", () => {
+			card.classList.remove("arrastando");
 		});
 	}
 
@@ -83,16 +111,26 @@ export default class CardCreator {
 		const targetColumn = select.value;
 
 		if (targetColumn.trim() != "" && targetColumn != atualColumn) {
-			const query = document.querySelector(`#${targetColumn} button`);
+			const query = document.querySelector(
+				`#${targetColumn} .adicionar-card`
+			);
 			const newColumn = document.getElementById(targetColumn);
+
 			newColumn.insertBefore(card, query);
 			card.value = targetColumn;
 
 			const move = {
+				sala: sala,
 				tipo: "mover tarefa",
-				card: card.id,
+				id: card.id,
 				coluna: targetColumn,
 			};
+			const edit = {
+				sala: sala,
+				tipo: "fechar modal",
+				id: card.id,
+			};
+			ws.send(JSON.stringify(edit));
 			ws.send(JSON.stringify(move));
 		}
 	}
@@ -118,39 +156,20 @@ export default class CardCreator {
 		});
 	}
 
-	/* Atualiza o menu de select de todos os cards */
-	/* static fillAllSelects() {
-		const targets = document.querySelectorAll(".card-modal__move");
-
-		targets.forEach((element) => {
-			element.innerHTML = "";
-			const atualLocation = this.clickedCard.coluna;
-			const selectText = document.createElement("option");
-			selectText.innerText = "Mover para";
-			selectText.value = "";
-			element.append(selectText);
-			const columns = document.querySelectorAll(".coluna");
-			columns.forEach((coluna) => {
-				if (coluna.id !== atualLocation.id) {
-					const name = document.querySelector(
-						`#${coluna.id} input`
-					).value;
-					const option = document.createElement("option");
-					option.innerText = name;
-					option.value = coluna.id;
-					element.append(option);
-				}
-			});
-		});
-	} */
-
 	static startCardModal() {
 		/* Show modal */
 		const modal = document.querySelector(".modal");
+
 		modal.classList.remove("hidden");
 		modal.addEventListener("click", (e) => {
 			if (e.target == modal) {
 				modal.classList.add("hidden");
+				const edit = {
+					sala: sala,
+					tipo: "fechar modal",
+					id: this.clickedCard.id,
+				};
+				ws.send(JSON.stringify(edit));
 			}
 		});
 		const title = document.querySelector(".card-modal__nome");
@@ -159,12 +178,14 @@ export default class CardCreator {
 		content.value = this.clickedCard.conteudo;
 		if (this.cardFirstOpened) {
 			this.modalEvents(true);
+			this.cardFirstOpened = false;
 		} else {
 			this.modalEvents(false);
 		}
 	}
 
 	static modalEvents(activate) {
+		//const board = ApiMock.getBoard(sala);
 		let realCard = document.getElementById(this.clickedCard.id);
 		/* Close modal */
 		const modal = document.querySelector(".modal");
@@ -175,6 +196,10 @@ export default class CardCreator {
 		cardModal.value = this.clickedCard.id;
 		const title = document.querySelector(".card-modal__nome");
 		title.value = this.clickedCard.titulo;
+
+		/* membros */
+
+		this.renderMembers(realCard);
 
 		/* Mudar conteudo do card */
 		const content = document.querySelector(".card-modal__conteudo");
@@ -188,6 +213,12 @@ export default class CardCreator {
 
 		if (activate) {
 			closeButton.addEventListener("click", () => {
+				const edit = {
+					sala: sala,
+					tipo: "fechar modal",
+					id: this.clickedCard.id,
+				};
+				ws.send(JSON.stringify(edit));
 				modal.classList.add("hidden");
 			});
 
@@ -196,8 +227,10 @@ export default class CardCreator {
 				if (
 					confirm("Tem certeza que deseja excluir esse card?") == true
 				) {
+					realCard = document.getElementById(this.clickedCard.id);
 					realCard.remove();
 					const remove = {
+						sala: sala,
 						tipo: "excluir card",
 						id: this.clickedCard.id,
 					};
@@ -212,6 +245,7 @@ export default class CardCreator {
 				);
 				cardContent.innerText = content.value;
 				const change = {
+					sala: sala,
 					tipo: "mudança de conteudo - card",
 					id: this.clickedCard.id,
 					conteudo: content.value,
@@ -225,6 +259,7 @@ export default class CardCreator {
 				);
 				cardTitle.innerText = title.value;
 				const change = {
+					sala: sala,
 					tipo: "mudança de nome - card",
 					id: this.clickedCard.id,
 					nome: title.value,
@@ -233,11 +268,103 @@ export default class CardCreator {
 			});
 
 			select.addEventListener("change", () => {
+				console.log("x");
 				realCard = document.getElementById(this.clickedCard.id);
 				this.cardSelect(realCard);
 				this.fillSelect(select, realCard.parentElement);
 				modal.classList.add("hidden");
+				membersModal.classList.add("hidden");
+				const edit = {
+					sala: sala,
+					tipo: "fechar modal",
+					id: this.clickedCard.id,
+				};
+				ws.send(JSON.stringify(edit));
 			});
 		}
+	}
+
+	static createMembersModal(card) {
+		const boardMembers = ApiMock.board.members;
+		const target = document.querySelector("#membros--lista-membros");
+
+		const membersModal = document.createElement("div");
+		membersModal.className = "membros--modal";
+
+		const modalHeader = document.createElement("header");
+		const headerTitle = document.createElement("h2");
+		headerTitle.className = "text-1";
+		headerTitle.innerText = "Membros";
+
+		const modalClose = document.createElement("span");
+		modalClose.innerText = "X";
+		modalClose.addEventListener("click", () => {
+			membersModal.remove();
+		});
+
+		modalHeader.append(headerTitle, modalClose);
+
+		const cardMembers = document.createElement("h3");
+		cardMembers.className = "text-2";
+		cardMembers.innerText = "Membros do quadro";
+
+		const membersList = document.createElement("ul");
+		membersList.className = "membros-modal--lista";
+
+		boardMembers.forEach((element) => {
+			const memberCard = document.createElement("li");
+			memberCard.className = "card-membros";
+			const memberName = document.createElement("p");
+			memberName.className = "text-2";
+			memberName.innerText = `${element.username} (${element.email})`;
+			memberCard.append(memberName);
+			if (!card.members.some((e) => e.username === element.username)) {
+				const addMemberButton = document.createElement("button");
+				addMemberButton.className = "adicionar-btn";
+				addMemberButton.innerText = "+";
+				addMemberButton.addEventListener("click", () => {
+					card.members.push(element);
+					membersModal.remove();
+					this.renderMembers(card);
+					this.createMembersModal(card);
+				});
+				memberCard.append(addMemberButton);
+			} else {
+				const removeMemberButton = document.createElement("button");
+				removeMemberButton.className = "remover-btn";
+				removeMemberButton.innerText = "-";
+
+				removeMemberButton.addEventListener("click", () => {
+					card.members.splice(card.members.indexOf(element), 1);
+					membersModal.remove();
+					this.renderMembers(card);
+					this.createMembersModal(card);
+				});
+				memberCard.append(removeMemberButton);
+			}
+
+			membersList.appendChild(memberCard);
+		});
+
+		membersModal.append(modalHeader, membersList);
+		target.after(membersModal);
+	}
+
+	static renderMembers(realCard) {
+		const cardMembers = document.getElementById("membros--lista-membros");
+		cardMembers.innerHTML = "";
+		realCard.members.forEach((element) => {
+			const taskMember = document.createElement("li");
+			taskMember.innerText = element.username;
+			taskMember.title = element.email;
+			cardMembers.append(taskMember);
+		});
+		const addMemberButton = document.createElement("button");
+		addMemberButton.innerText = "+";
+		addMemberButton.className = "adicionar-btn";
+		cardMembers.append(addMemberButton);
+		addMemberButton.addEventListener("click", () => {
+			this.createMembersModal(realCard);
+		});
 	}
 }

@@ -15,7 +15,6 @@
 body {
 	height: fit-content;
 	overflow-x: hidden;
-
 	background-color: #202AD0;
 	background-image: url('../assets/logos/background.svg');
 	background-repeat: repeat;
@@ -379,6 +378,9 @@ img {
 	scroll-snap-align: start;
 
 	background-color: var(--white);
+
+	animation-duration: 0.6s;
+	animation-name: coluna-aparece;
 }
 @media (min-width: 481px) {
 	.coluna {
@@ -392,11 +394,26 @@ img {
 }
 
 /* Nome da coluna */
-.coluna > input {
-	width: 70%;
+
+.coluna header{
+	position: relative;
+	display: flex;
+	width: 90%;
 	height: 50px;
 	margin-top: 30px;
 	padding-bottom: 10px;
+	justify-content: center;
+	align-items: center;
+
+	background: linear-gradient(to right, black 25%, rgba(255, 255, 255, 0) 0%);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	background-size: 10px 1px;
+}
+
+.coluna header > input {
+	width: 70%;
+	align-self: center;
 
 	font-style: normal;
 	font-weight: 300;
@@ -405,31 +422,51 @@ img {
 	text-align: center;
 	color: var(--blue);
 
-	background: linear-gradient(to right, black 25%, rgba(255, 255, 255, 0) 0%);
-	background-position: bottom;
-	background-repeat: repeat-x;
-	background-size: 10px 1px;
+
 }
 
+.botao-delete{
+	position: absolute;
+	right: 10px;
+	border-radius: 50%;
+	padding: 5px;
+	width: 30px;
+	height: 30px;
+}
+
+.botao-delete img {
+	object-fit: contain;
+	width: 20px;
+	height: 20px;
+}
 /* Card que pode ser arrastado */
 .arrastavel {
 	width: 90%;
-	height: 100px;
-	margin-top: 10px;
-	padding: 10px;
-	position: relative;
-
 	cursor: grab;
-
 	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
-
-	background-color: #FF9A98;
-	border-radius: 5px;
-
+	height: 100px;
+	padding: 10px;
 	transition: 0.4s;
+	margin-top: 10px;
+	border-radius: 5px;
+	position: relative;
+	align-items: center;
+	flex-direction: column;
+	animation-duration: 0.6s;
+	animation-name: cartao-aparece;
+	background-color: #FF9A98;
+	justify-content: space-around;
+	border: 4px solid transparent;
+}
+
+.arrastando{
+	opacity: 0.3;
+	cursor: move;
+}
+
+.editavel{
+	transition: 1s;
+	border: 4px solid var(--grey);
 }
 
 .dropzone {
@@ -525,13 +562,35 @@ img {
 	scroll-margin: 20px;
 }
 
+
+
+/* Notificações */
+
+.notifications{
+	display: flex;
+	right: 20px;
+	bottom: 20px;
+	width: 200px;
+	height: 30px;
+	font-weight: 600;
+	position: absolute;
+	text-align: center;
+	border-radius: 5px;
+	align-items: center;
+	justify-content: center;
+	animation-duration: 5s;
+	animation-fill-mode: forwards;
+	background-color: var(--white);
+	animation-name: notificacao-aparece;
+}
+
 .hidden {
 	display: none;
 }
 
 /* @media (min-width: 481px) {} */
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 768px) {
 	.arrastavel__menu{
 		display: none;
 	}

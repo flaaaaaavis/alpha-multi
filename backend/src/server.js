@@ -1,5 +1,6 @@
-import { app } from "./app.js";
 import config from "./config.js";
+import { app } from "./app.js";
+
 import { pool } from "./db.js";
 const { PORT } = config;
 import { v4 } from "uuid";
@@ -24,10 +25,16 @@ wss.on("connection", (ws) => {
 
 	ws.on("message", (data) => {
 		const mensagem = JSON.parse(data);
+		if (mensagem.room) {
+			ws.room = mensagem.room;
+		}
 		console.log(mensagem);
 		wss.clients.forEach((client) => {
 			if (client !== ws && client.readyState === WebSocket.OPEN) {
-				client.send(JSON.stringify(mensagem));
+				console.log(client.room, mensagem.sala);
+				if (client.room == mensagem.sala) {
+					client.send(JSON.stringify(mensagem));
+				}
 			}
 		});
 	});

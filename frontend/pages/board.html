@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
-
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,11 +10,9 @@
 		<link rel="stylesheet" href="../styles/board.css" />
 
 		<title>DM Kanban - Quadro</title>
-
 	</head>
 
 	<body>
-
 		<header id="board--header">
 			<!-- <img class="logo" src="../assets/logo.png"> -->
 			<input
@@ -27,7 +24,11 @@
 		</header>
 
 		<button id="menu--button__open">
-			<img src="../assets/icons/menu.png" alt="Menu lateral" title="Abrir menu lateral">
+			<img
+				src="../assets/icons/menu.png"
+				alt="Menu lateral"
+				title="Abrir menu lateral"
+			/>
 		</button>
 
 		<menu id="sidebar-menu" class="menu--container">
@@ -35,26 +36,39 @@
 				<header class="menu--header">
 					<div class="menu--header__top">
 						<section>
-							<h2>Kenji Animadinho</h2>
-							<p>kenji@email.com</p>
+							<h2 id="user-username">Kenji Animadinho</h2>
+							<p id="user-email">kenji@email.com</p>
 						</section>
-						<img id="closeMenuButton" src="../assets/icons/close.png" alt="Fechar menu">
+						<img
+							id="closeMenuButton"
+							src="../assets/icons/close.png"
+							alt="Fechar menu"
+						/>
 					</div>
 					<div class="menu--header__account">
 						<a href="">
-							<img src="../assets/icons/mail_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+							<img
+								src="../assets/icons/mail_FILL0_wght400_GRAD0_opsz48.svg"
+								alt=""
+							/>
 							Alterar e-mail
 						</a>
 						<a href="">
-							<img src="../assets/icons/lock_reset_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+							<img
+								src="../assets/icons/lock_reset_FILL0_wght400_GRAD0_opsz48.svg"
+								alt=""
+							/>
 							Alterar senha
 						</a>
 						<a href="">
-							<img src="../assets/icons/delete.png" alt="">
+							<img src="../assets/icons/delete.png" alt="" />
 							Excluir conta
 						</a>
 						<a href="">
-							<img src="../assets/icons/logout_FILL0_wght400_GRAD0_opsz48 (1).svg" alt="">
+							<img
+								src="../assets/icons/logout_FILL0_wght400_GRAD0_opsz48 (1).svg"
+								alt=""
+							/>
 							Sair
 						</a>
 					</div>
@@ -62,53 +76,92 @@
 				<main class="menu--main">
 					<section>
 						<h3 id="this-board__title">Este quadro</h3>
-						<hr>
+						<hr />
 
 						<ul class="menu--main__accordion">
 							<li class="menu--accordion__item" id="members">
-								<a href="#members" class="item__title this-board__item">
-									<img src="../assets/icons/group.png" alt="">
+								<a
+									href="#members"
+									class="item__title this-board__item"
+								>
+									<img
+										src="../assets/icons/group.png"
+										alt=""
+									/>
 									Participantes
 								</a>
 
 								<ul class="menu--accordion__item-content">
 									<li class="menu--accordion__sub-item">
 										<form>
-											<input type="email" name="" id="" placeholder="Adicionar participante">
+											<input
+												type="email"
+												name=""
+												id=""
+												placeholder="Adicionar participante"
+											/>
 											<button>Adicionar</button>
 										</form>
 									</li>
-									<li class="menu--accordion__sub-item">Kenjinho</li>
-									<li class="menu--accordion__sub-item">Animado</li>
+									<li class="menu--accordion__sub-item">
+										Kenjinho
+									</li>
+									<li class="menu--accordion__sub-item">
+										Animado
+									</li>
 								</ul>
 							</li>
 						</ul>
 						<a href="" class="this-board__item">
-							<img src="../assets/icons/delete.png" alt="">
+							<img src="../assets/icons/delete.png" alt="" />
 							Excluir quadro
 						</a>
 					</section>
 					<ul class="menu--main__accordion">
 						<li class="menu--accordion__item" id="your-boards">
 							<span id="your-boards__title">
-								<a href="#your-boards" class="item__title" >Seus quadros</a>
-								<img src="../assets/icons/add.png" id="your-boards__new-board-button" alt="Criar novo quadro">
+								<a href="#your-boards" class="item__title"
+									>Seus quadros</a
+								>
+								<img
+									src="../assets/icons/add.png"
+									id="your-boards__new-board-button"
+									alt="Criar novo quadro"
+								/>
 							</span>
-							<hr>
+							<hr />
 
 							<ul class="menu--accordion__item-content">
-								<li class="menu--accordion__sub-item this-board__item">Quadro 1</li>
-								<li class="menu--accordion__sub-item this-board__item">Quadro 2</li>
-								<li class="menu--accordion__sub-item this-board__item">Quadro 3</li>
-								<li class="menu--accordion__sub-item this-board__item">Quadro 4</li>
-								<li class="menu--accordion__sub-item this-board__item">Quadro 5</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									Quadro 1
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									Quadro 2
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									Quadro 3
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									Quadro 4
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									Quadro 5
+								</li>
 							</ul>
 						</li>
 					</ul>
-
 				</main>
 			</nav>
-
 		</menu>
 
 		<div class="quadro"></div>
@@ -132,7 +185,10 @@
 					<header>
 						<h2 class="title-2">Configurações</h2>
 						<span class="close title-2">
-							<img src="../assets/icons/close.png" alt="Fechar card">
+							<img
+								src="../assets/icons/close.png"
+								alt="Fechar card"
+							/>
 						</span>
 					</header>
 					<ul>
