@@ -37,6 +37,8 @@ export const UserService = {
 
         try {
 
+            console.log(usuario)
+
             const id = uuidv4();
             const senha = hashPwd(usuario.senha);
 

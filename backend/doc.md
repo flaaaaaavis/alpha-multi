@@ -223,3 +223,21 @@ Deleta um usuário
     "result": "Usuario deletado com sucesso!"
 }
 ```
+
+> GET /api/usuario/:id
+
+Traz todas as informações do usuario;
+
+**Response**
+`200 OK`
+
+```js
+{
+    "result": "Usuario deletado com sucesso!"
+}
+```
+
+
+
+Projetos por usuário.
+getUsuarioPorId.
