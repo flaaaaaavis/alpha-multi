@@ -2,7 +2,7 @@ export default class Api {
 	static baseUrl = "http://localhost:8000";
 
 	static async register(body) {
-		const usuario = await fetch(`${this.baseUrl}/api/usuario`, {
+		const usuario = await fetch(`${this.baseUrl}/api/usuario/`, {
 			method: "POST",
 			body: JSON.stringify(body),
 			headers: {
@@ -43,8 +43,8 @@ export default class Api {
 		return usuario;
 	}
 
-	static async editUser(body) {
-		const usuario = await fetch(`${this.baseUrl}/api/usuario`, {
+	static async modifyUser(body) {
+		const usuario = await fetch(`${this.baseUrl}/api/usuario/`, {
 			method: "PATCH",
 			body: JSON.stringify(body),
 			headers: {
@@ -256,7 +256,10 @@ export default class Api {
 			},
 		})
 			.then((res) => {
-				return res.status;
+				return res.json();
+			})
+			.then((data) => {
+				return data;
 			})
 			.catch((err) => {
 				return err;
@@ -275,6 +278,29 @@ export default class Api {
 		})
 			.then((res) => {
 				return res.status;
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return task;
+	}
+
+	static async getTask(id) {
+		const task = await fetch(`${this.baseUrl}/api/tarefa/${id}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
 			})
 			.catch((err) => {
 				return err;

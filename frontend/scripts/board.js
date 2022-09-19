@@ -3,9 +3,23 @@ import { ws, sala } from "./Websocket.js";
 import ApiMock from "./ApiMock.js";
 import Render from "./Render.js";
 import Api from "./Api.js";
+import parseJwt from "./userInfo.js";
 
-const user = JSON.parse(localStorage.getItem("@dmkanban-user"));
+const token = localStorage.getItem("@dmkanban-user");
+
+if (!token) {
+	location.replace("./login.html");
+}
+
+const user = parseJwt(token);
 let projectId;
+
+const exitButton = document.getElementById("sair");
+exitButton.addEventListener("click", (e) => {
+	e.preventDefault();
+	localStorage.removeItem("@dmkanban-user");
+	location.replace("./login.html");
+});
 
 /* const newProject = document.getElementById("your-boards__new-board-button");
 newProject.addEventListener("click", async () => {
@@ -34,7 +48,7 @@ ws.addEventListener("open", () => {
 	ws.send(JSON.stringify({ room: sala }));
 	const newUser = {
 		tipo: "conexão",
-		usuario: user.username,
+		usuario: user.usuario.usuario,
 		sala: sala,
 	};
 	ws.send(JSON.stringify(newUser));
@@ -181,11 +195,9 @@ closeButton.addEventListener("click", (event) => {
 });
 
 function editMenuInfo() {
-	console.log(user);
 	const username = document.getElementById("user-username");
-	username.innerText = user.username;
+	username.innerText = user.usuario.usuario;
 	const email = document.getElementById("user-email");
-	console.log(email);
-	email.innerText = user.email;
+	email.innerText = user.usuario.email;
 }
 editMenuInfo();

@@ -1,5 +1,10 @@
-import ApiMock from "./ApiMock.js";
 import Api from "./Api.js";
+
+const token = localStorage.getItem("@dmkanban-user");
+
+if (token) {
+	location.replace("./board.html");
+}
 
 const loginButton = document.getElementById("login-button");
 loginButton.addEventListener("click", async (e) => {
@@ -8,9 +13,9 @@ loginButton.addEventListener("click", async (e) => {
 	const password = document.getElementById("login-password").value;
 	const user = {
 		email: email.trim(),
-		password: password.trim(),
+		senha: password.trim(),
 	};
-	const request = Api.login(user);
+	const request = await Api.login(user);
 	console.log(request);
 	if (request.token) {
 		localStorage.setItem("@dmkanban-user", JSON.stringify(request.token));
