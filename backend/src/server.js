@@ -8,8 +8,6 @@ import { v4 } from "uuid";
 import http from "http";
 //const express = require("express");
 
-console.log(config);
-
 import WebSocket, { WebSocketServer } from "ws";
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });

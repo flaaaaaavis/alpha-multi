@@ -148,7 +148,7 @@ function moveCard(data) {
 		coluna.insertBefore(card, alvo);
 		card.classList.remove("arrastando");
 	} else {
-		alvo = document.querySelector(`#${data.coluna} button`);
+		alvo = document.querySelector(`#${data.coluna} .adicionar-card`);
 		console.log(alvo, card);
 		coluna.insertBefore(card, alvo);
 		card.classList.remove("arrastando");

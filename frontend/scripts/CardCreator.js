@@ -111,8 +111,11 @@ export default class CardCreator {
 		const targetColumn = select.value;
 
 		if (targetColumn.trim() != "" && targetColumn != atualColumn) {
-			const query = document.querySelector(`#${targetColumn} button`);
+			const query = document.querySelector(
+				`#${targetColumn} .adicionar-card`
+			);
 			const newColumn = document.getElementById(targetColumn);
+
 			newColumn.insertBefore(card, query);
 			card.value = targetColumn;
 
@@ -122,6 +125,12 @@ export default class CardCreator {
 				id: card.id,
 				coluna: targetColumn,
 			};
+			const edit = {
+				sala: sala,
+				tipo: "fechar modal",
+				id: card.id,
+			};
+			ws.send(JSON.stringify(edit));
 			ws.send(JSON.stringify(move));
 		}
 	}
@@ -259,6 +268,7 @@ export default class CardCreator {
 			});
 
 			select.addEventListener("change", () => {
+				console.log("x");
 				realCard = document.getElementById(this.clickedCard.id);
 				this.cardSelect(realCard);
 				this.fillSelect(select, realCard.parentElement);
