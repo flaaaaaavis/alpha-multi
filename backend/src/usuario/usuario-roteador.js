@@ -74,6 +74,25 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
     
 })
 
+UserRouter.route('/:id').get(jsonBodyParser, async (req, res) => {    
+
+    if (!req.params) return res.status(400).json({'error':'Missing Req Params'});
+    const { id } = req.params;
+
+    const dbRes = await UserService.updateUsuario(id, novoUsuario);
+
+    if (dbRes.length > 0) {
+        
+        res.status(200).json(dbRes); 
+
+    } else {
+               
+        res.status(500).json({error:"Internal Server Error"})
+
+    }
+
+})
+
 .delete(jsonBodyParser, async (req, res) => {
 
     if (!req.body) {
@@ -103,7 +122,7 @@ UserRouter.route('/senha').patch(jsonBodyParser, async (req, res) => {
         return res.status(400).json({ error: `Missing request body` });
     }
     
-    if (req.body['senha'] === undefined) {
+    if (req.body['id', 'senha'] === undefined) {
         return res
             .status(400)
             .json({ error: `Missing 'senha' property on request body` });
@@ -159,5 +178,19 @@ UserRouter.route('/login').post(jsonBodyParser, async (req, res) => {
     }
 
 });
+
+UserRouter.route('/projetos').post(jsonBodyParser, async (req, res) => {
+
+    if (!req.body) return res.status(400).json({error: `Missing request body`})
+
+    const { id } = req.body;
+
+    const projetos = await UserService.getProjetosPorUsuario(id);
+
+    if (projetos.length > 0) return res.status(200).json({projetos: projetos})
+    res.status(500).json({error: "Internal Server Error"})
+
+
+})
 
 export default UserRouter;

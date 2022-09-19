@@ -19,8 +19,8 @@ export const TaskService = {
 
         try {
 
-            const query = `INSERT INTO tarefas (coluna_id, data_criacao, nome, ordem, tags, anotacoes) VALUES ($1, CURRENT_TIMESTAMP, $2, $3, $4, $5)`;
-            const values = [tarefa.coluna_id, tarefa.nome, tarefa.ordem, tarefa.tags, tarefa.anotacoes];
+            const query = `INSERT INTO tarefas (coluna_id, data_criacao, nome, ordem, tags, anotacoes, colaboradores) VALUES ($1, CURRENT_TIMESTAMP, $2, $3, $4, $5, $6)`;
+            const values = [tarefa.coluna_id, tarefa.nome, tarefa.ordem, tarefa.tags, tarefa.anotacoes, tarefa.colaboradores];
             const data = await pool.query(query, values)
             return data;
 
@@ -35,7 +35,7 @@ export const TaskService = {
 
         try {           
 
-            const query = `UPDATE tarefas SET coluna_id = ($1), nome = ($2), ordem = ($3), tags = ($4), anotacoes = ($5)  WHERE id = ($6);`;
+            const query = `UPDATE tarefas SET coluna_id = ($1), nome = ($2), ordem = ($3), tags = ($4), anotacoes = ($5), colaboradores = ($6)  WHERE id = ($6);`;
             const values = [tarefa.coluna_id, tarefa.nome, tarefa.ordem, tarefa.tags, tarefa.anotacoes, id];
             const data = await pool.query(query, values)
             return data;
