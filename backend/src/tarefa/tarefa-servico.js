@@ -22,7 +22,7 @@ export const TaskService = {
             const query = `INSERT INTO tarefas (coluna_id, data_criacao, nome, ordem, tags, anotacoes) VALUES ($1, CURRENT_TIMESTAMP, $2, $3, $4, $5)`;
             const values = [tarefa.coluna_id, tarefa.nome, tarefa.ordem, tarefa.tags, tarefa.anotacoes];
             const data = await pool.query(query, values)
-            return data.rows;
+            return data;
 
         } catch(e) {
 
@@ -38,7 +38,7 @@ export const TaskService = {
             const query = `UPDATE tarefas SET coluna_id = ($1), nome = ($2), ordem = ($3), tags = ($4), anotacoes = ($5)  WHERE id = ($6);`;
             const values = [tarefa.coluna_id, tarefa.nome, tarefa.ordem, tarefa.tags, tarefa.anotacoes, id];
             const data = await pool.query(query, values)
-            return data.rows;
+            return data;
 
         } catch(e) {
 
@@ -53,7 +53,7 @@ export const TaskService = {
         try {
 
             const data = await pool.query(`DELETE FROM tarefas WHERE id = ${id}`)
-            return data.rows;
+            return data;
 
         } catch(e) {
 

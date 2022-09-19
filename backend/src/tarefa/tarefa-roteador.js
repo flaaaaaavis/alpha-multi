@@ -30,15 +30,15 @@ TaskRouter.route('/').post(jsonBodyParser, async (req, res) => {
 
     const dbRes = await TaskService.insertTarefa(tarefa)
 
-    if (dbRes) {
-        res.status(201).json(dbRes);
+    if (dbRes.rowCount === 1) {
+        res.status(201).json({result: "Tarefa criada com sucesso!"});
     } else {
         res.status(500).json({message:"Internal Server Error"});
     }
         
-});
+})
 
-TaskRouter.route('/:task_uuid').patch(jsonBodyParser, async (req, res) => {
+.patch(jsonBodyParser, async (req, res) => {
 
     if (!req.body) {
         return res.status(400).json({ Error: `Missing request body` });
@@ -64,14 +64,10 @@ TaskRouter.route('/:task_uuid').patch(jsonBodyParser, async (req, res) => {
 
     const dbRes = await TaskService.updateTarefa(id, tarefa);
 
-    if (dbRes) {
-        
-        res.status(201).json(dbRes); 
-
+    if (dbRes.rowCount === 1) {
+        res.status(200).json({result: "Tarefa alterada com sucesso!"});
     } else {
-        
-        res.status(500).json({message:"Internal Server Error"})
-
+        res.status(500).json({message:"Internal Server Error"});
     }
     
 })
@@ -88,15 +84,28 @@ TaskRouter.route('/:task_uuid').patch(jsonBodyParser, async (req, res) => {
 
     if (dbRes) {
 
-        res.status(201).json(dbRes);
+        res.status(200).json({result: "Tarefa deletada com sucesso!"});
         
     } else {
 
         res.status(500).json({message:"Internal Server Error"})
 
     }
-    
    
-  });
+});
+
+TaskRouter.route('/:id_categoria').get(jsonBodyParser, async (req, res) => {
+
+    if (!req.params) {
+        return res.status(400).json({error: 'Missing request params'})
+    }
+
+    const { id_categoria } = req.params;
+
+    const dbRes = await TaskService.getTarefasPorColuna(id_categoria);
+    if (dbRes.length >= 1) return res.status(200).json(dbRes);
+    return res.status(500).json({message:"Internal Server Error"})
+
+});
 
 export default TaskRouter;
