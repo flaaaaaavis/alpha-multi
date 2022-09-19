@@ -6,7 +6,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<link rel="stylesheet" href="../styles/reset.css" />
-		<link rel="stylesheet" href="../styles/animations.css" />
 		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/board.css" />
 
@@ -32,7 +31,7 @@
 			/>
 		</button>
 
-		<menu id="sidebar-menu" class="">
+		<menu id="sidebar-menu" class="menu--container">
 			<nav class="menu">
 				<header class="menu--header">
 					<div class="menu--header__top">
@@ -65,7 +64,7 @@
 							<img src="../assets/icons/delete.png" alt="" />
 							Excluir conta
 						</a>
-						<a href="./login.html">
+						<a href="">
 							<img
 								src="../assets/icons/logout_FILL0_wght400_GRAD0_opsz48 (1).svg"
 								alt=""
@@ -113,11 +112,7 @@
 								</ul>
 							</li>
 						</ul>
-						<a
-							id="your-boards--delete"
-							href=""
-							class="this-board__item"
-						>
+						<a href="" class="this-board__item">
 							<img src="../assets/icons/delete.png" alt="" />
 							Excluir quadro
 						</a>
@@ -171,13 +166,6 @@
 
 		<div class="quadro"></div>
 
-		<div class="notifications hidden">
-			<p class="notification-text">
-				<span id="notifications-username"></span>
-				entrou
-			</p>
-		</div>
-
 		<div class="modal hidden">
 			<div class="card-modal">
 				<main class="card-modal__main">
@@ -187,16 +175,6 @@
 						placeholder="Nome do cartão"
 						value="Nome do cartão"
 					/>
-					<div class="card-modal__membros">
-						<h2 class="membros--titulo">Membros</h2>
-						<ul id="membros--lista-membros">
-							<li>Membro 1</li>
-							<li>membro 2</li>
-							<button id="add-membro" class="adicionar-btn">
-								+
-							</button>
-						</ul>
-					</div>
 					<p>Descrição</p>
 					<textarea
 						class="card-modal__conteudo"
@@ -226,6 +204,7 @@
 				</aside>
 			</div>
 		</div>
+
 		<script type="module" src="../scripts/board.js"></script>
 	</body>
 </html>

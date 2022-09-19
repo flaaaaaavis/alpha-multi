@@ -7,7 +7,7 @@ import Api from "./Api.js";
 const user = JSON.parse(localStorage.getItem("@dmkanban-user"));
 let projectId;
 
-const newProject = document.getElementById("your-boards__new-board-button");
+/* const newProject = document.getElementById("your-boards__new-board-button");
 newProject.addEventListener("click", async () => {
 	const project = {
 		nome: "novo projeto",
@@ -25,7 +25,7 @@ deleteProject.addEventListener("click", async (e) => {
 	};
 	const request = await Api.deleteProject(project);
 	console.log(request);
-});
+}); */
 
 /* Conectar ao websocket */
 
@@ -103,13 +103,22 @@ ws.addEventListener("message", ({ data }) => {
 			quadro.value = dados.nome;
 			break;
 		case "mudança de conteudo - card":
-			console.log("entrou");
-			const card2 = document.querySelector(`#${dados.id} p`);
-			card2.innerText = dados.conteudo;
+			card = document.querySelector(`#${dados.id} p`);
+			card.innerText = dados.conteudo;
 			break;
 		case "excluir card":
-			const card3 = document.getElementById(dados.id);
-			card3.remove();
+			card = document.getElementById(dados.id);
+			card.remove();
+			break;
+		case "editando tarefa":
+			console.log("entrou");
+			card = document.getElementById(dados.id);
+			card.classList.add("editavel");
+			break;
+		case "fechar modal":
+			card = document.getElementById(dados.id);
+			card.classList.remove("editavel");
+			break;
 	}
 });
 
@@ -146,88 +155,6 @@ function moveCard(data) {
 	}
 }
 
-let columnCount = 1;
-let addCardCount = 1;
-
-const projectTitle = document.getElementById("nome-projeto");
-projectTitle.addEventListener("change", () => {
-	if (projectTitle.value.trim() != "") {
-		Project.changeName(projectTitle.value.trim());
-		console.log(Project.project);
-	}
-});
-
-function createBoard() {
-	const board = document.querySelector(".quadro");
-	projectTitle.value = "Novo quadro";
-	board.innerHTML = "";
-
-	const addColumnBtn = document.createElement("button");
-	addColumnBtn.className = "adicionar-coluna";
-	addColumnBtn.title = "Criar nova coluna";
-	const img = document.createElement("img");
-	img.src = "../assets/icons/new-column.png";
-	addColumnBtn.append(img);
-	board.append(addColumnBtn);
-	createColumn();
-	createColumn();
-}
-
-/* Cria a coluna ao apertar o botão */
-function createColumn(send) {
-	const board = document.querySelector(".quadro");
-	const column = document.createElement("div");
-	column.className = "coluna";
-	column.id = `coluna-${columnCount}`;
-	column.addEventListener("drop", (event) => {
-		DragAndDrop.onDrop(event);
-	});
-	column.addEventListener("dragover", (event) => {
-		DragAndDrop.onDragOver(event);
-	});
-
-	const name = document.createElement("input");
-	name.placeholder = "nome da coluna";
-	name.value = `Nova coluna ${columnCount}`;
-	name.addEventListener("change", () => {
-		CardCreator.fillAllSelects();
-		const newName = {
-			tipo: "mudança de nome - coluna",
-			id: column.id,
-			nome: name.value,
-		};
-		ws.send(JSON.stringify(newName));
-	});
-	const button = document.createElement("button");
-	button.className = "adicionar-card";
-	button.id = `add-card-${addCardCount}`;
-	button.title = "Criar novo card";
-	addCardCount++;
-	const img = document.createElement("img");
-	img.src = "../assets/icons/new-card.png";
-	button.appendChild(img);
-
-	button.addEventListener("click", (event) => {
-		event.preventDefault();
-		CardCreator.createCard(button.id, true);
-		/* 		project.forEach((element) => {
-
-		}) */
-	});
-
-	column.append(name, button);
-	board.insertBefore(column, document.querySelector(".adicionar-coluna"));
-	const newColumn = {
-		tipo: "nova coluna",
-		id: column.id,
-		contagem: columnCount,
-	};
-	if (send) {
-		ws.send(JSON.stringify(newColumn));
-	}
-	columnCount++;
-}
-
 function menuControl() {
 	let menu = document.getElementById("sidebar-menu");
 	const openButton = document.getElementById("menu--button__open");
@@ -253,8 +180,12 @@ closeButton.addEventListener("click", (event) => {
 	menuControl();
 });
 
-createBoard();
-const addColumnButton = document.querySelector(".adicionar-coluna");
-addColumnButton.addEventListener("click", (event) => {
-	createColumn(true);
-});
+function editMenuInfo() {
+	console.log(user);
+	const username = document.getElementById("user-username");
+	username.innerText = user.username;
+	const email = document.getElementById("user-email");
+	console.log(email);
+	email.innerText = user.email;
+}
+editMenuInfo();
