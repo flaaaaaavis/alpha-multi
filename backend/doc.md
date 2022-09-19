@@ -12,27 +12,28 @@ Pesquisa uma tarefa com base na id_categoria
 
 **Response**
 `200 OK`
+
 ```js
 [
 	{
-		"id": 2,
-		"coluna_id": 2,
-		"data_criacao": "2022-09-18T20:11:51.288Z",
-		"nome": "tarefa2",
-		"ordem": 1,
-		"tags": "tag2",
-		"anotacoes": "anotações"
+		id: 2,
+		coluna_id: 2,
+		data_criacao: "2022-09-18T20:11:51.288Z",
+		nome: "tarefa2",
+		ordem: 1,
+		tags: "tag2",
+		anotacoes: "anotações",
 	},
 	{
-		"id": 4,
-		"coluna_id": 2,
-		"data_criacao": "2022-09-19T14:44:38.715Z",
-		"nome": "tarefa1",
-		"ordem": 1,
-		"tags": "tag1",
-		"anotacoes": "anotacao"
-	}
-]
+		id: 4,
+		coluna_id: 2,
+		data_criacao: "2022-09-19T14:44:38.715Z",
+		nome: "tarefa1",
+		ordem: 1,
+		tags: "tag1",
+		anotacoes: "anotacao",
+	},
+];
 ```
 
 > POST /api/tarefa/
@@ -40,7 +41,8 @@ Pesquisa uma tarefa com base na id_categoria
 Cria uma tarefa.
 
 **body**
-```js 
+
+```js
 {
     "coluna_id": "string",
     "nome": "string",
@@ -52,6 +54,7 @@ Cria uma tarefa.
 
 **Response**
 `201 CREATED`
+
 ```js
 {
     "result": "Tarefa criada com sucesso!"
@@ -63,12 +66,13 @@ Cria uma tarefa.
 Altera uma tarefa com base no id.
 
 **body**
-```js 
+
+```js
 {
     "coluna_id": "string",
     "nome": "string",
     "ordem": "number",
-    "tags": "string",    
+    "tags": "string",
     "anotacoes": "string",
     "id": "number"
 }
@@ -76,6 +80,7 @@ Altera uma tarefa com base no id.
 
 **Response**
 `200 OK`
+
 ```js
 {
     "result": "Tarefa alterada com sucesso!"
@@ -87,7 +92,8 @@ Altera uma tarefa com base no id.
 Deleta uma tarefa com base no id.
 
 **body**
-```js 
+
+```js
 {
     "id": "number"
 }
@@ -95,6 +101,7 @@ Deleta uma tarefa com base no id.
 
 **Response**
 `200 OK`
+
 ```js
 {
     "result": "Tarefa deletada com sucesso!"
@@ -110,7 +117,8 @@ Endpoinds para o recurso: usuario.
 Cria um usuário.
 
 **body**
-```js 
+
+```js
 {
     "usuario": "string",
     "email": "string",
@@ -120,6 +128,7 @@ Cria um usuário.
 
 **Response**
 `201 CREATED`
+
 ```js
 {
     "result": "Usuario criado com sucesso!"
@@ -131,8 +140,9 @@ Cria um usuário.
 Faz login e retorna token jwt.
 
 **body**
-```js 
-{    
+
+```js
+{
     "email": "string",
     "senha": "string"
 }
@@ -140,6 +150,7 @@ Faz login e retorna token jwt.
 
 **Response**
 `200 OK`
+
 ```js
 {
 	"auth": true,
@@ -152,7 +163,8 @@ Faz login e retorna token jwt.
 Altera um usuário.
 
 **body**
-```js 
+
+```js
 {
     "id": "string",
     "email": "string",
@@ -162,6 +174,7 @@ Altera um usuário.
 
 **Response**
 `200 OK`
+
 ```js
 {
     "result": "Usuario alterado com sucesso!"
@@ -170,10 +183,11 @@ Altera um usuário.
 
 > PATCH /api/usuario/senha
 
-Altera um usuário.
+Altera a senha de um usuário.
 
 **body**
-```js 
+
+```js
 {
     "id": "string"
     "senha": "string"
@@ -194,7 +208,8 @@ Altera um usuário.
 Deleta um usuário
 
 **body**
-```js 
+
+```js
 {
     "id": "string",
 }
@@ -202,11 +217,9 @@ Deleta um usuário
 
 **Response**
 `200 OK`
+
 ```js
 {
     "result": "Usuario deletado com sucesso!"
 }
 ```
-
-
-
