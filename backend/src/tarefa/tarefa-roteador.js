@@ -18,7 +18,7 @@ TaskRouter.route('/').post(jsonBodyParser, async (req, res) => {
         }
     }
 
-    const { coluna_id, nome, ordem, tags, anotacoes } = req.body;
+    const { coluna_id, nome, ordem, tags, anotacoes, colaboradores } = req.body;
 
     const tarefa = {
         coluna_id: coluna_id,
@@ -26,6 +26,7 @@ TaskRouter.route('/').post(jsonBodyParser, async (req, res) => {
         ordem: parseInt(ordem),
         tags: tags,
         anotacoes: anotacoes || "",
+        colaboradores: colaboradores || ""
     };
 
     const dbRes = await TaskService.insertTarefa(tarefa)
@@ -52,7 +53,7 @@ TaskRouter.route('/').post(jsonBodyParser, async (req, res) => {
         }
     }
 
-    const { coluna_id, nome, ordem, tags, anotacoes, id } = req.body;
+    const { coluna_id, nome, ordem, tags, anotacoes, colaboradores, id } = req.body;
 
     const tarefa = {
         coluna_id: coluna_id,
@@ -60,6 +61,7 @@ TaskRouter.route('/').post(jsonBodyParser, async (req, res) => {
         ordem: parseInt(ordem),
         tags: tags,
         anotacoes: anotacoes || "",
+        colaboradores: colaboradores || ""
     };
 
     const dbRes = await TaskService.updateTarefa(id, tarefa);
