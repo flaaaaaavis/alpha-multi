@@ -1,4 +1,3 @@
-import ApiMock from "./ApiMock.js";
 import Api from "./Api.js";
 
 const loginButton = document.getElementById("login-button");
@@ -10,10 +9,10 @@ loginButton.addEventListener("click", async (e) => {
 		email: email.trim(),
 		password: password.trim(),
 	};
-	const request = Api.login(user);
+	const request = await Api.login(user);
 	console.log(request);
 	if (request.token) {
-		localStorage.setItem("@dmkanban-user", JSON.stringify(request.token));
+		localStorage.setItem("@dmkanban-token", request.token);
 		location.replace("./board.html");
 	} else {
 		alert("Usuário ou senha inválidos!");

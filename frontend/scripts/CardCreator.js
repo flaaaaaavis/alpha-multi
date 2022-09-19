@@ -150,13 +150,11 @@ export default class CardCreator {
 	static startCardModal() {
 		/* Show modal */
 		const modal = document.querySelector(".modal");
-		const membersModal = document.querySelector(".membros--modal");
 
 		modal.classList.remove("hidden");
 		modal.addEventListener("click", (e) => {
 			if (e.target == modal) {
 				modal.classList.add("hidden");
-				membersModal.classList.add("hidden");
 				const edit = {
 					sala: sala,
 					tipo: "fechar modal",
@@ -183,7 +181,6 @@ export default class CardCreator {
 		/* Close modal */
 		const modal = document.querySelector(".modal");
 		const closeButton = document.querySelector(".close");
-		const membersModal = document.querySelector(".membros--modal");
 
 		/* mudar titulo do card */
 		const cardModal = document.querySelector(".card-modal");
@@ -214,7 +211,6 @@ export default class CardCreator {
 				};
 				ws.send(JSON.stringify(edit));
 				modal.classList.add("hidden");
-				membersModal.classList.add("hidden");
 			});
 
 			deleteBtn.addEventListener("click", (e) => {
@@ -231,7 +227,6 @@ export default class CardCreator {
 					};
 					ws.send(JSON.stringify(remove));
 					modal.classList.add("hidden");
-					membersModal.classList.add("hidden");
 				}
 			});
 
@@ -279,43 +274,33 @@ export default class CardCreator {
 		}
 	}
 
-	static renderMembers(card) {
-		const membersModal = document.querySelector(".membros--modal");
-		const cardMembers = document.getElementById("membros--lista-membros");
-		const membersModalList = document.getElementById(
-			"membros-modal--lista"
-		);
-		membersModalList.innerHTML = "";
-		cardMembers.innerHTML = "";
-		card.members.forEach((element) => {
-			const member = document.createElement("li");
-			member.innerText = element.username;
-			member.title = element.email;
-			cardMembers.appendChild(member);
-		});
-
-		const addMembers = document.createElement("button");
-		addMembers.innerText = "+";
-		addMembers.className = "adicionar-btn";
-
-		addMembers.addEventListener("click", () => {
-			this.renderMembersModal(card);
-			membersModal.classList.toggle("hidden");
-		});
-		cardMembers.append(addMembers);
-		const close = document.querySelector(".close-2");
-		close.addEventListener("click", () => {
-			membersModal.classList.add("hidden");
-		});
-	}
-
-	static renderMembersModal(card) {
+	static createMembersModal(card) {
 		const boardMembers = ApiMock.board.members;
-		const membersModal = document.querySelector(".membros--modal");
-		const membersModalList = document.getElementById(
-			"membros-modal--lista"
-		);
-		membersModalList.innerHTML = "";
+		const target = document.querySelector("#membros--lista-membros");
+
+		const membersModal = document.createElement("div");
+		membersModal.className = "membros--modal";
+
+		const modalHeader = document.createElement("header");
+		const headerTitle = document.createElement("h2");
+		headerTitle.className = "text-1";
+		headerTitle.innerText = "Membros";
+
+		const modalClose = document.createElement("span");
+		modalClose.innerText = "X";
+		modalClose.addEventListener("click", () => {
+			membersModal.remove();
+		});
+
+		modalHeader.append(headerTitle, modalClose);
+
+		const cardMembers = document.createElement("h3");
+		cardMembers.className = "text-2";
+		cardMembers.innerText = "Membros do quadro";
+
+		const membersList = document.createElement("ul");
+		membersList.className = "membros-modal--lista";
+
 		boardMembers.forEach((element) => {
 			const memberCard = document.createElement("li");
 			memberCard.className = "card-membros";
@@ -323,32 +308,53 @@ export default class CardCreator {
 			memberName.className = "text-2";
 			memberName.innerText = `${element.username} (${element.email})`;
 			memberCard.append(memberName);
-			card.members.forEach((user) => {
-				if (user.username !== element.username) {
-					console.log("add", user.username, element.username);
-					const addMemberButton = document.createElement("button");
-					addMemberButton.className = "adicionar-btn";
-					addMemberButton.innerText = "+";
-					addMemberButton.addEventListener("click", () => {
-						card.members.push(element);
-						membersModal.classList.add("hidden");
-					});
-					memberCard.append(addMemberButton);
-				} else {
-					console.log("remove", user.username, element.username);
-					const removeMemberButton = document.createElement("button");
-					removeMemberButton.className = "remover-btn";
-					removeMemberButton.innerText = "-";
+			if (!card.members.some((e) => e.username === element.username)) {
+				const addMemberButton = document.createElement("button");
+				addMemberButton.className = "adicionar-btn";
+				addMemberButton.innerText = "+";
+				addMemberButton.addEventListener("click", () => {
+					card.members.push(element);
+					membersModal.remove();
+					this.renderMembers(card);
+					this.createMembersModal(card);
+				});
+				memberCard.append(addMemberButton);
+			} else {
+				const removeMemberButton = document.createElement("button");
+				removeMemberButton.className = "remover-btn";
+				removeMemberButton.innerText = "-";
 
-					removeMemberButton.addEventListener("click", () => {
-						card.members.splice(card.members.indexOf(user), 1);
-						membersModal.classList.add("hidden");
-					});
-					memberCard.append(removeMemberButton);
-				}
-			});
+				removeMemberButton.addEventListener("click", () => {
+					card.members.splice(card.members.indexOf(element), 1);
+					membersModal.remove();
+					this.renderMembers(card);
+					this.createMembersModal(card);
+				});
+				memberCard.append(removeMemberButton);
+			}
 
-			membersModalList.appendChild(memberCard);
+			membersList.appendChild(memberCard);
+		});
+
+		membersModal.append(modalHeader, membersList);
+		target.after(membersModal);
+	}
+
+	static renderMembers(realCard) {
+		const cardMembers = document.getElementById("membros--lista-membros");
+		cardMembers.innerHTML = "";
+		realCard.members.forEach((element) => {
+			const taskMember = document.createElement("li");
+			taskMember.innerText = element.username;
+			taskMember.title = element.email;
+			cardMembers.append(taskMember);
+		});
+		const addMemberButton = document.createElement("button");
+		addMemberButton.innerText = "+";
+		addMemberButton.className = "adicionar-btn";
+		cardMembers.append(addMemberButton);
+		addMemberButton.addEventListener("click", () => {
+			this.createMembersModal(realCard);
 		});
 	}
 }
