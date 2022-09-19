@@ -21,11 +21,25 @@
 		</header>
 		<main>
 			<form>
-				<input type="text" id="" placeholder="Nome" maxlength="25"/>
-				<input type="email" id="" placeholder="E-mail" />
-				<input type="password" id="" placeholder="Senha" />
+				<input
+					type="text"
+					id="cadastro-nome"
+					placeholder="Nome"
+					maxlength="25"
+				/>
+				<input type="email" id="cadastro-email" placeholder="E-mail" />
+				<input
+					type="password"
+					id="cadastro-senha"
+					placeholder="Senha"
+				/>
+				<input
+					type="password"
+					id="cadastro-conf-senha"
+					placeholder="Confirmar senha"
+				/>
 
-				<button type="button">Cadastrar</button>
+				<button id="cadastro-button" type="button">Cadastrar</button>
 			</form>
 		</main>
 		<footer>
@@ -33,6 +47,6 @@
 			<a href="./login.html">Faça seu login aqui</a>
 		</footer>
 
-		<script src="./scripts/script.js"></script>
+		<script type="module" src="../scripts/register.js"></script>
 	</body>
 </html>
