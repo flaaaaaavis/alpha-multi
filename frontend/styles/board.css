@@ -428,8 +428,6 @@ img {
 .botao-delete{
 	position: absolute;
 	right: 10px;
-
-	background-color: var(--orange);
 	border-radius: 50%;
 	padding: 5px;
 	width: 30px;

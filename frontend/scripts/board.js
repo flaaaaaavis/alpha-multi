@@ -157,9 +157,8 @@ function moveCard(data) {
 
 function menuControl() {
 	let menu = document.getElementById("sidebar-menu");
-	const openButton = document.getElementById("menu--button__open");
-
-	if (menu.style.display === "none") {
+	if (menu.style.display === "none" || menu.style.display == "") {
+		console.log("entrou");
 		menu.style.display = "flex";
 		openButton.style.display = "none";
 	} else {
