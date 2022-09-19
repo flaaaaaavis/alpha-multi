@@ -160,4 +160,18 @@ UserRouter.route('/login').post(jsonBodyParser, async (req, res) => {
 
 });
 
+UserRouter.route('/projetos').post(jsonBodyParser, async (req, res) => {
+
+    if (!req.body) return res.status(400).json({error: `Missing request body`})
+
+    const { id } = req.body;
+
+    const projetos = await UserService.getProjetosPorUsuario(id);
+
+    if (projetos.length > 0) return res.status(200).json({projetos: projetos})
+    res.status(500).json({error: "Internal Server Error"})
+
+
+})
+
 export default UserRouter;

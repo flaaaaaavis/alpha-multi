@@ -97,6 +97,22 @@ export const UserService = {
 
         }
 
+    },
+    async getProjetosPorUsuario(id) {
+
+        try {
+
+            const query = `SELECT * FROM projetos WHERE id IN (SELECT projeto_id FROM projetos_usuarios WHERE usuario_id = '${id}')`;
+            const values = [novaSenha, id];
+            const data = await pool.query(query, values)
+            return data.rows;
+
+        } catch(e) {
+
+            console.log(e)
+
+        }
+
     }
 
 }
