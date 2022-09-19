@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<link rel="stylesheet" href="../styles/reset.css" />
+		<link rel="stylesheet" href="../styles/sidebar-menu.css">
 		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/board.css" />
 
@@ -80,15 +81,13 @@
 
 						<ul class="menu--main__accordion">
 							<li class="menu--accordion__item" id="members">
-								<a
-									href="#members"
-									class="item__title this-board__item"
-								>
-									<img
-										src="../assets/icons/group.png"
-										alt=""
-									/>
-									Participantes
+								<a href="#members" class="item__title this-board__item">
+									<span>
+										<img src="../assets/icons/group.png" alt="">
+										Participantes
+									</span>
+
+									<img src="../assets/icons/add.png" id="your-boards__new-board-button" alt="Criar novo quadro">
 								</a>
 
 								<ul class="menu--accordion__item-content">
@@ -104,10 +103,12 @@
 										</form>
 									</li>
 									<li class="menu--accordion__sub-item">
-										Kenjinho
+										<span>Kenjinho</span>
+										<button><img src="../assets/icons/close.png" alt="Excluir participante"></button>
 									</li>
 									<li class="menu--accordion__sub-item">
-										Animado
+										<span>Animado</span>
+										<button><img src="../assets/icons/close.png" alt="Excluir participante"></button>
 									</li>
 								</ul>
 							</li>
@@ -120,42 +121,32 @@
 					<ul class="menu--main__accordion">
 						<li class="menu--accordion__item" id="your-boards">
 							<span id="your-boards__title">
-								<a href="#your-boards" class="item__title"
-									>Seus quadros</a
-								>
-								<img
-									src="../assets/icons/add.png"
-									id="your-boards__new-board-button"
-									alt="Criar novo quadro"
-								/>
+								<a href="#your-boards" class="item__title">Seus quadros</a>
+								<img src="../assets/icons/add.png" id="your-boards__new-board-button" alt="Criar novo quadro">
 							</span>
 							<hr />
 
 							<ul class="menu--accordion__item-content">
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									Quadro 1
+								<li class="menu--accordion__sub-item">
+									<form>
+										<input type="email" name="" id="" placeholder="Novo quadro">
+										<button>Criar</button>
+									</form>
 								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									Quadro 2
+								<li class="menu--accordion__sub-item this-board__item">
+									<button>Quadro 1</button>
 								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									Quadro 3
+								<li class="menu--accordion__sub-item this-board__item">
+									<button>Quadro 2</button>
 								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									Quadro 4
+								<li class="menu--accordion__sub-item this-board__item">
+									<buttonQuadro 3></button>
 								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									Quadro 5
+								<li class="menu--accordion__sub-item this-board__item">
+									<button>Quadro 4</button>
+								</li>
+								<li class="menu--accordion__sub-item this-board__item">
+									<button>Quadro 5</button>
 								</li>
 							</ul>
 						</li>
