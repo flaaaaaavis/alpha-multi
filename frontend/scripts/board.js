@@ -156,7 +156,7 @@ function menuControl() {
 	let menu = document.getElementById('sidebar-menu')
 	const openButton = document.getElementById('menu--button__open')
 
-	if( menu.style.display === 'none') {
+	if( window.getComputedStyle(menu).display == 'none') {
 		menu.style.display = 'flex'
 		openButton.style.display = 'none'
 	} else {
@@ -170,6 +170,7 @@ openButton.addEventListener('click', (event) => {
 	event.preventDefault()
 	menuControl()
 })
+
 const closeButton = document.getElementById('closeMenuButton')
 closeButton.addEventListener('click', (event) => {
 	event.preventDefault()

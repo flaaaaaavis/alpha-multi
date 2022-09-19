@@ -62,7 +62,7 @@ img {
 	top: 0;
 	left: 0;
 	z-index: 2;
-	position: absolute;
+	position: fixed;
 
 	display: none;
 
@@ -371,7 +371,7 @@ img {
 
 	display: flex;
 	flex-direction: column;
-	row-gap: 20px;
+	row-gap: 5px;
 	align-items: center;
 
 	transition: 0.4s;
