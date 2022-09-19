@@ -31,10 +31,10 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
 
     const dbRes = await UserService.insertUsuario(novoUsuario)
 
-    if (dbRes) {
-        res.status(201).json(dbRes);
+    if (dbRes.rowCount === 1) {
+        res.status(200).json({result: "Usuario criado com sucesso!"});
     } else {
-        res.status(500).json({error:"Internal Server Error"});
+        res.status(500).json({message:"Internal Server Error"});
     }
         
 })
@@ -62,12 +62,12 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
 
     const dbRes = await UserService.updateUsuario(id, novoUsuario);
 
-    if (dbRes) {
+    if (dbRes.rowCount === 1) {
         
-        res.status(201).json(dbRes); 
+        res.status(200).json({result: "Usuario alterado com sucesso!"}); 
 
     } else {
-        
+               
         res.status(500).json({error:"Internal Server Error"})
 
     }
@@ -84,9 +84,9 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
 
     const dbRes = await UserService.deleteUsuario(id);
 
-    if (dbRes) {
+    if (dbRes.rowCount === 1) {
 
-        res.status(201).json(dbRes);
+        res.status(200).json({result: "Usuário deletado com sucesso!"});
         
     } else {
 
@@ -115,9 +115,9 @@ UserRouter.route('/senha').patch(jsonBodyParser, async (req, res) => {
 
     const dbRes = await UserService.updateUsuarioSenha(id, novaSenha);
 
-    if (dbRes) {
+    if (dbRes.rowCount === 1) {
         
-        res.status(201).json(dbRes); 
+        res.status(200).json({result: "Senha alterada!"}); 
 
     } else {
         
@@ -144,7 +144,7 @@ UserRouter.route('/login').post(jsonBodyParser, async (req, res) => {
     const { email, senha } = req.body;
 
     const usuario = await UserService.getUsuarioByEmail(email);
-    if (!usuario.id) {
+    if (!usuario) {
         return res.status(400).json({ error: `Email inválido` });
     }
     

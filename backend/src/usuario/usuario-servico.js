@@ -23,6 +23,7 @@ export const UserService = {
         try {
 
             const data = await pool.query(`SELECT * FROM usuarios WHERE email = '${email}'`)
+            console.log(data)
             return data.rows[0];
 
         } catch(e) {
@@ -42,7 +43,7 @@ export const UserService = {
             const query = `INSERT INTO usuarios (id, data_criacao, usuario, email, senha) VALUES ($1, CURRENT_TIMESTAMP, $2, $3, $4)`;
             const values = [id, usuario.usuario, usuario.email, senha];
             const data = await pool.query(query, values)
-            return data.rows;
+            return data;
 
         } catch(e) {
 
@@ -58,7 +59,7 @@ export const UserService = {
             const query = `UPDATE usuarios SET usuario = ($1), email = ($2) WHERE id = ($3);`;
             const values = [usuario.usuario, usuario.email, id];
             const data = await pool.query(query, values)
-            return data.rows;
+            return data;
 
         } catch(e) {
 
@@ -72,7 +73,7 @@ export const UserService = {
         try {
 
             const data = await pool.query(`DELETE FROM usuarios WHERE id = '${id}'`)
-            return data.rows;
+            return data;
 
         } catch(e) {
 
