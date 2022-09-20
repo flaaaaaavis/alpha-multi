@@ -17,7 +17,7 @@
 	display: none;
 }
 
-.modal, #modal--delete-board__container, #modal--change-email__container, #modal--change-password__container, #modal--delete-account__container, #modal--delete-user-from-project__container {
+.modal, #modal--delete-board__container, #modal--change-email__container, #modal--change-password__container, #modal--delete-account__container, #modal--delete-user-from-project__container, #modal--delete-card__container {
     width: 100vw;
     height: 100vh;
     top: 0;
@@ -597,6 +597,65 @@
 }
 
 #modal--delete-board__button {
+	width: 107px;
+	height: 27px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 17px;
+	color: #FFFFFF;
+
+	background: var(--grey);
+	border-radius: 5px;
+}
+
+/* Deletar card */
+
+#modal--delete-card__container {
+    display: none;
+}
+
+#modal--delete-card {
+	width: 350px;
+	height: 225px;
+	padding: 25px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+	background-color: var(--white);
+	border-radius: 5px;
+}
+
+#modal--delete-card__title {
+	width: 50%;
+	padding-bottom: 10px;
+
+	text-align: center;
+
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	color: var(--red);
+
+	background: linear-gradient(to right, black 25%, rgba(255, 255, 255, 0) 0%);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	background-size: 10px 1px;
+}
+
+
+#modal--delete-card__text {
+	text-align: center;
+}
+
+#modal--delete-card__button {
 	width: 107px;
 	height: 27px;
 
