@@ -8,9 +8,6 @@ export const UserService = {
 
         try {
 
-            console.log(id)
-            console.log(typeof id)
-
             const data = await pool.query(`SELECT * FROM usuarios WHERE id = '${id}'`)
             return data.rows[0];
 
@@ -108,8 +105,7 @@ export const UserService = {
         try {
 
             const query = `SELECT * FROM projetos WHERE id IN (SELECT projeto_id FROM projetos_usuarios WHERE usuario_id = '${id}')`;
-            const values = [novaSenha, id];
-            const data = await pool.query(query, values)
+            const data = await pool.query(query)
             return data.rows;
 
         } catch(e) {
