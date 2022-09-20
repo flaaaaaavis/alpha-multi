@@ -5,19 +5,22 @@ import Render from "./Render.js";
 import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
 
-const token = localStorage.getItem("@dmkanban-user");
+const token = localStorage.getItem("@dmkanban-token");
 
 if (!token) {
 	location.replace("./login.html");
 }
 
 const user = parseJwt(token);
+
+console.log(user);
+localStorage.setItem("@dmkanban-userId", user.usuario.id);
 let projectId;
 
 const exitButton = document.getElementById("sair");
 exitButton.addEventListener("click", (e) => {
 	e.preventDefault();
-	localStorage.removeItem("@dmkanban-user");
+	localStorage.removeItem("@dmkanban-token");
 	location.replace("./login.html");
 });
 
@@ -58,9 +61,9 @@ ws.addEventListener("open", () => {
 function startBoard() {
 	const board = ApiMock.getBoard(sala);
 	if (!board) {
-		Render.createBoard();
+		Render.createBoard(3);
 	} else {
-		Render.createBoard();
+		Render.createBoard(board.columns.length);
 		Render.renderData(board);
 	}
 }
@@ -201,3 +204,59 @@ function editMenuInfo() {
 	email.innerText = user.usuario.email;
 }
 editMenuInfo();
+
+function modalFunctions() {
+	const emailButton = document.getElementById("mudar-email");
+	const modal = document.querySelector(".modal");
+	const emailModal = document.querySelector(".email-modal");
+	emailButton.addEventListener("click", (e) => {
+		e.preventDefault();
+		modal.classList.remove("hidden");
+		emailModal.classList.remove("hidden");
+	});
+
+	modal.addEventListener("click", (e) => {
+		if (e.target == modal) {
+			modal.classList.add("hidden");
+			emailModal.classList.add("hidden");
+		}
+	});
+
+	const close = document.querySelector(".email-modal header span");
+	close.addEventListener("click", () => {
+		modal.classList.add("hidden");
+		emailModal.classList.add("hidden");
+	});
+
+	const change = document.getElementById("mudar-email-input");
+	change.addEventListener("click", async (e) => {
+		const request = await changeEmail();
+		alert(request);
+	});
+}
+
+async function changeEmail() {
+	const email = document.getElementById("input-email").value;
+	if (email.trim() === "") {
+		return alert("Por favor digite um email");
+	} else if (!validateEmail(email)) {
+		return alert("Por favor digite um email valido");
+	}
+	const body = {
+		id: user.usuario.id,
+		usuario: user.usuario.usuario,
+		email: email.trim(),
+	};
+	const request = await Api.modifyUser(body);
+	if (request.result) {
+		return request.result;
+	}
+	return request;
+}
+
+function validateEmail(email) {
+	var re = /\S+@\S+\.\S+/;
+	return re.test(email);
+}
+
+modalFunctions();

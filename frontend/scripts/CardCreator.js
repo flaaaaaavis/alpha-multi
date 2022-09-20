@@ -159,11 +159,13 @@ export default class CardCreator {
 	static startCardModal() {
 		/* Show modal */
 		const modal = document.querySelector(".modal");
-
+		const cardModal = document.querySelector(".card-modal");
+		cardModal.classList.remove("hidden");
 		modal.classList.remove("hidden");
 		modal.addEventListener("click", (e) => {
 			if (e.target == modal) {
 				modal.classList.add("hidden");
+				cardModal.classList.add("hidden");
 				const edit = {
 					sala: sala,
 					tipo: "fechar modal",

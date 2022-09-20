@@ -15,7 +15,7 @@ export default class DragAndDrop {
 	static onDrop(event) {
 		const myColumn = event.target.id;
 		if (myColumn != "") {
-			const query = `#${myColumn} button`;
+			const query = `#${myColumn} .adicionar-card`;
 			const button = document.querySelector(query);
 			const id = event.dataTransfer.getData("text");
 			const dragger = document.getElementById(id);
@@ -42,7 +42,6 @@ export default class DragAndDrop {
 			card.classList.remove("arrastando");
 
 			const id = event.dataTransfer.getData("text");
-			console.log(id);
 			const arrastavel = document.getElementById(id);
 			if (myColumn.classList.contains("coluna")) {
 				myColumn.insertBefore(arrastavel, card);

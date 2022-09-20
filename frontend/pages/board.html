@@ -46,21 +46,21 @@
 						/>
 					</div>
 					<div class="menu--header__account">
-						<a href="">
+						<a id="mudar-email" href="#">
 							<img
 								src="../assets/icons/mail_FILL0_wght400_GRAD0_opsz48.svg"
 								alt=""
 							/>
 							Alterar e-mail
 						</a>
-						<a href="">
+						<a href="#">
 							<img
 								src="../assets/icons/lock_reset_FILL0_wght400_GRAD0_opsz48.svg"
 								alt=""
 							/>
 							Alterar senha
 						</a>
-						<a href="">
+						<a href="#">
 							<img src="../assets/icons/delete.png" alt="" />
 							Excluir conta
 						</a>
@@ -88,7 +88,7 @@
 										src="../assets/icons/group.png"
 										alt=""
 									/>
-									Participantes
+									Participantes +
 								</a>
 
 								<ul class="menu--accordion__item-content">
@@ -167,7 +167,7 @@
 		<div class="quadro"></div>
 
 		<div class="modal hidden">
-			<div class="card-modal">
+			<div class="card-modal hidden">
 				<main class="card-modal__main">
 					<input
 						class="title-1 card-modal__nome"
@@ -175,6 +175,22 @@
 						placeholder="Nome do cartão"
 						value="Nome do cartão"
 					/>
+					<ul id="membros--lista-membros">
+						<li>Membro 1</li>
+						<li>membro 2</li>
+						<button class="add-member">+</button>
+						<button id="add-membro" class="adicionar-btn">+</button>
+					</ul>
+					<div class="membros--modal hidden">
+						<header>
+							<h2 class="text-1">Membros</h2>
+							<span class="close-2">X</span>
+						</header>
+						<h3 class="text-2">Membros do quadro</h3>
+						<ul id="membros-modal--lista">
+							<li>Membro 1</li>
+						</ul>
+					</div>
 					<p>Descrição</p>
 					<textarea
 						class="card-modal__conteudo"
@@ -202,6 +218,20 @@
 						</li>
 					</ul>
 				</aside>
+			</div>
+
+			<div class="email-modal hidden">
+				<header>
+					<h2 class="title-2">Mudar seu e-mail</h2>
+					<span>X</span>
+				</header>
+				<input
+					class="text-2"
+					type="email"
+					id="input-email"
+					placeholder="Digite o novo e-mail"
+				/>
+				<button id="mudar-email-input">Enviar</button>
 			</div>
 		</div>
 

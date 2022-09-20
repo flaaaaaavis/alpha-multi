@@ -15,11 +15,12 @@ registerBtn.addEventListener("click", async (e) => {
 	const confirmPassword = document.getElementById(
 		"cadastro-conf-senha"
 	).value;
-	if (
-		password.trim() === confirmPassword.trim() &&
-		name.trim() !== "" &&
-		email.trim() !== ""
-	) {
+	if (password.trim() !== confirmPassword.trim()) {
+		const erro = document.getElementById("erro");
+		erro.innerText = "As senhas não são iguais";
+		return false;
+	}
+	if (password.trim() !== "" && name.trim() !== "" && email.trim() !== "") {
 		const user = {
 			usuario: name.trim(),
 			email: email.trim(),

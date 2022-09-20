@@ -7,7 +7,7 @@ export default class Render {
 	static columnCount = 1;
 	static addCardCount = 1;
 
-	static createBoard() {
+	static createBoard(columnNum = 3) {
 		const projectTitle = document.getElementById("nome-projeto");
 		const board = document.querySelector(".quadro");
 		projectTitle.value = "Novo quadro";
@@ -23,11 +23,25 @@ export default class Render {
 			this.createColumn(true);
 		});
 		board.append(addColumnBtn);
-		this.createColumn(false);
-		this.createColumn(false);
+		for (let i = 0; i < columnNum; i++) {
+			switch (i) {
+				case 0:
+					this.createColumn(false, "A fazer");
+					break;
+				case 1:
+					this.createColumn(false, "Fazendo");
+					break;
+				case 2:
+					this.createColumn(false, "Feito");
+					break;
+			}
+		}
 	}
 
-	static async createColumn(send) {
+	static async createColumn(
+		send,
+		columnName = `Nova coluna ${this.columnCount}`
+	) {
 		console.log("send");
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
@@ -45,7 +59,7 @@ export default class Render {
 		header.className = "coluna--header";
 		const name = document.createElement("input");
 		name.placeholder = "nome da coluna";
-		name.value = `Nova coluna ${this.columnCount}`;
+		name.value = columnName;
 		name.addEventListener("change", async () => {
 			const id = localStorage.getItem("@dm-kanban:id");
 			const change = {

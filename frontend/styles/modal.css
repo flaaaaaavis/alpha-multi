@@ -176,8 +176,8 @@
 }
 
 .membros--modal{
-	top: 65px;
-	width: 90%;
+	top: 120px;
+	width: 50%;
 	padding: 10px;
 	display: flex;
 	position: absolute;
@@ -244,6 +244,65 @@
 	border-radius: 50%;
 	color: var(--white);
 	background-color: var(--pink);
+}
+
+.email-modal{
+	position: absolute;
+	width: 30%;
+    height: 30vh;
+	padding: 20px;
+	display: flex;
+	border-radius: 5px;
+	flex-direction: column;
+	justify-content: space-between;
+	background-color: var(--white);
+}
+
+.email-modal header{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.email-modal header span{
+	cursor: pointer;
+}
+
+.email-modal input {
+	width: 80%;
+	height: 30px;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 24px;
+	border-radius: 8px;
+	font-style: normal;
+	padding: 20px 10px;
+	color: var(--black);
+	align-self: center;
+	border: 2px solid var(--grey);
+}
+
+.email-modal input:hover{
+	border: 2px solid var(--blue);
+}
+.email-modal input:focus{
+	border: 2px solid var(--light-blue);
+}
+
+.email-modal button {
+	width: 100px;
+	height: 30px;
+	display: flex;
+	font-size: 18px;
+	align-self: end;
+	font-weight: 400;
+	font-style: normal;
+	border-radius: 5px;
+	flex-direction: row;
+	color: var(--white);
+	align-items: center;
+	justify-content: center;
+	background: var(--orange);
 }
 
 @media screen and (min-width: 768px) {
