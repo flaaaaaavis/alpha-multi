@@ -27,7 +27,7 @@ registerBtn.addEventListener("click", async (e) => {
 			senha: password.trim(),
 		};
 		const request = await Api.register(user);
-		alert(request);
+		alert(request.result);
 		location.replace("../index.html");
 	}
 });

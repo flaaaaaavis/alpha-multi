@@ -48,8 +48,8 @@ export default class Render {
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
-		column.id = columnId;
-		column.value = columnId;
+		column.id = columnId.id;
+		column.value = columnId.id;
 		column.addEventListener("drop", (event) => {
 			DragAndDrop.onDrop(event);
 		});

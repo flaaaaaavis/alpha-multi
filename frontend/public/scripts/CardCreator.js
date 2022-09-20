@@ -32,13 +32,15 @@ export default class CardCreator {
 	static async createCard(target, send, colunaId, cardId = "") {
 		if (cardId == "") {
 			const body = {
-				coluna_id: colunaId,
+				coluna_id: colunaId.id,
 				nome: "Nome da tarefa",
 				ordem: this.cardCounter,
 				tags: "",
 				anotacoes: "Conteúdo da tarefa",
 			};
-			cardId = await Api.createTask(body);
+			const request = await Api.createTask(body);
+			console.log(request);
+			cardId = request.id;
 		}
 		console.log(cardId);
 		const targetButton = document.getElementById(target);

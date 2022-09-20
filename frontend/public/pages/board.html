@@ -55,14 +55,14 @@
 							/>
 							Alterar e-mail
 						</a>
-						<a href="#">
+						<a id="mudar-senha" href="#">
 							<img
 								src="../assets/icons/lock_reset_FILL0_wght400_GRAD0_opsz48.svg"
 								alt=""
 							/>
 							Alterar senha
 						</a>
-						<a href="#">
+						<a id="excluir-conta" href="#">
 							<img src="../assets/icons/delete.png" alt="" />
 							Excluir conta
 						</a>
@@ -76,6 +76,60 @@
 					</div>
 				</header>
 				<main class="menu--main">
+					<ul class="menu--main__accordion">
+						<li class="menu--accordion__item" id="your-boards">
+							<span id="your-boards__title">
+								<a href="#your-boards" class="item__title"
+									>Seus quadros</a
+								>
+								<img
+									src="../assets/icons/add.png"
+									id="your-boards__new-board-button"
+									alt="Criar novo quadro"
+								/>
+							</span>
+							<hr />
+
+							<ul class="menu--accordion__item-content">
+								<li class="menu--accordion__sub-item">
+									<form>
+										<input
+											type="text"
+											name=""
+											id="input-quadro"
+											placeholder="Novo quadro"
+										/>
+										<button id="criar-quadro">Criar</button>
+									</form>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 1</button>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 2</button>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 3</button>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 4</button>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 5</button>
+								</li>
+							</ul>
+						</li>
+					</ul>
 					<section>
 						<h3 id="this-board__title">Este quadro</h3>
 						<hr />
@@ -139,60 +193,6 @@
 							Excluir quadro
 						</a>
 					</section>
-					<ul class="menu--main__accordion">
-						<li class="menu--accordion__item" id="your-boards">
-							<span id="your-boards__title">
-								<a href="#your-boards" class="item__title"
-									>Seus quadros</a
-								>
-								<img
-									src="../assets/icons/add.png"
-									id="your-boards__new-board-button"
-									alt="Criar novo quadro"
-								/>
-							</span>
-							<hr />
-
-							<ul class="menu--accordion__item-content">
-								<li class="menu--accordion__sub-item">
-									<form>
-										<input
-											type="text"
-											name=""
-											id="input-quadro"
-											placeholder="Novo quadro"
-										/>
-										<button id="criar-quadro">Criar</button>
-									</form>
-								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									<button>Quadro 1</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									<button>Quadro 2</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									<button>Quadro 3</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									<button>Quadro 4</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									<button>Quadro 5</button>
-								</li>
-							</ul>
-						</li>
-					</ul>
 				</main>
 			</nav>
 		</menu>
@@ -311,13 +311,6 @@
 
 				<form id="modal--change-password__form">
 					<div>
-						<input
-							required
-							type="password"
-							placeholder="Senha atual"
-							id="modal--change-password__current-pass"
-						/>
-
 						<input
 							required
 							type="password"
