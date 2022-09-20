@@ -7,10 +7,10 @@ export default class Render {
 	static columnCount = 1;
 	static addCardCount = 1;
 
-	static createBoard() {
+	static createBoard(columnNum = 3, name, id) {
 		const projectTitle = document.getElementById("nome-projeto");
 		const board = document.querySelector(".quadro");
-		projectTitle.value = "Novo quadro";
+		projectTitle.value = name;
 		board.innerHTML = "";
 
 		const addColumnBtn = document.createElement("button");
@@ -23,17 +23,33 @@ export default class Render {
 			this.createColumn(true);
 		});
 		board.append(addColumnBtn);
-		this.createColumn(false);
-		this.createColumn(false);
+		for (let i = 0; i < columnNum; i++) {
+			switch (i) {
+				case 0:
+					this.createColumn(false, "A fazer", id);
+					break;
+				case 1:
+					this.createColumn(false, "Fazendo", id);
+					break;
+				case 2:
+					this.createColumn(false, "Feito", id);
+					break;
+			}
+		}
 	}
 
-	static async createColumn(send) {
-		console.log("send");
+	static async createColumn(send, columnName = "Nova coluna", id) {
+		const body = {
+			projeto_id: id,
+			nome: columnName,
+			ordem: this.columnCount,
+		};
+		const columnId = await Api.createCategory(body);
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
-		column.id = `coluna-${this.columnCount}`;
-		column.value = this.columnCount;
+		column.id = columnId.id;
+		column.value = columnId.id;
 		column.addEventListener("drop", (event) => {
 			DragAndDrop.onDrop(event);
 		});
@@ -45,9 +61,9 @@ export default class Render {
 		header.className = "coluna--header";
 		const name = document.createElement("input");
 		name.placeholder = "nome da coluna";
-		name.value = `Nova coluna ${this.columnCount}`;
+		name.value = columnName;
 		name.addEventListener("change", async () => {
-			const id = localStorage.getItem("@dm-kanban:id");
+			//const id = localStorage.getItem("@dm-kanban:id");
 			const change = {
 				projeto_id: id,
 				nome: name.value,
@@ -76,7 +92,7 @@ export default class Render {
 				) == true
 			) {
 				const change = {
-					id: column.value,
+					id: column.id,
 				};
 				const request = await Api.deleteCategory(change, column.value);
 				console.log(request);
@@ -104,7 +120,7 @@ export default class Render {
 
 		button.addEventListener("click", (event) => {
 			event.preventDefault();
-			CardCreator.createCard(button.id, true);
+			CardCreator.createCard(button.id, true, columnId);
 		});
 
 		column.append(header, button);

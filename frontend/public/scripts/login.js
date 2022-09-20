@@ -1,9 +1,9 @@
 import Api from "./Api.js";
 
-const token = localStorage.getItem("@dmkanban-user");
+const token = localStorage.getItem("@dmkanban-token");
 
 if (token) {
-	location.replace("./board.html");
+	location.replace("./pages/board.html");
 }
 
 const loginButton = document.getElementById("login-button");
@@ -18,8 +18,8 @@ loginButton.addEventListener("click", async (e) => {
 	const request = await Api.login(user);
 	console.log(request);
 	if (request.token) {
-		localStorage.setItem("@dmkanban-user", JSON.stringify(request.token));
-		location.replace("./board.html");
+		localStorage.setItem("@dmkanban-token", JSON.stringify(request.token));
+		location.replace("./pages/board.html");
 	} else {
 		alert("Usuário ou senha inválidos!");
 	}

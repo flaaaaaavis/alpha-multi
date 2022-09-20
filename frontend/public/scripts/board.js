@@ -1,45 +1,55 @@
 import CardCreator from "./CardCreator.js";
 import { ws, sala } from "./Websocket.js";
-import ApiMock from "./ApiMock.js";
 import Render from "./Render.js";
 import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
 
-const token = localStorage.getItem("@dmkanban-user");
+const token = localStorage.getItem("@dmkanban-token");
 
-// if (!token) {
-// 	location.replace("./login.html");
-// }
+if (!token) {
+	location.replace("../index.html");
+}
 
 const user = parseJwt(token);
+
+console.log(user);
+localStorage.setItem("@dmkanban-userId", user.usuario.id);
 let projectId;
 
 const exitButton = document.getElementById("sair");
 exitButton.addEventListener("click", (e) => {
 	e.preventDefault();
-	localStorage.removeItem("@dmkanban-user");
-	location.replace("./login.html");
+	localStorage.removeItem("@dmkanban-token");
+	location.replace("../index.html");
 });
 
-/* const newProject = document.getElementById("your-boards__new-board-button");
-newProject.addEventListener("click", async () => {
+const newProject = document.getElementById("criar-quadro");
+newProject.addEventListener("click", async (e) => {
+	e.preventDefault();
+	let nome = document.getElementById("input-quadro").value;
+	if (nome.trim() == "") {
+		nome = "Novo quadro";
+	}
+
 	const project = {
-		nome: "novo projeto",
+		nome: nome,
+		adm: user.usuario.id,
 	};
 	projectId = await Api.createProject(project);
 	localStorage.setItem("@dm-kanban:id", projectId);
-	console.log(projectId);
+	Render.createBoard(3, nome, projectId);
 });
 
-const deleteProject = document.getElementById("your-boards--delete");
-deleteProject.addEventListener("click", async (e) => {
-	e.preventDefault();
-	const project = {
-		id: projectId,
-	};
-	const request = await Api.deleteProject(project);
-	console.log(request);
-}); */
+/* renderizar o projeto */
+/* async function startBoard(nome, id) {
+	const board = ApiMock.getBoard(sala);
+	if (!board) {
+		Render.createBoard(3);
+	} else {
+		Render.createBoard(board.columns.length);
+		Render.renderData(board);
+	}
+} */
 
 /* Conectar ao websocket */
 
@@ -53,19 +63,6 @@ ws.addEventListener("open", () => {
 	};
 	ws.send(JSON.stringify(newUser));
 });
-
-/* renderizar o projeto */
-function startBoard() {
-	const board = ApiMock.getBoard(sala);
-	if (!board) {
-		Render.createBoard();
-	} else {
-		Render.createBoard();
-		Render.renderData(board);
-	}
-}
-
-startBoard();
 
 /* Respostas do websocket */
 
@@ -201,3 +198,136 @@ function editMenuInfo() {
 	email.innerText = user.usuario.email;
 }
 editMenuInfo();
+
+function modalFunctions() {
+	const modal = document.querySelector(".modal");
+	const emailModal = document.querySelector(".email-modal");
+	const emailButton = document.getElementById("mudar-email");
+	const openDeleteAccountModal = document.getElementById("excluir-conta");
+	const deleteAccountModal = document.getElementById(
+		"modal--delete-account__container"
+	);
+	const deleteModalButton = document.getElementById(
+		"modal--delete-user-from-project__button"
+	);
+	const closeEmail = document.querySelector(".email-modal header span");
+	const changeEmailInput = document.getElementById("mudar-email-input");
+
+	const passwordModal = document.getElementById(
+		"modal--change-password__container"
+	);
+	const openPasswordModal = document.getElementById("mudar-senha");
+	const changePasswordButton = document.getElementById(
+		"modal--change-password__button"
+	);
+	changePasswordButton.addEventListener("click", (e) => {
+		e.preventDefault();
+		changePassword();
+	});
+
+	openPasswordModal.addEventListener("click", (e) => {
+		e.preventDefault();
+		passwordModal.style.display = "flex";
+	});
+
+	passwordModal.addEventListener("click", (e) => {
+		e.preventDefault();
+		if (e.target == passwordModal) {
+			passwordModal.style.display = "none";
+		}
+	});
+
+	emailButton.addEventListener("click", (e) => {
+		e.preventDefault();
+		modal.classList.remove("hidden");
+		emailModal.classList.remove("hidden");
+	});
+
+	modal.addEventListener("click", (e) => {
+		if (e.target == modal) {
+			console.log("entrou");
+			modal.classList.add("hidden");
+			emailModal.classList.add("hidden");
+		}
+	});
+
+	closeEmail.addEventListener("click", () => {
+		modal.classList.add("hidden");
+		emailModal.classList.add("hidden");
+	});
+
+	openDeleteAccountModal.addEventListener("click", () => {
+		deleteAccountModal.style.display = "flex";
+	});
+
+	deleteAccountModal.addEventListener("click", (e) => {
+		e.preventDefault();
+		if (e.target == deleteAccountModal) {
+			deleteAccountModal.style.display = "none";
+		}
+	});
+
+	deleteModalButton.addEventListener("click", async (e) => {
+		e.preventDefault();
+		const request = await Api.deleteUser({ id: user.usuario.id });
+		alert(request.result);
+		localStorage.removeItem("@dmkanban-token");
+		location.replace("../index.html");
+	});
+
+	changeEmailInput.addEventListener("click", async (e) => {
+		const request = await changeEmail();
+		alert(request);
+	});
+}
+
+async function changeEmail() {
+	const email = document.getElementById("input-email").value;
+	if (email.trim() === "") {
+		return alert("Por favor digite um email");
+	} else if (!validateEmail(email)) {
+		return alert("Por favor digite um email valido");
+	}
+	const body = {
+		id: user.usuario.id,
+		usuario: user.usuario.usuario,
+		email: email.trim(),
+	};
+	const request = await Api.modifyUser(body);
+	console.log(request);
+	if (request.result) {
+		document.getElementById("user-email").innerText = email.trim();
+		return request.result;
+	}
+	console.log(request);
+	return request;
+}
+
+function validateEmail(email) {
+	var re = /\S+@\S+\.\S+/;
+	return re.test(email);
+}
+
+async function changePassword() {
+	const newPassword = document.getElementById(
+		"modal--change-password__new-pass"
+	).value;
+	const newPasswordRepeat = document.getElementById(
+		"modal--change-password__repeat-new-pass"
+	).value;
+	if (newPassword.trim() != newPasswordRepeat.trim()) {
+		return alert("As senhas não são iguais");
+	}
+	const body = {
+		id: user.usuario.id,
+		senha: newPassword.trim(),
+	};
+	const request = await Api.editUserPassword(body);
+	console.log(request);
+	if (request.result) {
+		return alert(request.result);
+	}
+	return request;
+}
+
+modalFunctions();

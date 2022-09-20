@@ -1,6 +1,7 @@
 import DragAndDrop from "./dragAndDrop.js";
 import ApiMock from "./ApiMock.js";
 import { ws, sala } from "./Websocket.js";
+import Api from "./Api.js";
 
 export default class CardCreator {
 	constructor() {
@@ -28,7 +29,20 @@ export default class CardCreator {
 	}
 
 	/* Cria a estrutura básica do card */
-	static createCard(target, send, cardId = `arrastavel-${this.cardCounter}`) {
+	static async createCard(target, send, colunaId, cardId = "") {
+		if (cardId == "") {
+			const body = {
+				coluna_id: colunaId.id,
+				nome: "Nome da tarefa",
+				ordem: this.cardCounter,
+				tags: "",
+				anotacoes: "Conteúdo da tarefa",
+			};
+			const request = await Api.createTask(body);
+			console.log(request);
+			cardId = request.id;
+		}
+		console.log(cardId);
 		const targetButton = document.getElementById(target);
 		const parent = targetButton.parentElement;
 
@@ -159,11 +173,13 @@ export default class CardCreator {
 	static startCardModal() {
 		/* Show modal */
 		const modal = document.querySelector(".modal");
-
+		const cardModal = document.querySelector(".card-modal");
+		cardModal.classList.remove("hidden");
 		modal.classList.remove("hidden");
 		modal.addEventListener("click", (e) => {
 			if (e.target == modal) {
 				modal.classList.add("hidden");
+				cardModal.classList.add("hidden");
 				const edit = {
 					sala: sala,
 					tipo: "fechar modal",

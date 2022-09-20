@@ -1,20 +1,5 @@
-:root {
-	--white: #FFFFFF;
-	--light-grey: #D9D9D9;
-	--grey: #4C4C4C;
-	--black: #000;
-	--blue: #212AD1;
-	--light-blue: #91F6F0;
-	--green: #68E79A;
-	--yellow: #FFE787;
-	--orange: #F26F21;
-	--pink: #FF6865;
-	--light-pink: #FF9A98;
-	--red: #E32F3A;
-}
-
 .modal {
-	display: none;
+	display: flex;
 }
 
 .modal, #modal--delete-board__container, #modal--change-email__container, #modal--change-password__container, #modal--delete-account__container, #modal--delete-user-from-project__container, #modal--delete-card__container {
@@ -192,8 +177,8 @@
 }
 
 .membros--modal{
-	top: 65px;
-	width: 90%;
+	top: 120px;
+	width: 50%;
 	padding: 10px;
 	display: flex;
 	position: absolute;
@@ -262,7 +247,66 @@
 	background-color: var(--pink);
 }
 
-@media (min-width: 769px) {
+.email-modal{
+	position: absolute;
+	width: 30%;
+    height: 30vh;
+	padding: 20px;
+	display: flex;
+	border-radius: 5px;
+	flex-direction: column;
+	justify-content: space-between;
+	background-color: var(--white);
+}
+
+.email-modal header{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.email-modal header span{
+	cursor: pointer;
+}
+
+.email-modal input {
+	width: 80%;
+	height: 30px;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 24px;
+	border-radius: 8px;
+	font-style: normal;
+	padding: 20px 10px;
+	color: var(--black);
+	align-self: center;
+	border: 2px solid var(--grey);
+}
+
+.email-modal input:hover{
+	border: 2px solid var(--blue);
+}
+.email-modal input:focus{
+	border: 2px solid var(--light-blue);
+}
+
+.email-modal button {
+	width: 100px;
+	height: 30px;
+	display: flex;
+	font-size: 18px;
+	align-self: end;
+	font-weight: 400;
+	font-style: normal;
+	border-radius: 5px;
+	flex-direction: row;
+	color: var(--white);
+	align-items: center;
+	justify-content: center;
+	background: var(--orange);
+}
+
+@media screen and (min-width: 768px) {
 	.title-1 {
 		font-weight: 400;
 		font-size: 32px;
