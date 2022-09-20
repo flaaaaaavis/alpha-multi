@@ -74,6 +74,7 @@ Altera uma tarefa com base no id.
     "ordem": "number",
     "tags": "string",
     "anotacoes": "string",
+    "colaboradores": "[]",
     "id": "number"
 }
 ```
