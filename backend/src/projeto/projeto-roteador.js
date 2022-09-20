@@ -1,97 +1,81 @@
-import express from 'express';
-import { ProjectService } from './projeto-servico.js';
+import express from "express";
+import { ProjectService } from "./projeto-servico.js";
 
 const jsonBodyParser = express.json();
 const ProjectRouter = express.Router();
 
-ProjectRouter.route('/').post(jsonBodyParser, async (req, res) => {
-    
-    if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
-    }
-    
-    for (let prop of ['nome']) {
-        if (req.body[prop] === undefined) {
-        return res
-            .status(400)
-            .json({ Error: `Missing '${prop}' property on request body` });
-        }
-    }
+ProjectRouter.route("/").post(jsonBodyParser, async (req, res) => {
+	if (!req.body) {
+		return res.status(400).json({ Error: `Missing request body` });
+	}
 
-    const { nome } = req.body;
+	for (let prop of ["nome"]) {
+		if (req.body[prop] === undefined) {
+			return res
+				.status(400)
+				.json({ Error: `Missing '${prop}' property on request body` });
+		}
+	}
 
-    const projeto = {
-        nome: nome
-    };
+	const { nome, adm } = req.body;
 
-    const dbRes = await ProjectService.insertProjeto(projeto)
+	const projeto = {
+		nome: nome,
+		adm: adm,
+	};
 
-    if (dbRes) { 
+	const dbRes = await ProjectService.insertProjeto(projeto);
 
-        res.status(201).json(dbRes);
-
-     } else  {
-
-        res.status(500).json({message:"Internal Server Error"});
-
-    }
-        
+	if (dbRes) {
+		res.status(201).json(dbRes);
+	} else {
+		res.status(500).json({ message: "Internal Server Error" });
+	}
 });
 
-ProjectRouter.route('/').patch(jsonBodyParser, async (req, res) => {
+ProjectRouter.route("/")
+	.patch(jsonBodyParser, async (req, res) => {
+		if (!req.body) {
+			return res.status(400).json({ Error: `Missing request body` });
+		}
 
-    if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
-    }
-    
-    for (let prop of ['nome']) {
-        if (req.body[prop] === undefined) {
-        return res
-            .status(400)
-            .json({ Error: `Missing '${prop}' property on request body` });
-        }
-    }
+		for (let prop of ["nome"]) {
+			if (req.body[prop] === undefined) {
+				return res.status(400).json({
+					Error: `Missing '${prop}' property on request body`,
+				});
+			}
+		}
 
-    const { nome, id } = req.body;
+		const { nome, id } = req.body;
 
-    const projeto = {
-        nome: nome
-    };
+		const projeto = {
+			nome: nome,
+		};
 
-    const dbRes = await ProjectService.updateProjeto(id, projeto);
+		const dbRes = await ProjectService.updateProjeto(id, projeto);
 
-    if (dbRes) {
+		if (dbRes) {
+			res.status(201).json(dbRes);
+		} else {
+			res.status(500).json({ message: "Internal Server Error" });
+		}
+	})
 
-        res.status(201).json(dbRes);
+	.delete(jsonBodyParser, async (req, res) => {
+		if (!req.body) {
+			return res.status(400).json({ Error: `Missing request body` });
+		}
 
-    } else {
+		const { id } = req.body;
 
-        res.status(500).json({message:"Internal Server Error"})
+		const dbRes = await ProjectService.deleteProjeto(id);
 
-    }
-    
-})
-
-.delete(jsonBodyParser, async (req, res) => {
-
-    if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
-    }
-
-    const { id } = req.body;
-
-    const dbRes = await ProjectService.deleteProjeto(id);
-
-    if (dbRes) {
-
-        res.status(201).json(dbRes);
-
-    } else {
-
-        res.status(500).json({message:"Internal Server Error"})
-
-    }
-   
-  });
+		if (dbRes) {
+			res.status(201).json(dbRes);
+		} else {
+			res.status(500).json({ message: "Internal Server Error" });
+		}
+	});
 
 export default ProjectRouter;

@@ -31,7 +31,7 @@ wss.on("connection", (ws) => {
 		console.log(mensagem);
 		wss.clients.forEach((client) => {
 			if (client !== ws && client.readyState === WebSocket.OPEN) {
-				console.log(client.room, mensagem.sala);
+				/* console.log(client.room, mensagem.sala); */
 				if (client.room == mensagem.sala) {
 					client.send(JSON.stringify(mensagem));
 				}
