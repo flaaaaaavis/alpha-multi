@@ -233,11 +233,12 @@ Traz todas as informações do usuario;
 
 ```js
 {
-    "result": "Usuario deletado com sucesso!"
+	"id": "string",
+	"data_criacao": "timestamp",
+	"usuario": "string",
+	"email": "string",
+	"senha": "string"
 }
 ```
 
-
-
 Projetos por usuário.
-getUsuarioPorId.

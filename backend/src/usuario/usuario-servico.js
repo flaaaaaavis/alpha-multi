@@ -8,6 +8,9 @@ export const UserService = {
 
         try {
 
+            console.log(id)
+            console.log(typeof id)
+
             const data = await pool.query(`SELECT * FROM usuarios WHERE id = '${id}'`)
             return data.rows[0];
 

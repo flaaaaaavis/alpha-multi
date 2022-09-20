@@ -100,11 +100,12 @@ UserRouter.route('/').post(jsonBodyParser, async (req, res) => {
 UserRouter.route('/:id').get(jsonBodyParser, async (req, res) => {    
 
     if (!req.params) return res.status(400).json({'error':'Missing Req Params'});
-    const { id } = req.params;
+    const { id } = req.params;    
 
-    const dbRes = await UserService.updateUsuario(id, novoUsuario);
+    const dbRes = await UserService.getUsuario(id);
+    console.log(dbRes)
 
-    if (dbRes.length > 0) {
+    if (dbRes.id) {
         
         res.status(200).json(dbRes); 
 
