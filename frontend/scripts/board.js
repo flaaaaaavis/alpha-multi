@@ -182,6 +182,16 @@ function menuControl() {
 	}
 }
 
+function modalControl(modalId) {
+	const modal = document.getElementById(id)
+
+	if (window.getComputedStyle(modal).display === "none") {
+		menu.style.display = "flex";
+	} else {
+		menu.style.display = "none";
+	}
+}
+
 const openButton = document.getElementById("menu--button__open");
 openButton.addEventListener("click", (event) => {
 	event.preventDefault();
@@ -192,6 +202,30 @@ const closeButton = document.getElementById("closeMenuButton");
 closeButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	menuControl();
+});
+
+const deleteAccountButton = document.getElementById("delete-account-button")
+deleteAccountButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	modalControl("modal--delete-account__container");
+});
+
+const changeEmailButton = document.getElementById("change-email-button")
+changeEmailButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	modalControl("modal--change-email__container");
+});
+
+const changePassButton = document.getElementById("change-password-button")
+changePassButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	modalControl("modal--change-password__container");
+});
+
+const deleteBoardButton = document.getElementById("delete-board-button")
+deleteBoardButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	modalControl("modal--delete-board__container");
 });
 
 function editMenuInfo() {
