@@ -8,9 +8,6 @@ export const UserService = {
 
         try {
 
-            console.log(id)
-            console.log(typeof id)
-
             const data = await pool.query(`SELECT * FROM usuarios WHERE id = '${id}'`)
             return data.rows[0];
 
@@ -108,13 +105,40 @@ export const UserService = {
         try {
 
             const query = `SELECT * FROM projetos WHERE id IN (SELECT projeto_id FROM projetos_usuarios WHERE usuario_id = '${id}')`;
-            const values = [novaSenha, id];
-            const data = await pool.query(query, values)
+            const data = await pool.query(query)
             return data.rows;
 
         } catch(e) {
 
             console.log(e)
+
+        }
+
+    },
+    async insertUsuarioProjeto(usuario_id, projeto_id) {
+
+        try {
+
+            const query = `INSERT INTO projetos_usuarios (usuario_id, projeto_id) VALUES ($1, $2)`;
+            const values = [usuario_id, projeto_id];
+            const data = await pool.query(query, values)
+            return data;
+        } catch(e) {
+
+            console.log(e);
+
+        }
+
+    },
+    async deleteUsuarioProjeto(usuario_id, projeto_id) {
+
+        try {
+
+            const data = await pool.query(`DELETE FROM projetos_usuarios WHERE usuario_id = ${usuario_id} AND projeto_id = ${projeto_id} LIMIT 1`);
+            return data;
+        } catch(e) {
+
+            console.log(e);
 
         }
 

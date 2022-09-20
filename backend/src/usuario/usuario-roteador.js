@@ -103,7 +103,6 @@ UserRouter.route('/:id').get(jsonBodyParser, async (req, res) => {
     const { id } = req.params;    
 
     const dbRes = await UserService.getUsuario(id);
-    console.log(dbRes)
 
     if (dbRes.id) {
         
