@@ -7,9 +7,9 @@ import parseJwt from "./userInfo.js";
 
 const token = localStorage.getItem("@dmkanban-user");
 
-if (!token) {
-	location.replace("./login.html");
-}
+// if (!token) {
+// 	location.replace("./login.html");
+// }
 
 const user = parseJwt(token);
 let projectId;
@@ -173,7 +173,7 @@ function menuControl() {
 	let menu = document.getElementById("sidebar-menu");
 	const openButton = document.getElementById("menu--button__open");
 
-	if (window.getComputedStyle(menu).display == "none") {
+	if (window.getComputedStyle(menu).display === "none") {
 		menu.style.display = "flex";
 		openButton.style.display = "none";
 	} else {

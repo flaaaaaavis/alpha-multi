@@ -17,7 +17,6 @@
     "uuidv4": "^6.2.13",
     "ws": "^8.8.1"
   },
-  "type": "module",
   "name": "alpha-multi",
   "description": "",
   "version": "1.0.0",
