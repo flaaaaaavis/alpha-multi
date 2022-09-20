@@ -1,4 +1,23 @@
+:root {
+	--white: #FFFFFF;
+	--light-grey: #D9D9D9;
+	--grey: #4C4C4C;
+	--black: #000;
+	--blue: #212AD1;
+	--light-blue: #91F6F0;
+	--green: #68E79A;
+	--yellow: #FFE787;
+	--orange: #F26F21;
+	--pink: #FF6865;
+	--light-pink: #FF9A98;
+	--red: #E32F3A;
+}
+
 .modal {
+	display: none;
+}
+
+.modal, #modal--delete-board__container, #modal--change-email__container, #modal--change-password__container, #modal--delete-account__container, #modal--delete-user-from-project__container {
     width: 100vw;
     height: 100vh;
     top: 0;
@@ -6,7 +25,6 @@
     position: fixed;
     z-index: 2;
 
-    display: flex;
     align-items: center;
     justify-content: center;
 
@@ -22,7 +40,6 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-
 
 .title-2 {
 	font-style: normal;
@@ -47,7 +64,6 @@
     background-color: var(--white);
 	border-radius: 4px;
 }
-
 
 .card-modal__main {
     width: 100%;
@@ -246,7 +262,7 @@
 	background-color: var(--pink);
 }
 
-@media screen and (min-width: 768px) {
+@media (min-width: 769px) {
 	.title-1 {
 		font-weight: 400;
 		font-size: 32px;
@@ -279,4 +295,320 @@
 		font-size: 24px;
 		line-height: 29px;
 	}
+}
+
+/* Remover usuário do projeto */
+
+#modal--delete-user-from-project__container {
+    display: none;
+}
+
+#modal--delete-user-from-project {
+	width: 400px;
+	height: 250px;
+	padding: 20px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
+	background-color: var(--white);
+	border-radius: 5px;
+}
+
+#modal--delete-user-from-project__title {
+	width: 50%;
+	padding-bottom: 10px;
+
+	text-align: center;
+
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	color: var(--red);
+
+	background: linear-gradient(to right, black 25%, rgba(255, 255, 255, 0) 0%);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	background-size: 10px 1px;
+}
+
+#modal--delete-user-from-project__text {
+	text-align: center;
+}
+
+#modal--delete-user-from-project__button {
+	width: 107px;
+	height: 27px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 17px;
+	color: #FFFFFF;
+
+	background: var(--grey);
+	border-radius: 5px;
+}
+
+
+/* Deletar conta */
+
+#modal--delete-account__container {
+    display: none;
+}
+
+#modal--delete-account {
+	width: 350px;
+	height: 250px;
+	padding: 20px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
+	background-color: var(--white);
+	border-radius: 5px;
+}
+
+#modal--delete-account__title {
+	width: 50%;
+	padding-bottom: 10px;
+
+	text-align: center;
+
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	color: var(--red);
+
+	background: linear-gradient(to right, black 25%, rgba(255, 255, 255, 0) 0%);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	background-size: 10px 1px;
+}
+
+#modal--delete-account__text {
+	text-align: center;
+}
+
+#modal--delete-account__button {
+	width: 107px;
+	height: 27px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 17px;
+	color: #FFFFFF;
+
+	background: var(--grey);
+	border-radius: 5px;
+}
+
+
+/* Alterar senha */
+
+#modal--change-password__container {
+    display: none;
+}
+
+#modal--change-password {
+	width: 400px;
+	height: 300px;
+	padding: 20px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
+	background-color: var(--white);
+	border-radius: 5px;
+}
+
+#modal--change-password__title {
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+}
+
+#modal--change-password__form {
+	width: 100%;
+	height: 70%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#modal--change-password__form div {
+	width: 100%;
+	height: 65%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#modal--change-password__form input {
+	width: 75%;
+	height: 27px;
+	padding-left: 20px;
+
+	border-bottom: 1px solid var(--black);
+}
+
+#modal--change-password__form input:hover {
+	border-bottom: 2px solid var(--blue);
+}
+
+#modal--change-password__button {
+	width: 107px;
+	height: 27px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-weight: 600;
+	font-size: 14px;
+	color: var(--white);
+
+	background: var(--blue);
+	border-radius: 5px;
+}
+
+
+/* Alterar email */
+
+#modal--change-email__container {
+    display: none;
+}
+
+#modal--change-email {
+	width: 400px;
+	height: 300px;
+	padding: 20px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
+	background-color: var(--white);
+	border-radius: 5px;
+}
+
+#modal--change-email__title {
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+}
+
+#modal--change-email__form {
+	width: 100%;
+	height: 60%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#modal--change-email__form input {
+	width: 75%;
+	height: 27px;
+	padding-left: 20px;
+
+	border-bottom: 1px solid var(--black);
+}
+
+#modal--change-email__form input:hover {
+	border-bottom: 2px solid var(--blue);
+}
+
+#modal--change-email__button {
+	width: 107px;
+	height: 27px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-weight: 600;
+	font-size: 14px;
+	color: var(--white);
+
+	background: var(--blue);
+	border-radius: 5px;
+}
+
+
+/* Excluir quadro */
+
+#modal--delete-board__container {
+    display: none;
+}
+
+#modal--delete-board {
+	width: 400px;
+	height: 250px;
+	padding: 25px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+	background-color: var(--white);
+	border-radius: 5px;
+}
+
+#modal--delete-board__title {
+	width: 50%;
+	padding-bottom: 10px;
+
+	text-align: center;
+
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	color: var(--red);
+
+	background: linear-gradient(to right, black 25%, rgba(255, 255, 255, 0) 0%);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	background-size: 10px 1px;
+}
+
+#modal--delete-board__text {
+	text-align: center;
+}
+
+#modal--delete-board__button {
+	width: 107px;
+	height: 27px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 17px;
+	color: #FFFFFF;
+
+	background: var(--grey);
+	border-radius: 5px;
 }
