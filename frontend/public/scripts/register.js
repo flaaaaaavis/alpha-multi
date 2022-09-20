@@ -28,6 +28,6 @@ registerBtn.addEventListener("click", async (e) => {
 		};
 		const request = await Api.register(user);
 		alert(request);
-		location.replace("./login.html");
+		location.replace("../index.html");
 	}
 });

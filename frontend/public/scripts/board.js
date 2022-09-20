@@ -8,7 +8,7 @@ import parseJwt from "./userInfo.js";
 const token = localStorage.getItem("@dmkanban-token");
 
 if (!token) {
-	location.replace("./login.html");
+	location.replace("../index.html");
 }
 
 const user = parseJwt(token);
@@ -21,7 +21,7 @@ const exitButton = document.getElementById("sair");
 exitButton.addEventListener("click", (e) => {
 	e.preventDefault();
 	localStorage.removeItem("@dmkanban-token");
-	location.replace("./login.html");
+	location.replace("../index.html");
 });
 
 /* const newProject = document.getElementById("your-boards__new-board-button");

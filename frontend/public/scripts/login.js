@@ -3,7 +3,7 @@ import Api from "./Api.js";
 const token = localStorage.getItem("@dmkanban-token");
 
 if (token) {
-	location.replace("./board.html");
+	location.replace("./pages/board.html");
 }
 
 const loginButton = document.getElementById("login-button");
@@ -19,7 +19,7 @@ loginButton.addEventListener("click", async (e) => {
 	console.log(request);
 	if (request.token) {
 		localStorage.setItem("@dmkanban-token", JSON.stringify(request.token));
-		location.replace("./board.html");
+		location.replace("./pages/board.html");
 	} else {
 		alert("Usuário ou senha inválidos!");
 	}
