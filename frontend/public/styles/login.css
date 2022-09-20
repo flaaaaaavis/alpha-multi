@@ -138,12 +138,15 @@ a:hover {
 	}
 
 	button {
+<<<<<<<< HEAD:frontend/public/styles/cadastro-e-login.css
 		margin: 20px 0px;
 		width: 250px;
 		height: 60px;
+========
 		width: 15%;
 		max-width: 200px;
 		height: 45px;
+>>>>>>>> dabddd44a15db85118337ffac41073ec6bd287b7:frontend/public/styles/login.css
 		border-radius: 8px;
 
 		font-weight: 400;

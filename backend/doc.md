@@ -74,6 +74,7 @@ Altera uma tarefa com base no id.
     "ordem": "number",
     "tags": "string",
     "anotacoes": "string",
+    "colaboradores": "[]",
     "id": "number"
 }
 ```
@@ -223,3 +224,22 @@ Deleta um usuário
     "result": "Usuario deletado com sucesso!"
 }
 ```
+
+> GET /api/usuario/:id
+
+Traz todas as informações do usuario;
+
+**Response**
+`200 OK`
+
+```js
+{
+	"id": "string",
+	"data_criacao": "timestamp",
+	"usuario": "string",
+	"email": "string",
+	"senha": "string"
+}
+```
+
+Projetos por usuário.

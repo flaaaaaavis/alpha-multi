@@ -7,6 +7,7 @@
 	background: none;
 	box-sizing: border-box;
 	font-family: 'Lato', sans-serif;
+	font-style: normal;
 }
 
 html, body, div, span, applet, object, iframe,
@@ -52,6 +53,10 @@ table {
 
 input, button, textarea, select {
 	outline: none;
+}
+
+img {
+	cursor: pointer;
 }
 
 a {

@@ -8,6 +8,9 @@ export const UserService = {
 
         try {
 
+            console.log(id)
+            console.log(typeof id)
+
             const data = await pool.query(`SELECT * FROM usuarios WHERE id = '${id}'`)
             return data.rows[0];
 
@@ -36,6 +39,8 @@ export const UserService = {
     async insertUsuario(usuario){
 
         try {
+
+            console.log(usuario)
 
             const id = uuidv4();
             const senha = hashPwd(usuario.senha);
@@ -87,6 +92,22 @@ export const UserService = {
         try {           
 
             const query = `UPDATE usuarios SET senha = ($1) WHERE id = ($2);`;
+            const values = [novaSenha, id];
+            const data = await pool.query(query, values)
+            return data.rows;
+
+        } catch(e) {
+
+            console.log(e)
+
+        }
+
+    },
+    async getProjetosPorUsuario(id) {
+
+        try {
+
+            const query = `SELECT * FROM projetos WHERE id IN (SELECT projeto_id FROM projetos_usuarios WHERE usuario_id = '${id}')`;
             const values = [novaSenha, id];
             const data = await pool.query(query, values)
             return data.rows;
