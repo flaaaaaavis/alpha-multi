@@ -114,6 +114,34 @@ export const UserService = {
 
         }
 
+    },
+    async insertUsuarioProjeto(usuario_id, projeto_id) {
+
+        try {
+
+            const query = `INSERT INTO projetos_usuarios (usuario_id, projeto_id) VALUES ($1, $2)`;
+            const values = [usuario_id, projeto_id];
+            const data = await pool.query(query, values)
+            return data;
+        } catch(e) {
+
+            console.log(e);
+
+        }
+
+    },
+    async deleteUsuarioProjeto(usuario_id, projeto_id) {
+
+        try {
+
+            const data = await pool.query(`DELETE FROM projetos_usuarios WHERE usuario_id = ${usuario_id} AND projeto_id = ${projeto_id} LIMIT 1`);
+            return data;
+        } catch(e) {
+
+            console.log(e);
+
+        }
+
     }
 
 }
