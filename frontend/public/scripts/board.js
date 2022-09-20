@@ -24,25 +24,31 @@ exitButton.addEventListener("click", (e) => {
 	location.replace("../index.html");
 });
 
-/* const newProject = document.getElementById("your-boards__new-board-button");
+const newProject = document.getElementById("criar-quadro");
 newProject.addEventListener("click", async () => {
+	let nome = document.getElementById("input-quadro").value;
+	if (nome.trim() == "") {
+		nome = "Novo quadro";
+	}
+
 	const project = {
-		nome: "novo projeto",
+		nome: nome,
 	};
 	projectId = await Api.createProject(project);
 	localStorage.setItem("@dm-kanban:id", projectId);
-	console.log(projectId);
+	Render.createBoard(3, nome, projectId);
 });
 
-const deleteProject = document.getElementById("your-boards--delete");
-deleteProject.addEventListener("click", async (e) => {
-	e.preventDefault();
-	const project = {
-		id: projectId,
-	};
-	const request = await Api.deleteProject(project);
-	console.log(request);
-}); */
+/* renderizar o projeto */
+/* async function startBoard(nome, id) {
+	const board = ApiMock.getBoard(sala);
+	if (!board) {
+		Render.createBoard(3);
+	} else {
+		Render.createBoard(board.columns.length);
+		Render.renderData(board);
+	}
+} */
 
 /* Conectar ao websocket */
 
@@ -56,19 +62,6 @@ ws.addEventListener("open", () => {
 	};
 	ws.send(JSON.stringify(newUser));
 });
-
-/* renderizar o projeto */
-function startBoard() {
-	const board = ApiMock.getBoard(sala);
-	if (!board) {
-		Render.createBoard(3);
-	} else {
-		Render.createBoard(board.columns.length);
-		Render.renderData(board);
-	}
-}
-
-startBoard();
 
 /* Respostas do websocket */
 
