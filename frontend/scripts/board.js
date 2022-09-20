@@ -11,7 +11,7 @@ const token = localStorage.getItem("@dmkanban-user");
 // 	location.replace("./login.html");
 // }
 
-const user = parseJwt(token);
+//const user = parseJwt(token);
 let projectId;
 
 const exitButton = document.getElementById("sair");
