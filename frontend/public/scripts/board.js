@@ -184,6 +184,12 @@ function modalControl(modalId) {
 	});
 }
 
+const closeModal = document.querySelectorAll('.close-modal-x')
+// closeModal.addEventListener("click", (event) => {
+// 	event.preventDefault();
+// 	menuControl();
+// });
+
 const openButton = document.getElementById("menu--button__open");
 openButton.addEventListener("click", (event) => {
 	event.preventDefault();

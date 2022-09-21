@@ -49,6 +49,19 @@ body {
 	box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 }
 
+#board--header img {
+	display: none;
+}
+@media (min-width: 768px) {
+	#board--header img {
+		position: absolute;
+		height: 40px;
+		left: 30px;
+
+		display: block;
+	}
+}
+
 .title-1 {
 	font-weight: 400;
 	font-size: 26px;
@@ -72,6 +85,16 @@ body {
 	background-color: var(--white);
 	filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
 }
+/* @media (min-width: 481px) {
+	#menu--button__open {
+		width: 60px;
+		height: 60px;
+		top: 5px;
+		left: 0;
+
+		filter: none;
+	}
+} */
 
 #menu--button__open img {
 	width: 40px;
@@ -150,11 +173,9 @@ body {
 	line-height: 29px;
 	text-align: center;
 	color: var(--blue);
-
-
 }
 
-.botao-delete{
+.botao-delete {
 	position: absolute;
 	right: 10px;
 	border-radius: 50%;
@@ -319,9 +340,7 @@ body {
 	display: none;
 }
 
-
 @media screen and (min-width: 768px) {
-
 	.menu {
 		width: 275px;
 	}

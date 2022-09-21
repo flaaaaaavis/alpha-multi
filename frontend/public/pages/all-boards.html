@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link rel="stylesheet" href="../styles/reset.css" />
+		<link rel="stylesheet" href="../styles/animations.css" />
+		<link rel="stylesheet" href="../styles/sidebar-menu.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
+		<link rel="stylesheet" href="../styles/board.css" />
+		<link rel="stylesheet" href="../styles/all-boards.css">
+
+		<title>DM Kanban - Quadro</title>
+	</head>
+
+	<body>
+		<header id="board--header">
+			<img class="logo" src="../assets/logo.png">
+			<input
+				class="title-1"
+				type="text"
+				id="nome-projeto"
+				value="Novo quadro"
+			/>
+		</header>
+
+		<button id="menu--button__open">
+			<img
+				src="../assets/icons/menu.png"
+				alt="Menu lateral"
+				title="Abrir menu lateral"
+			/>
+		</button>
+
+		<menu id="sidebar-menu" class="menu--container">
+			<nav class="menu">
+				<header class="menu--header">
+					<div class="menu--header__top">
+						<section>
+							<h2 id="user-username">Kenji Animadinho</h2>
+							<p id="user-email">kenji@email.com</p>
+						</section>
+						<img
+							id="closeMenuButton"
+							src="../assets/icons/close.png"
+							alt="Fechar menu"
+						/>
+					</div>
+					<div class="menu--header__account">
+						<a id="mudar-email" href="#">
+							<img
+								src="../assets/icons/mail_FILL0_wght400_GRAD0_opsz48.svg"
+								alt=""
+							/>
+							Alterar e-mail
+						</a>
+						<a id="mudar-senha" href="#">
+							<img
+								src="../assets/icons/lock_reset_FILL0_wght400_GRAD0_opsz48.svg"
+								alt=""
+							/>
+							Alterar senha
+						</a>
+						<a id="excluir-conta" href="#">
+							<img src="../assets/icons/delete.png" alt="" />
+							Excluir conta
+						</a>
+						<a href="#" id="sair">
+							<img
+								src="../assets/icons/logout_FILL0_wght400_GRAD0_opsz48 (1).svg"
+								alt=""
+							/>
+							Sair
+						</a>
+					</div>
+				</header>
+				<main class="menu--main">
+					<ul class="menu--main__accordion">
+						<li class="menu--accordion__item" id="your-boards">
+							<span id="your-boards__title">
+								<a href="#your-boards" class="item__title"
+									>Seus quadros</a
+								>
+								<img
+									src="../assets/icons/add.png"
+									id="your-boards__new-board-button"
+									alt="Criar novo quadro"
+								/>
+							</span>
+							<hr />
+
+							<ul class="menu--accordion__item-content">
+								<li class="menu--accordion__sub-item">
+									<form>
+										<input
+											type="text"
+											name=""
+											id="input-quadro"
+											placeholder="Novo quadro"
+										/>
+										<button id="criar-quadro">Criar</button>
+									</form>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 1</button>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 2</button>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 3</button>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 4</button>
+								</li>
+								<li
+									class="menu--accordion__sub-item this-board__item"
+								>
+									<button>Quadro 5</button>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<section>
+						<h3 id="this-board__title">Este quadro</h3>
+						<hr />
+
+						<ul class="menu--main__accordion">
+							<li class="menu--accordion__item" id="members">
+								<a href="#members" id="members-row" class="item__title this-board__item">
+									<span>
+										<img
+											src="../assets/icons/group.png"
+											alt=""
+										/>
+										Participantes
+									</span>
+
+									<img
+										src="../assets/icons/add.png"
+										id="your-boards__new-board-button"
+										alt="Criar novo quadro"
+									/>
+								</a>
+
+								<ul class="menu--accordion__item-content">
+									<li class="menu--accordion__sub-item">
+										<form>
+											<input
+												type="email"
+												name=""
+												id=""
+												placeholder="Adicionar participante"
+											/>
+											<button>Adicionar</button>
+										</form>
+									</li>
+									<li class="menu--accordion__sub-item">
+										<span>Kenjinho</span>
+										<button>
+											<img
+												src="../assets/icons/close.png"
+												alt="Excluir participante"
+											/>
+										</button>
+									</li>
+									<li class="menu--accordion__sub-item">
+										<span>Animado</span>
+										<button>
+											<img
+												src="../assets/icons/close.png"
+												alt="Excluir participante"
+											/>
+										</button>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<a href="" class="this-board__item" id="delete-board-button">
+							<img src="../assets/icons/delete.png" alt="" />
+							Excluir quadro
+						</a>
+					</section>
+					<ul class="menu--main__accordion">
+						<li class="menu--accordion__item" id="your-boards">
+							<span id="your-boards__title">
+								<a href="#your-boards" class="item__title">Seus quadros</a>
+								<img src="../assets/icons/add.png" id="your-boards__new-board-button" alt="Criar novo quadro">
+							</span>
+							<hr />
+
+							<ul class="menu--accordion__item-content">
+								<li class="menu--accordion__sub-item">
+									<form>
+										<input type="email" name="" id="" placeholder="Novo quadro">
+										<button>Criar</button>
+									</form>
+								</li>
+								<li class="menu--accordion__sub-item this-board__item">
+									<button>Quadro 1</button>
+								</li>
+								<li class="menu--accordion__sub-item this-board__item">
+									<button>Quadro 2</button>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</main>
+			</nav>
+		</menu>
+
+		<main id="all-boards__container">
+			<h2>Seus quadros</h2>
+			<ul id="all-boards__list">
+				<li class="all-boards--list__item">
+					<p>Nome exemplo</p>
+					<img src="../assets/icons/edit_FILL0_wght400_GRAD0_opsz48 (1).svg" alt="">
+				</li>
+				<li class="all-boards--list__item">
+					<p>Nome exemplo</p>
+					<img src="../assets/icons/edit_FILL0_wght400_GRAD0_opsz48 (1).svg" alt="">
+				</li>
+				<li class="all-boards--list__item">
+					<p>Nome exemplo</p>
+					<img src="../assets/icons/edit_FILL0_wght400_GRAD0_opsz48 (1).svg" alt="">
+				</li>
+				<li class="all-boards--list__item">
+					<p>Nome exemplo</p>
+					<img src="../assets/icons/edit_FILL0_wght400_GRAD0_opsz48 (1).svg" alt="">
+				</li>
+				<li class="all-boards--list__item">
+					<p>Nome exemplo</p>
+					<img src="../assets/icons/edit_FILL0_wght400_GRAD0_opsz48 (1).svg" alt="">
+				</li>
+				<li class="all-boards--list__item">
+					<p>Nome exemplo</p>
+					<img src="../assets/icons/edit_FILL0_wght400_GRAD0_opsz48 (1).svg" alt="">
+				</li>
+			</ul>
+		</main>
+
+		<script type="module" src="../scripts/board.js"></script>
+	</body>
+</html>
