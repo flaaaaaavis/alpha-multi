@@ -410,4 +410,25 @@ export default class Api {
 
 		return project;
 	}
+
+	static async addUserToProjectByEmail(body) {
+		const project = await fetch(`${this.baseUrl}/api/projeto/membros`, {
+			method: "POST",
+			body: JSON.stringify(body),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return project;
+	}
 }

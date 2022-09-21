@@ -184,7 +184,7 @@ function modalControl(modalId) {
 	});
 }
 
-const closeModal = document.querySelectorAll('.close-modal-x')
+const closeModal = document.querySelectorAll(".close-modal-x");
 // closeModal.addEventListener("click", (event) => {
 // 	event.preventDefault();
 // 	menuControl();
@@ -408,6 +408,7 @@ async function renderProjects(project, categories) {
 		board
 	);
 	localStorage.setItem("@dm-kanban:id", board.id);
+	udpateSala();
 	ws.send(JSON.stringify({ room: sala }));
 	Render.renderData(board);
 	console.log(board);
@@ -418,12 +419,50 @@ async function getMembers(project) {
 		id: project.projeto_id,
 	};
 	const membersInfo = [];
+	const list = document.getElementById("project-members-list");
 	const members = await Api.getUsersByProject(body);
 	members.projetos.forEach(async (member) => {
 		const info = await Api.getUserById(member.usuario_id);
 		membersInfo.push(info);
+		console.log(info);
+		const item = document.createElement("li");
+		item.className = "menu--accordion__sub-item";
+		const span = document.createElement("span");
+		span.innerText = info.usuario;
+		span.title = info.email;
+		const button = document.createElement("button");
+		const img = document.createElement("img");
+		img.src = "../assets/icons/close.png";
+		img.alt = "Excluir participante";
+		button.append(img);
+		item.append(span, button);
+		list.append(item);
 	});
+
 	return membersInfo;
 }
+
+async function addMemberToProject() {
+	const input = document.getElementById("adicionar-participante").value;
+	const email = validateEmail(input);
+	if (email) {
+		const body = {
+			projeto_id: localStorage.getItem("@dm-kanban:id"),
+			email: input.trim(),
+		};
+		const request = await Api.addUserToProjectByEmail(body);
+		if (request.result) {
+			alert(request.result);
+		} else {
+			alert("usuário não encontrado");
+		}
+	}
+}
+
+const addMemberButton = document.getElementById("add-participante-button");
+addMemberButton.addEventListener("click", (e) => {
+	e.preventDefault();
+	addMemberToProject();
+});
 
 getProjects();
