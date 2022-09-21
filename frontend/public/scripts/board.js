@@ -1,5 +1,5 @@
 import CardCreator from "./CardCreator.js";
-import { ws, sala } from "./Websocket.js";
+import { ws, sala, udpateSala } from "./Websocket.js";
 import Render from "./Render.js";
 import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
@@ -12,9 +12,19 @@ if (!token) {
 
 const user = parseJwt(token);
 
-console.log(user);
 localStorage.setItem("@dmkanban-userId", user.usuario.id);
 let projectId;
+
+ws.addEventListener("open", () => {
+	console.log("conectado!!!");
+	ws.send(JSON.stringify({ room: sala }));
+	const newUser = {
+		tipo: "conexão",
+		usuario: user.usuario.usuario,
+		sala: sala,
+	};
+	ws.send(JSON.stringify(newUser));
+});
 
 const exitButton = document.getElementById("sair");
 exitButton.addEventListener("click", (e) => {
@@ -37,6 +47,7 @@ newProject.addEventListener("click", async (e) => {
 	};
 	projectId = await Api.createProject(project);
 	localStorage.setItem("@dm-kanban:id", projectId);
+	startWs();
 	Render.createBoard(3, nome, projectId);
 });
 
@@ -53,16 +64,7 @@ newProject.addEventListener("click", async (e) => {
 
 /* Conectar ao websocket */
 
-ws.addEventListener("open", () => {
-	console.log("conectado!!!");
-	ws.send(JSON.stringify({ room: sala }));
-	const newUser = {
-		tipo: "conexão",
-		usuario: user.usuario.usuario,
-		sala: sala,
-	};
-	ws.send(JSON.stringify(newUser));
-});
+function startWs() {}
 
 /* Respostas do websocket */
 
@@ -180,13 +182,18 @@ function menuControl() {
 }
 
 function modalControl(modalId) {
-	const modal = document.getElementById(id)
-
+	const modal = document.getElementById(modalId);
 	if (window.getComputedStyle(modal).display === "none") {
-		menu.style.display = "flex";
+		modal.style.display = "flex";
 	} else {
-		menu.style.display = "none";
+		modal.style.display = "none";
 	}
+	modal.addEventListener("click", (e) => {
+		e.preventDefault();
+		if (e.target == modal) {
+			modal.style.display = "none";
+		}
+	});
 }
 
 const openButton = document.getElementById("menu--button__open");
@@ -201,25 +208,25 @@ closeButton.addEventListener("click", (event) => {
 	menuControl();
 });
 
-const deleteAccountButton = document.getElementById("excluir-conta")
+const deleteAccountButton = document.getElementById("excluir-conta");
 deleteAccountButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	modalControl("modal--delete-account__container");
 });
 
-const changeEmailButton = document.getElementById("mudar-email")
+const changeEmailButton = document.getElementById("mudar-email");
 changeEmailButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	modalControl("modal--change-email__container");
 });
 
-const changePassButton = document.getElementById("mudar-senha")
+const changePassButton = document.getElementById("mudar-senha");
 changePassButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	modalControl("modal--change-password__container");
 });
 
-const deleteBoardButton = document.getElementById("delete-board-button")
+const deleteBoardButton = document.getElementById("delete-board-button");
 deleteBoardButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	modalControl("modal--delete-board__container");
@@ -235,8 +242,6 @@ editMenuInfo();
 
 function modalFunctions() {
 	const modal = document.querySelector(".modal");
-	const emailModal = document.querySelector(".email-modal");
-	const emailButton = document.getElementById("mudar-email");
 	const openDeleteAccountModal = document.getElementById("excluir-conta");
 	const deleteAccountModal = document.getElementById(
 		"modal--delete-account__container"
@@ -269,12 +274,6 @@ function modalFunctions() {
 		if (e.target == passwordModal) {
 			passwordModal.style.display = "none";
 		}
-	});
-
-	emailButton.addEventListener("click", (e) => {
-		e.preventDefault();
-		modal.classList.remove("hidden");
-		emailModal.classList.remove("hidden");
 	});
 
 	modal.addEventListener("click", (e) => {

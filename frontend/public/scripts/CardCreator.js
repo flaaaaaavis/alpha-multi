@@ -39,10 +39,8 @@ export default class CardCreator {
 				anotacoes: "Conteúdo da tarefa",
 			};
 			const request = await Api.createTask(body);
-			console.log(request);
 			cardId = request.id;
 		}
-		console.log(cardId);
 		const targetButton = document.getElementById(target);
 		const parent = targetButton.parentElement;
 
