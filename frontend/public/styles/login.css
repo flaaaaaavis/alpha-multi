@@ -9,6 +9,22 @@
 	--orange: #F26F21;
 	--pink: #FF6865;
 	--light-pink: #FF9A98;
+	--red: #E32F3A;
+
+	--brand-size: 18px;
+	--brand-weight: 700;
+
+	--column-title-size: 14px;
+	--column-title-weight: 600;
+
+	--card-title-size: 12px;
+	--card-title-weight: 400;
+
+	--card-content-size: 14px;
+	--card-content-weight: 400;
+
+	--button-text-size: 14px;
+	--button-text-weight: 400;
 }
 
 body {
@@ -58,8 +74,8 @@ input {
 	height: 30px;
 	padding-left: 20px;
 
-	font-weight: 400;
-	font-size: 20px;
+	font-weight: var(--card-title-weight);
+	font-size: var(--card-title-size);
 	color: var(--white);
 
 	border-bottom: 1px solid var(--white);
@@ -74,8 +90,8 @@ input:hover {
 }
 
 input::placeholder {
-	font-weight: 400;
-	font-size: 12px;
+	font-weight: var(--card-title-weight);
+	font-size: var(--card-title-size);
 	color: var(--light-grey);
 }
 
@@ -89,9 +105,8 @@ button {
 	justify-content: center;
 	align-items: center;
 
-	font-weight: 400;
-	font-size: 24px;
-	line-height: 29px;
+	font-weight: var(--button-text-weight);
+	font-size: var(--button-text-size);
 	color: var(--white);
 
 	background: var(--orange);
@@ -107,14 +122,14 @@ footer {
 }
 
 p {
-	font-weight: 400;
-	font-size: 20px;
+	font-weight: var(--card-content-weight);
+	font-size: var(--card-content-size);
 	color: var(--white);
 }
 
 a {
-	font-weight: 400;
-	font-size: 20px;
+	font-weight: var(--card-content-weight);
+	font-size: var(--card-content-size);
 	color: var(--orange);
 }
 
@@ -138,28 +153,9 @@ a:hover {
 	}
 
 	button {
-<<<<<<<< HEAD:frontend/public/styles/cadastro-e-login.css
-		margin: 20px 0px;
-		width: 250px;
-		height: 60px;
-========
 		width: 15%;
 		max-width: 200px;
 		height: 45px;
->>>>>>>> dabddd44a15db85118337ffac41073ec6bd287b7:frontend/public/styles/login.css
 		border-radius: 8px;
-
-		font-weight: 400;
-		font-size: 20px;
-	}
-
-	p {
-		font-weight: 400;
-		font-size: 16px;
-	}
-
-	a {
-		font-weight: 400;
-		font-size: 16px;
 	}
 }
