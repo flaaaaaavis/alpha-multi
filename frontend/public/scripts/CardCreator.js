@@ -34,7 +34,7 @@ export default class CardCreator {
 			if (colunaId == undefined) {
 				return false;
 			}
-			console.log(colunaId[0].id);
+			console.log(colunaId.id);
 			const body = {
 				coluna_id: colunaId[0].id,
 				nome: "Nome da tarefa",

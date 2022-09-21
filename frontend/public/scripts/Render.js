@@ -57,11 +57,12 @@ export default class Render {
 			ordem: this.columnCount,
 		};
 		const columnId = await Api.createCategory(body);
+		console.log(columnId);
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
-		column.id = `coluna-${columnId.id}`;
-		column.value = columnId.id;
+		column.id = `coluna-${columnId[0].id}`;
+		column.value = columnId[0].id;
 		column.addEventListener("drop", (event) => {
 			DragAndDrop.onDrop(event);
 		});

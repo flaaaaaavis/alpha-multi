@@ -14,6 +14,7 @@ export default class DragAndDrop {
 
 	static onDrop(event) {
 		const myColumn = event.target.id;
+		console.log(myColumn);
 		if (myColumn != "") {
 			const query = `#${myColumn} .adicionar-card`;
 			const button = document.querySelector(query);
