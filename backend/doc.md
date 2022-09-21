@@ -58,6 +58,7 @@ Cria uma tarefa.
 ```js
 {
     "result": "Tarefa criada com sucesso!"
+    "id": "string"
 }
 ```
 
@@ -242,4 +243,31 @@ Traz todas as informações do usuario;
 }
 ```
 
-Projetos por usuário.
+> POST /api/usuario/projetos
+
+Traz todos os projetos nos quais o usuario esta inserido
+
+**body**
+
+```js
+{
+    "id": "string",
+}
+```
+
+**Response**
+`200 OK`
+
+```js
+{
+	"projetos": [
+		{
+			"id": "string",
+			"nome": "string",
+			"data_criacao": "timestamp",
+			"ultimo_acesso": "timestamp",
+			"adm": "string"
+		}
+	]
+}
+```
