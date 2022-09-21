@@ -118,13 +118,6 @@ body {
 	scroll-behavior: smooth;
 	scroll-snap-type: x mandatory;
 }
-/* @media (min-width: 481px) {
-	.quadro {
-		min-height: calc(100vh - 70px);
-		margin-top: 0;
-		margin-left: 20px;
-	}
-} */
 
   /* Design das colunas */
 .coluna {
@@ -180,11 +173,9 @@ body {
 	line-height: 29px;
 	text-align: center;
 	color: var(--blue);
-
-
 }
 
-.botao-delete{
+.botao-delete {
 	position: absolute;
 	right: 10px;
 	border-radius: 50%;
@@ -345,9 +336,7 @@ body {
 	display: none;
 }
 
-
 @media screen and (min-width: 768px) {
-
 	.menu {
 		width: 275px;
 	}
