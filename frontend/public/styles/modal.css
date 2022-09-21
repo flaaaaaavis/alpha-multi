@@ -341,10 +341,18 @@
 	}
 }
 
+.close-modal-x {
+	width: 15px;
+	height: 15px;
+	margin-top: -10px;
+
+	align-self: flex-end;
+}
+
 /* Remover usuário do projeto */
 
 #modal--delete-user-from-project__container {
-    display: none;
+    display: flex;
 }
 
 #modal--delete-user-from-project {
