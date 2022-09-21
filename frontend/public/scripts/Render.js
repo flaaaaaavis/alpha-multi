@@ -48,7 +48,7 @@ export default class Render {
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
-		column.id = columnId.id;
+		column.id = `coluna-${columnId.id}`;
 		column.value = columnId.id;
 		column.addEventListener("drop", (event) => {
 			DragAndDrop.onDrop(event);
@@ -68,7 +68,7 @@ export default class Render {
 				projeto_id: id,
 				nome: name.value,
 				ordem: this.columnCount,
-				id: column.value,
+				id: column.id,
 			};
 			const request = await Api.modifyCategory(change, column.value);
 			console.log(request);

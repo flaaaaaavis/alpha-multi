@@ -47,6 +47,7 @@ export default class CardCreator {
 		const card = document.createElement("div");
 		card.className = "arrastavel";
 		card.id = cardId;
+		card.members = [];
 		card.draggable = true;
 
 		const cardName = document.createElement("h2");
@@ -158,10 +159,10 @@ export default class CardCreator {
 		columns.forEach((element) => {
 			if (element.id !== id) {
 				const name = document.querySelector(
-					`#${element.id} input`
-				).value;
+					`#${element.id} .coluna--header input`
+				);
 				const option = document.createElement("option");
-				option.innerText = name;
+				option.innerText = name.value;
 				option.value = element.id;
 				select.append(option);
 			}
