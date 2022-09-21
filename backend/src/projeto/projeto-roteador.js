@@ -97,20 +97,16 @@ ProjectRouter.route("/membros").post(jsonBodyParser, async (req, res) => {
 		return res.status(400).json({ Error: `Missing request body` });
 	}
 
-	for (let prop of ["usuario_id", "projeto_id"]) {
+	for (let prop of ["email", "projeto_id"]) {
 		if (req.body[prop] === undefined) {
 			return res.status(400).json({
 				Error: `Missing '${prop}' property on request body`,
 			});
 		}
 	}
-	const { usuario_id, projeto_id } = req.body;
+	const { email, projeto_id } = req.body;
 
-	const dbRes = await ProjectService.insertUsuarioProjeto(
-		usuario_id,
-		projeto_id
-	);
-	console.log(dbRes);
+	const dbRes = await ProjectService.insertUsuarioProjeto(email, projeto_id);
 	if (dbRes) {
 		res.status(201).json({
 			result: "Usuario adicionado ao projeto com sucesso!",

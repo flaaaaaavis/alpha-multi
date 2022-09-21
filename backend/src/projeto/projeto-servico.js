@@ -12,12 +12,15 @@ export const ProjectService = {
 			console.log(e);
 		}
 	},
-	async insertUsuarioProjeto(usuario_id, projeto_id) {
+	async insertUsuarioProjeto(email, projeto_id) {
 		try {
-			const query = `INSERT INTO projetos_usuarios (usuario_id, projeto_id) VALUES ($1, $2)`;
-			const values = [usuario_id, projeto_id];
-			const data = await pool.query(query, values);
-			return data;
+			const query = `SELECT id FROM usuarios WHERE email = '${email}'`;
+			const data = await pool.query(query);
+			const usuario_id = data.rows[0].id;
+			const query2 = `INSERT INTO projetos_usuarios (usuario_id, projeto_id) VALUES ($1, $2)`;
+			const values2 = [usuario_id, projeto_id];
+			const data2 = await pool.query(query2, values2);
+			return data2;
 		} catch (e) {
 			console.log(e);
 		}
