@@ -1,102 +1,98 @@
-import express from 'express';
-import { CategoryService } from './categoria-servico.js';
+import express from "express";
+import { CategoryService } from "./categoria-servico.js";
 
 const jsonBodyParser = express.json();
 const CategoryRouter = express.Router();
 
-CategoryRouter.route('/').post(jsonBodyParser, async (req, res) => {
-    
-    if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
-    }
-    
-    for (let prop of ['projeto_id', 'nome', 'ordem']) {
-        if (req.body[prop] === undefined) {
-        return res
-            .status(400)
-            .json({ Error: `Missing '${prop}' property on request body` });
-        }
-    }
+CategoryRouter.route("/").post(jsonBodyParser, async (req, res) => {
+	if (!req.body) {
+		return res.status(400).json({ Error: `Missing request body` });
+	}
 
-    const { projeto_id, nome, ordem } = req.body;
+	for (let prop of ["projeto_id", "nome", "ordem"]) {
+		if (req.body[prop] === undefined) {
+			return res
+				.status(400)
+				.json({ Error: `Missing '${prop}' property on request body` });
+		}
+	}
 
-    const categoria = {
-        projeto_id: projeto_id,
-        nome: nome,
-        ordem: parseInt(ordem)
-    };
+	const { projeto_id, nome, ordem } = req.body;
 
-    const dbRes = await CategoryService.insertCategoria(categoria)
+	const categoria = {
+		projeto_id: projeto_id,
+		nome: nome,
+		ordem: parseInt(ordem),
+	};
 
-    if (dbRes) {
+	const dbRes = await CategoryService.insertCategoria(categoria);
 
-        res.status(201).json(dbRes);
-
-    } else {
-
-        res.status(500).json({message:"Internal Server Error"});
-
-    }    
-        
+	if (dbRes) {
+		res.status(201).json(dbRes);
+	} else {
+		res.status(500).json({ message: "Internal Server Error" });
+	}
 });
 
-CategoryRouter.route('/:category_uuid').patch(jsonBodyParser, async (req, res) => {
+CategoryRouter.route("/:category_uuid")
+	.patch(jsonBodyParser, async (req, res) => {
+		if (!req.body) {
+			return res.status(400).json({ Error: `Missing request body` });
+		}
 
-    if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
-    }
-    
-    for (let prop of ['projeto_id', 'nome', 'ordem']) {
-        if (req.body[prop] === undefined) {
-        return res
-            .status(400)
-            .json({ Error: `Missing '${prop}' property on request body` });
-        }
-    }
+		for (let prop of ["projeto_id", "nome", "ordem"]) {
+			if (req.body[prop] === undefined) {
+				return res.status(400).json({
+					Error: `Missing '${prop}' property on request body`,
+				});
+			}
+		}
 
-    const { projeto_id, nome, ordem, id } = req.body;
+		const { projeto_id, nome, ordem, id } = req.body;
 
-    const categoria = {
-        projeto_id: projeto_id,
-        nome: nome,
-        ordem: parseInt(ordem)
-    };
+		const categoria = {
+			projeto_id: projeto_id,
+			nome: nome,
+			ordem: parseInt(ordem),
+		};
 
-    const dbRes = await CategoryService.updateCategoria(id, categoria);
+		const dbRes = await CategoryService.updateCategoria(id, categoria);
 
-    if (dbRes) {
+		if (dbRes) {
+			res.status(201).json(dbRes);
+		} else {
+			res.status(500).json({ message: "Internal Server Error" });
+		}
+	})
 
-        res.status(201).json(dbRes);
+	.delete(jsonBodyParser, async (req, res) => {
+		if (!req.body) {
+			return res.status(400).json({ Error: `Missing request body` });
+		}
 
-    } else {
+		const { id } = req.body;
 
-        res.status(500).json({message:"Internal Server Error"})
+		const dbRes = await CategoryService.deleteCategoria(id);
 
-   }
-    
-})
+		if (dbRes) {
+			res.status(201).json(dbRes);
+		} else {
+			res.status(500).json({ message: "Internal Server Error" });
+		}
+	});
 
-.delete(jsonBodyParser, async (req, res) => {
+CategoryRouter.route("/:id").get(jsonBodyParser, async (req, res) => {
+	if (!req.params)
+		return res.status(400).json({ error: "Missing Req Params" });
+	const { id } = req.params;
 
-    if (!req.body) {
-        return res.status(400).json({ Error: `Missing request body` });
-    }
-
-    const { id } = req.body;
-
-    const dbRes = await CategoryService.deleteCategoria(id);
-
-    if (dbRes) {
-        
-        res.status(201).json(dbRes);
-    
-    } else {
-        
-        res.status(500).json({message:"Internal Server Error"})
-    
-    }
-    
-   
+	const dbRes = await CategoryService.getCategoriasPorProjeto(id);
+	console.log(dbRes);
+	if (dbRes) {
+		res.status(200).json(dbRes);
+	} else {
+		res.status(500).json({ error: "Internal Server Error" });
+	}
 });
 
 export default CategoryRouter;
