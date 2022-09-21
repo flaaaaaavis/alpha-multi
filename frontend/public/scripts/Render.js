@@ -227,8 +227,7 @@ export default class Render {
 
 		button.addEventListener("click", (event) => {
 			event.preventDefault();
-			console.log(columnId);
-			CardCreator.createCard(button.id, true, columnId);
+			CardCreator.createCard(button.id, true, columnElement);
 		});
 
 		column.append(header, button);

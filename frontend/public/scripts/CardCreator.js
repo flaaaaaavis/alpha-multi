@@ -34,7 +34,7 @@ export default class CardCreator {
 			if (colunaId == undefined) {
 				return false;
 			}
-			console.log(colunaId);
+			console.log(colunaId[0].id);
 			const body = {
 				coluna_id: colunaId[0].id,
 				nome: "Nome da tarefa",
@@ -52,7 +52,8 @@ export default class CardCreator {
 
 		const card = document.createElement("div");
 		card.className = "arrastavel";
-		card.id = cardId;
+		card.id = `tarefa-${cardId}`;
+		card.value = card.id;
 		card.members = [];
 		card.draggable = true;
 
@@ -67,7 +68,7 @@ export default class CardCreator {
 		cardContent.innerText = "Conteúdo da tarefa";
 
 		card.addEventListener("click", () => {
-			this.clickedCard.id = card.id;
+			this.clickedCard.id = card.value;
 			this.clickedCard.titulo = cardName.innerText;
 			this.clickedCard.conteudo = cardContent.innerText;
 			const select = document.querySelector(".card-modal__move");
@@ -77,7 +78,7 @@ export default class CardCreator {
 			const edit = {
 				sala: sala,
 				tipo: "editando tarefa",
-				id: card.id,
+				id: card.value,
 			};
 			ws.send(JSON.stringify(edit));
 		});
@@ -109,8 +110,11 @@ export default class CardCreator {
 
 		const card = document.createElement("div");
 		card.className = "arrastavel";
-		card.id = incomingCard.id;
-		card.members = incomingCard.colaboradores;
+		card.id = `tarefa-${incomingCard.id}`;
+		card.value = incomingCard.id;
+		console.log(incomingCard.colaboradores);
+		card.members = [incomingCard.colaboradores];
+		console.log(card.members);
 		card.draggable = true;
 
 		const cardName = document.createElement("h2");
@@ -124,7 +128,7 @@ export default class CardCreator {
 		cardContent.innerText = incomingCard.anotacoes;
 
 		card.addEventListener("click", () => {
-			this.clickedCard.id = card.id;
+			this.clickedCard.id = incomingCard.id;
 			this.clickedCard.titulo = cardName.innerText;
 			this.clickedCard.conteudo = cardContent.innerText;
 			const select = document.querySelector(".card-modal__move");
@@ -134,7 +138,7 @@ export default class CardCreator {
 			const edit = {
 				sala: sala,
 				tipo: "editando tarefa",
-				id: card.id,
+				id: incomingCard.id,
 			};
 			ws.send(JSON.stringify(edit));
 		});

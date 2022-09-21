@@ -48,13 +48,11 @@ newProject.addEventListener("click", async (e) => {
 	};
 	projectId = await Api.createProject(project);
 	localStorage.setItem("@dm-kanban:id", projectId);
-	startWs();
+	ws.send(JSON.stringify({ room: sala }));
 	Render.createBoard(3, nome, projectId);
 });
 
 /* Conectar ao websocket */
-
-function startWs() {}
 
 /* Respostas do websocket */
 
@@ -270,13 +268,11 @@ function modalFunctions() {
 		if (e.target == modal) {
 			console.log("entrou");
 			modal.classList.add("hidden");
-			emailModal.classList.add("hidden");
 		}
 	});
 
 	closeEmail.addEventListener("click", () => {
 		modal.classList.add("hidden");
-		emailModal.classList.add("hidden");
 	});
 
 	openDeleteAccountModal.addEventListener("click", () => {
@@ -406,6 +402,7 @@ async function renderProjects(project, categories) {
 		board
 	);
 	localStorage.setItem("@dm-kanban:id", board.id);
+	ws.send(JSON.stringify({ room: sala }));
 	Render.renderData(board);
 	console.log(board);
 }
