@@ -45,13 +45,16 @@ export default class DragAndDrop {
 			const id = event.dataTransfer.getData("text");
 			const arrastavel = document.getElementById(id);
 			if (myColumn.classList.contains("coluna")) {
+				const button = document.querySelector(
+					`#${myColumn.id} .adicionar-card`
+				);
 				myColumn.insertBefore(arrastavel, card);
 				const move = {
 					sala: sala,
 					tipo: "mover tarefa",
 					id: arrastavel.id,
 					coluna: myColumn.id,
-					acima: card.id,
+					acima: button.id,
 				};
 
 				ws.send(JSON.stringify(move));

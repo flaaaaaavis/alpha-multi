@@ -49,7 +49,8 @@ newProject.addEventListener("click", async (e) => {
 	};
 	projectId = await Api.createProject(project);
 	localStorage.setItem("@dm-kanban:id", projectId);
-	ws.send(JSON.stringify({ room: sala }));
+	udpateSala();
+	ws.send(JSON.stringify({ room: projectId }));
 	Render.createBoard(3, nome, projectId);
 });
 
@@ -74,7 +75,7 @@ ws.addEventListener("message", ({ data }) => {
 			}, 5000);
 			break;
 		case "arrastando tarefa":
-			card = document.getElementById(`tarefa-${dados.id}`);
+			card = document.getElementById(`${dados.id}`);
 			card.classList.add("arrastando");
 			break;
 		case "apagar coluna":
@@ -82,6 +83,7 @@ ws.addEventListener("message", ({ data }) => {
 			apagar.remove();
 			break;
 		case "mover tarefa":
+			console.log(dados);
 			moveCard(dados);
 			break;
 		case "nova coluna":
@@ -109,16 +111,16 @@ ws.addEventListener("message", ({ data }) => {
 			card.innerText = dados.conteudo;
 			break;
 		case "excluir card":
-			card = document.getElementById(dados.id);
+			card = document.getElementById(`tarefa-${dados.id}`);
 			card.remove();
 			break;
 		case "editando tarefa":
-			console.log("entrou");
-			card = document.getElementById(dados.id);
+			console.log(dados.id);
+			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.add("editavel");
 			break;
 		case "fechar modal":
-			card = document.getElementById(dados.id);
+			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.remove("editavel");
 			break;
 	}
@@ -141,11 +143,12 @@ project.addEventListener("change", async () => {
 
 function moveCard(data) {
 	console.log(data);
-	const card = document.getElementById(`tarefa-${data.id}`);
+	const card = document.getElementById(`${data.id}`);
 	const coluna = document.getElementById(data.coluna);
 	console.log(card, coluna);
 	let alvo;
 	if (data.acima) {
+		console.log(acima);
 		alvo = document.getElementById(data.acima);
 		coluna.insertBefore(card, alvo);
 		card.classList.remove("arrastando");

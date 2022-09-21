@@ -2,6 +2,8 @@ import DragAndDrop from "./dragAndDrop.js";
 import { ws, sala } from "./Websocket.js";
 import Api from "./Api.js";
 
+let salaAtual = sala;
+
 export default class CardCreator {
 	constructor() {
 		this.ws = ws;
@@ -77,7 +79,7 @@ export default class CardCreator {
 			const edit = {
 				sala: sala,
 				tipo: "editando tarefa",
-				id: card.value,
+				id: card.id,
 			};
 			ws.send(JSON.stringify(edit));
 		});
