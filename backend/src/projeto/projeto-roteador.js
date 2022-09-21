@@ -92,4 +92,32 @@ ProjectRouter.route("/:id").get(jsonBodyParser, async (req, res) => {
 	}
 });
 
+ProjectRouter.route("/membros").post(jsonBodyParser, async (req, res) => {
+	if (!req.body) {
+		return res.status(400).json({ Error: `Missing request body` });
+	}
+
+	for (let prop of ["usuario_id", "projeto_id"]) {
+		if (req.body[prop] === undefined) {
+			return res.status(400).json({
+				Error: `Missing '${prop}' property on request body`,
+			});
+		}
+	}
+	const { usuario_id, projeto_id } = req.body;
+
+	const dbRes = await ProjectService.insertUsuarioProjeto(
+		usuario_id,
+		projeto_id
+	);
+	console.log(dbRes);
+	if (dbRes) {
+		res.status(201).json({
+			result: "Usuario adicionado ao projeto com sucesso!",
+		});
+	} else {
+		res.status(500).json({ message: "Internal Server Error" });
+	}
+});
+
 export default ProjectRouter;
