@@ -15,9 +15,11 @@ UserRouter.route("/")
 
 		for (let prop of ["usuario", "email", "senha"]) {
 			if (req.body[prop] === undefined) {
-				return res.status(400).json({
-					error: `Missing '${prop}' property on request body`,
-				});
+				return res
+					.status(400)
+					.json({
+						error: `Missing '${prop}' property on request body`,
+					});
 			}
 		}
 
@@ -45,9 +47,11 @@ UserRouter.route("/")
 
 		for (let prop of ["email", "usuario"]) {
 			if (req.body[prop] === undefined) {
-				return res.status(400).json({
-					error: `Missing '${prop}' property on request body`,
-				});
+				return res
+					.status(400)
+					.json({
+						error: `Missing '${prop}' property on request body`,
+					});
 			}
 		}
 
@@ -155,8 +159,10 @@ UserRouter.route("/projetos").post(jsonBodyParser, async (req, res) => {
 		return res.status(400).json({ error: `Missing request body` });
 
 	const { id } = req.body;
+
 	const projetos = await UserService.getProjetosPorUsuario(id);
 
+	if (!projetos) return res.status(200).json({ error: "Nenhum projeto" });
 	if (projetos.length > 0)
 		return res.status(200).json({ projetos: projetos });
 	res.status(500).json({ error: "Internal Server Error" });
