@@ -308,4 +308,25 @@ export default class Api {
 
 		return task;
 	}
+
+	static async getAllProjects(body) {
+		const task = await fetch(`${this.baseUrl}/api/usuario/projetos`, {
+			method: "POST",
+			body: JSON.stringify(body),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return task;
+	}
 }

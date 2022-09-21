@@ -78,4 +78,18 @@ ProjectRouter.route("/")
 		}
 	});
 
+ProjectRouter.route("/:id").get(jsonBodyParser, async (req, res) => {
+	if (!req.params)
+		return res.status(400).json({ error: "Missing Req Params" });
+	const { id } = req.params;
+
+	const dbRes = await ProjectService.getProjetosPorId(id);
+	console.log(dbRes);
+	if (dbRes.id) {
+		res.status(200).json(dbRes);
+	} else {
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+});
+
 export default ProjectRouter;

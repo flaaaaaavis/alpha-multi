@@ -5,9 +5,9 @@ export const ProjectService = {
 	async getProjetosPorId(projeto_id) {
 		try {
 			const data = await pool.query(
-				`SELECT * FROM projetos WHERE id = ${projeto_id}`
+				`SELECT * FROM projetos WHERE id = '${projeto_id}'`
 			);
-			return data.rows;
+			return data.rows[0];
 		} catch (e) {
 			console.log(e);
 		}
@@ -18,6 +18,9 @@ export const ProjectService = {
 			const query = `INSERT INTO projetos (id, nome, adm, data_criacao, ultimo_acesso) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
 			const values = [id, projeto.nome, projeto.adm];
 			await pool.query(query, values);
+			const query2 = `INSERT INTO projetos_usuarios (usuario_id, projeto_id) VALUES ($1, $2)`;
+			const values2 = [projeto.adm, id];
+			const data = await pool.query(query2, values2);
 			return id;
 		} catch (e) {
 			console.log(e);
@@ -39,6 +42,17 @@ export const ProjectService = {
 				"DELETE FROM projetos WHERE id = '" + id + "'"
 			);
 			return data.rows;
+		} catch (e) {
+			console.log(e);
+		}
+	},
+
+	async deleteUsuarioProjeto(usuario_id, projeto_id) {
+		try {
+			const data = await pool.query(
+				`DELETE FROM projetos_usuarios WHERE usuario_id = ${usuario_id} AND projeto_id = ${projeto_id} LIMIT 1`
+			);
+			return data;
 		} catch (e) {
 			console.log(e);
 		}
