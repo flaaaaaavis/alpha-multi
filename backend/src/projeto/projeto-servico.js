@@ -70,4 +70,20 @@ export const ProjectService = {
 			console.log(e);
 		}
 	},
+	async getUsuarioPorProjeto(id) {
+		try {
+			console.log(id);
+			const projeto = await pool.query(
+				`SELECT usuario_id FROM projetos_usuarios WHERE projeto_id = '${id}'`
+			);
+			if (projeto.rowCount < 1) {
+				return false;
+			} else {
+				return projeto.rows;
+			}
+		} catch (e) {
+			console.log("Testando");
+			console.log(e);
+		}
+	},
 };

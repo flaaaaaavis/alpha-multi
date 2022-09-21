@@ -4,6 +4,7 @@ import Render from "./Render.js";
 import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
 
+const projects = [];
 const token = localStorage.getItem("@dmkanban-token");
 
 if (!token) {
@@ -50,17 +51,6 @@ newProject.addEventListener("click", async (e) => {
 	startWs();
 	Render.createBoard(3, nome, projectId);
 });
-
-/* renderizar o projeto */
-/* async function startBoard(nome, id) {
-	const board = ApiMock.getBoard(sala);
-	if (!board) {
-		Render.createBoard(3);
-	} else {
-		Render.createBoard(board.columns.length);
-		Render.renderData(board);
-	}
-} */
 
 /* Conectar ao websocket */
 
@@ -364,3 +354,73 @@ async function changePassword() {
 }
 
 modalFunctions();
+async function getProjects() {
+	console.log(user.usuario.id);
+	const body = {
+		id: user.usuario.id,
+	};
+	const request = await Api.getAllProjects(body);
+	if (request.projetos) {
+		const projetosMenu = document.getElementById("lista-de-projetos");
+		const uniqueProjects = [...new Set(request.projetos)];
+
+		console.log(uniqueProjects);
+
+		uniqueProjects.forEach(async (project) => {
+			const newProject = await Api.getProjectbyId(project.projeto_id);
+			const item = document.createElement("li");
+			item.className = "menu--accordion__sub-item this-board__item";
+			const itemButton = document.createElement("button");
+			itemButton.innerText = newProject.nome;
+			itemButton.value = newProject.id;
+			itemButton.addEventListener("click", async (e) => {
+				e.preventDefault();
+				const categories = await Api.getCategoryByProject(
+					itemButton.value
+				);
+				renderProjects(project, categories);
+			});
+
+			item.append(itemButton);
+			projetosMenu.append(item);
+		});
+	}
+}
+
+async function renderProjects(project, categories) {
+	const fullProject = await Api.getProjectbyId(project.projeto_id);
+	const projectMembers = await getMembers(project);
+	let tasksArray = [];
+	const board = {
+		name: fullProject.nome,
+		members: projectMembers,
+		id: fullProject.id,
+		cardCount: tasksArray.length,
+		columns: categories,
+	};
+	Render.createBoard(
+		board.columns.length,
+		board.name,
+		board.id,
+		false,
+		board
+	);
+	localStorage.setItem("@dm-kanban:id", board.id);
+	Render.renderData(board);
+	console.log(board);
+}
+
+async function getMembers(project) {
+	const body = {
+		id: project.projeto_id,
+	};
+	const membersInfo = [];
+	const members = await Api.getUsersByProject(body);
+	members.projetos.forEach(async (member) => {
+		const info = await Api.getUserById(member.usuario_id);
+		membersInfo.push(info);
+	});
+	return membersInfo;
+}
+
+getProjects();

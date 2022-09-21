@@ -6,7 +6,6 @@ export const TaskService = {
 			const data = await pool.query(
 				`SELECT * FROM tarefas WHERE coluna_id = ${coluna_id}`
 			);
-			console.log(data);
 			return data.rows;
 		} catch (e) {
 			console.log(e);

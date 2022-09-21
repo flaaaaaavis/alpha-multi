@@ -84,7 +84,6 @@ ProjectRouter.route("/:id").get(jsonBodyParser, async (req, res) => {
 	const { id } = req.params;
 
 	const dbRes = await ProjectService.getProjetosPorId(id);
-	console.log(dbRes);
 	if (dbRes.id) {
 		res.status(200).json(dbRes);
 	} else {
@@ -114,6 +113,19 @@ ProjectRouter.route("/membros").post(jsonBodyParser, async (req, res) => {
 	} else {
 		res.status(500).json({ message: "Internal Server Error" });
 	}
+});
+
+ProjectRouter.route("/usuarios").post(jsonBodyParser, async (req, res) => {
+	if (!req.body)
+		return res.status(400).json({ error: `Missing request body` });
+
+	const { id } = req.body;
+
+	const projetos = await ProjectService.getUsuarioPorProjeto(id);
+	if (!projetos) return res.status(200).json({ error: "Nenhum usuário" });
+	if (projetos.length > 0)
+		return res.status(200).json({ projetos: projetos });
+	res.status(500).json({ error: "Internal Server Error" });
 });
 
 export default ProjectRouter;

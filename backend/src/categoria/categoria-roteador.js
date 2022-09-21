@@ -87,7 +87,6 @@ CategoryRouter.route("/:id").get(jsonBodyParser, async (req, res) => {
 	const { id } = req.params;
 
 	const dbRes = await CategoryService.getCategoriasPorProjeto(id);
-	console.log(dbRes);
 	if (dbRes) {
 		res.status(200).json(dbRes);
 	} else {

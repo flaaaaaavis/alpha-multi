@@ -267,6 +267,10 @@ body {
 	margin-left: 5px;
 }
 
+.menu--accordion__item-content{
+	overflow-y: auto;
+}
+
 .adicionar-card {
 	height: fit-content;
 	width: 2.5em;

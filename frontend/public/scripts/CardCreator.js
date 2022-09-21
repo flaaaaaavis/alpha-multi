@@ -31,15 +31,21 @@ export default class CardCreator {
 	/* Cria a estrutura básica do card */
 	static async createCard(target, send, colunaId, cardId = "") {
 		if (cardId == "") {
+			if (colunaId == undefined) {
+				return false;
+			}
+			console.log(colunaId);
 			const body = {
-				coluna_id: colunaId.id,
+				coluna_id: colunaId[0].id,
 				nome: "Nome da tarefa",
 				ordem: this.cardCounter,
 				tags: "",
 				anotacoes: "Conteúdo da tarefa",
+				colaboradores: "[]",
 			};
 			const request = await Api.createTask(body);
 			cardId = request.id;
+			console.log(request);
 		}
 		const targetButton = document.getElementById(target);
 		const parent = targetButton.parentElement;
@@ -93,6 +99,48 @@ export default class CardCreator {
 			//card.value = JSON.stringify(cardObject);
 			ws.send(JSON.stringify(cardObject));
 		}
+
+		this.cardCounter++;
+	}
+
+	static async renderCard(target, incomingCard) {
+		const targetButton = document.getElementById(target);
+		const parent = targetButton.parentElement;
+
+		const card = document.createElement("div");
+		card.className = "arrastavel";
+		card.id = incomingCard.id;
+		card.members = incomingCard.colaboradores;
+		card.draggable = true;
+
+		const cardName = document.createElement("h2");
+		cardName.className = "nome__card";
+		cardName.innerText = incomingCard.nome;
+
+		this.cardDrag(card);
+
+		const cardContent = document.createElement("p");
+		cardContent.className = "conteudo__card";
+		cardContent.innerText = incomingCard.anotacoes;
+
+		card.addEventListener("click", () => {
+			this.clickedCard.id = card.id;
+			this.clickedCard.titulo = cardName.innerText;
+			this.clickedCard.conteudo = cardContent.innerText;
+			const select = document.querySelector(".card-modal__move");
+			this.fillSelect(select, parent.id);
+			this.startCardModal();
+
+			const edit = {
+				sala: sala,
+				tipo: "editando tarefa",
+				id: card.id,
+			};
+			ws.send(JSON.stringify(edit));
+		});
+
+		card.append(cardName, cardContent);
+		parent.insertBefore(card, targetButton);
 
 		this.cardCounter++;
 	}
