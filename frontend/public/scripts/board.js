@@ -4,7 +4,7 @@ import Render from "./Render.js";
 import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
 
-const projects = [];
+const projectMembers = [];
 const token = localStorage.getItem("@dmkanban-token");
 
 if (!token) {
@@ -38,6 +38,7 @@ const newProject = document.getElementById("criar-quadro");
 newProject.addEventListener("click", async (e) => {
 	e.preventDefault();
 	let nome = document.getElementById("input-quadro").value;
+	menuControl();
 	if (nome.trim() == "") {
 		nome = "Novo quadro";
 	}
@@ -73,11 +74,11 @@ ws.addEventListener("message", ({ data }) => {
 			}, 5000);
 			break;
 		case "arrastando tarefa":
-			card = document.getElementById(dados.id);
+			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.add("arrastando");
 			break;
 		case "apagar coluna":
-			const apagar = document.getElementById(dados.id);
+			const apagar = document.getElementById(`tarefa-${dados.id}`);
 			apagar.remove();
 			break;
 		case "mover tarefa":
@@ -91,11 +92,11 @@ ws.addEventListener("message", ({ data }) => {
 			CardCreator.createCard(target.id, false);
 			break;
 		case "mudança de nome - card":
-			card = document.querySelector(`#${dados.id} .nome__card`);
+			card = document.querySelector(`#tarefa-${dados.id} .nome__card`);
 			card.innerText = dados.nome;
 			break;
 		case "mudança de nome - coluna":
-			const coluna = document.querySelector(`#${dados.id} input`);
+			const coluna = document.querySelector(`#coluna-${dados.id} input`);
 			coluna.value = dados.nome;
 			CardCreator.fillAllSelects();
 			break;
@@ -104,7 +105,7 @@ ws.addEventListener("message", ({ data }) => {
 			quadro.value = dados.nome;
 			break;
 		case "mudança de conteudo - card":
-			card = document.querySelector(`#${dados.id} p`);
+			card = document.querySelector(`#tarefa-${dados.id} p`);
 			card.innerText = dados.conteudo;
 			break;
 		case "excluir card":
@@ -140,7 +141,7 @@ project.addEventListener("change", async () => {
 
 function moveCard(data) {
 	console.log(data);
-	const card = document.getElementById(data.id);
+	const card = document.getElementById(`tarefa-${data.id}`);
 	const coluna = document.getElementById(data.coluna);
 	console.log(card, coluna);
 	let alvo;
@@ -149,7 +150,7 @@ function moveCard(data) {
 		coluna.insertBefore(card, alvo);
 		card.classList.remove("arrastando");
 	} else {
-		alvo = document.querySelector(`#${data.coluna} .adicionar-card`);
+		alvo = document.querySelector(`#coluna-${data.coluna} .adicionar-card`);
 		console.log(alvo, card);
 		coluna.insertBefore(card, alvo);
 		card.classList.remove("arrastando");
@@ -390,6 +391,7 @@ async function getProjects() {
 }
 
 async function renderProjects(project, categories) {
+	menuControl();
 	const fullProject = await Api.getProjectbyId(project.projeto_id);
 	const projectMembers = await getMembers(project);
 	let tasksArray = [];
@@ -425,6 +427,7 @@ async function getMembers(project) {
 		const info = await Api.getUserById(member.usuario_id);
 		membersInfo.push(info);
 		console.log(info);
+		projectMembers.push(info);
 		const item = document.createElement("li");
 		item.className = "menu--accordion__sub-item";
 		const span = document.createElement("span");
@@ -466,3 +469,16 @@ addMemberButton.addEventListener("click", (e) => {
 });
 
 getProjects();
+
+async function recoverSession() {
+	const categories = await Api.getCategoryByProject(
+		localStorage.getItem("@dm-kanban:id")
+	);
+	renderProjects(project, categories);
+}
+
+const openProject = localStorage.getItem("@dm-kanban:id");
+console.log(openProject);
+/* if (openProject) {
+	recoverSession();
+} */

@@ -68,7 +68,7 @@ TaskRouter.route("/")
 		};
 
 		const dbRes = await TaskService.updateTarefa(id, tarefa);
-
+		console.log(dbRes);
 		if (dbRes.rowCount === 1) {
 			res.status(200).json({ result: "Tarefa alterada com sucesso!" });
 		} else {

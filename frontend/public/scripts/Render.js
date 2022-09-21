@@ -26,7 +26,7 @@ export default class Render {
 		img.src = "../assets/icons/new-column.png";
 		addColumnBtn.append(img);
 		addColumnBtn.addEventListener("click", () => {
-			this.createColumn(true);
+			this.createColumn(true, "nova coluna", id);
 		});
 		board.append(addColumnBtn);
 		if (newBoard) {
@@ -56,6 +56,7 @@ export default class Render {
 			nome: columnName,
 			ordem: this.columnCount,
 		};
+		console.log(id);
 		const columnId = await Api.createCategory(body);
 		console.log(columnId);
 		const board = document.querySelector(".quadro");
@@ -254,21 +255,6 @@ export default class Render {
 					CardCreator.updateCardMembers(card.members, card.id); */
 				});
 			}
-
-			/* 			column.cards.forEach((card) => {
-				console.log("entrou");
-				const target = document.querySelector(
-					`#coluna-${column.id} .adicionar-card`
-				);
-				CardCreator.createCard(target.value, false, card.id);
-				const cardName = document.querySelector(
-					`#${card.id} .nome__card`
-				);
-				cardName.innerText = card.name;
-				const cardContent = document.querySelector(`#${card.id} p`);
-				cardContent.innerText = card.content;
-				CardCreator.updateCardMembers(card.members, card.id);
-			}); */
 		});
 		CardCreator.updateCardCounter(data.cardCount);
 	}

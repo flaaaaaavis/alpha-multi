@@ -1,5 +1,4 @@
 import DragAndDrop from "./dragAndDrop.js";
-import ApiMock from "./ApiMock.js";
 import { ws, sala } from "./Websocket.js";
 import Api from "./Api.js";
 
@@ -36,7 +35,7 @@ export default class CardCreator {
 			}
 			console.log(colunaId.id);
 			const body = {
-				coluna_id: colunaId[0].id,
+				coluna_id: colunaId.id,
 				nome: "Nome da tarefa",
 				ordem: this.cardCounter,
 				tags: "",
@@ -87,6 +86,7 @@ export default class CardCreator {
 		parent.insertBefore(card, targetButton);
 
 		if (send) {
+			console.log(cardId);
 			const cardObject = {
 				sala: sala,
 				tipo: "nova tarefa",
@@ -112,9 +112,7 @@ export default class CardCreator {
 		card.className = "arrastavel";
 		card.id = `tarefa-${incomingCard.id}`;
 		card.value = incomingCard.id;
-		console.log(incomingCard.colaboradores);
 		card.members = [incomingCard.colaboradores];
-		console.log(card.members);
 		card.draggable = true;
 
 		const cardName = document.createElement("h2");
@@ -252,8 +250,7 @@ export default class CardCreator {
 	}
 
 	static modalEvents(activate) {
-		//const board = ApiMock.getBoard(sala);
-		let realCard = document.getElementById(this.clickedCard.id);
+		let realCard = document.getElementById(`tarefa-${this.clickedCard.id}`);
 		/* Close modal */
 		const modal = document.querySelector(".modal");
 		const closeButton = document.querySelector(".close");
@@ -266,7 +263,7 @@ export default class CardCreator {
 
 		/* membros */
 
-		this.renderMembers(realCard);
+		this.renderMembers(this.clickedCard.id);
 
 		/* Mudar conteudo do card */
 		const content = document.querySelector(".card-modal__conteudo");
@@ -308,7 +305,7 @@ export default class CardCreator {
 
 			content.addEventListener("change", () => {
 				const cardContent = document.querySelector(
-					`#${this.clickedCard.id} p`
+					`#tarefa-${this.clickedCard.id} p`
 				);
 				cardContent.innerText = content.value;
 				const change = {
@@ -322,7 +319,7 @@ export default class CardCreator {
 
 			title.addEventListener("change", () => {
 				const cardTitle = document.querySelector(
-					`#${this.clickedCard.id} h2`
+					`#tarefa-${this.clickedCard.id} h2`
 				);
 				cardTitle.innerText = title.value;
 				const change = {
@@ -351,8 +348,48 @@ export default class CardCreator {
 		}
 	}
 
-	static createMembersModal(card) {
-		const boardMembers = ApiMock.board.members;
+	static async createMembersModal(card) {
+		const body = {
+			id: localStorage.getItem("@dm-kanban:id"),
+		};
+		const members = await Api.getUsersByProject(body);
+		const boardMembers = [];
+		await members.projetos.forEach(async (member) => {
+			const info = await Api.getUserById(member.usuario_id);
+			const memberCard = document.createElement("li");
+			memberCard.className = "card-membros";
+			const memberName = document.createElement("p");
+			memberName.className = "text-2";
+			memberName.innerText = `${info.usuario} (${info.email})`;
+			memberCard.append(memberName);
+			if (!card.members.some((e) => e.username === info.usuario)) {
+				const addMemberButton = document.createElement("button");
+				addMemberButton.className = "adicionar-btn";
+				addMemberButton.innerText = "+";
+				addMemberButton.addEventListener("click", () => {
+					card.members.push(info);
+					membersModal.remove();
+					this.renderMembers(card.value);
+					this.createMembersModal(card);
+				});
+				memberCard.append(addMemberButton);
+			} else {
+				const removeMemberButton = document.createElement("button");
+				removeMemberButton.className = "remover-btn";
+				removeMemberButton.innerText = "-";
+
+				removeMemberButton.addEventListener("click", () => {
+					card.members.splice(card.members.indexOf(info), 1);
+					membersModal.remove();
+					this.renderMembers(card);
+					this.createMembersModal(card);
+				});
+				memberCard.append(removeMemberButton);
+			}
+
+			membersList.appendChild(memberCard);
+			//boardMembers.push(info);
+		});
 		const target = document.querySelector("#membros--lista-membros");
 
 		const membersModal = document.createElement("div");
@@ -378,54 +415,35 @@ export default class CardCreator {
 		const membersList = document.createElement("ul");
 		membersList.className = "membros-modal--lista";
 
-		boardMembers.forEach((element) => {
-			const memberCard = document.createElement("li");
-			memberCard.className = "card-membros";
-			const memberName = document.createElement("p");
-			memberName.className = "text-2";
-			memberName.innerText = `${element.username} (${element.email})`;
-			memberCard.append(memberName);
-			if (!card.members.some((e) => e.username === element.username)) {
-				const addMemberButton = document.createElement("button");
-				addMemberButton.className = "adicionar-btn";
-				addMemberButton.innerText = "+";
-				addMemberButton.addEventListener("click", () => {
-					card.members.push(element);
-					membersModal.remove();
-					this.renderMembers(card);
-					this.createMembersModal(card);
-				});
-				memberCard.append(addMemberButton);
-			} else {
-				const removeMemberButton = document.createElement("button");
-				removeMemberButton.className = "remover-btn";
-				removeMemberButton.innerText = "-";
-
-				removeMemberButton.addEventListener("click", () => {
-					card.members.splice(card.members.indexOf(element), 1);
-					membersModal.remove();
-					this.renderMembers(card);
-					this.createMembersModal(card);
-				});
-				memberCard.append(removeMemberButton);
-			}
-
-			membersList.appendChild(memberCard);
-		});
-
 		membersModal.append(modalHeader, membersList);
 		target.after(membersModal);
 	}
 
-	static renderMembers(realCard) {
+	static async renderMembers(id) {
+		console.log(id);
+		const realCard = document.getElementById(`tarefa-${id}`);
 		const cardMembers = document.getElementById("membros--lista-membros");
 		cardMembers.innerHTML = "";
 		realCard.members.forEach((element) => {
-			const taskMember = document.createElement("li");
-			taskMember.innerText = element.username;
-			taskMember.title = element.email;
-			cardMembers.append(taskMember);
+			if (element != "[]") {
+				const taskMember = document.createElement("li");
+				taskMember.innerText = element.usuario;
+				taskMember.title = element.email;
+				cardMembers.append(taskMember);
+			}
 		});
+		console.log(realCard.parentElement.value);
+		const body = {
+			nome: "",
+			ordem: "1",
+			tags: "",
+			anotacoes: "",
+			colaboradores: realCard.members,
+			coluna_id: realCard.parentElement.value,
+			id: id,
+		};
+		const request = await Api.modifyTask(body);
+		console.log(request);
 		const addMemberButton = document.createElement("button");
 		addMemberButton.innerText = "+";
 		addMemberButton.className = "adicionar-btn";

@@ -247,8 +247,8 @@ export default class Api {
 		return task;
 	}
 
-	static async modifyTask(body, id) {
-		const task = await fetch(`${this.baseUrl}/api/tarefa/${id}`, {
+	static async modifyTask(body) {
+		const task = await fetch(`${this.baseUrl}/api/tarefa/`, {
 			method: "PATCH",
 			body: JSON.stringify(body),
 			headers: {
