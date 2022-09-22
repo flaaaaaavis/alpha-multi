@@ -26,7 +26,9 @@ export default class CardCreator {
 
 	static updateCardMembers(members, id) {
 		const card = document.getElementById(id);
-		card.members = members;
+		const cardMembers = document.getElementById(`colaboradores-${card.id}`);
+		cardMembers.value = members;
+		console.log(cardMembers.value);
 	}
 
 	/* Cria a estrutura básica do card */
@@ -52,10 +54,13 @@ export default class CardCreator {
 		const parent = targetButton.parentElement;
 
 		const card = document.createElement("div");
+		const cardMembers = document.createElement("input");
+		cardMembers.id = `colaboradores-${cardId}`;
+		cardMembers.type = "hidden";
+		cardMembers.value = [];
 		card.className = "arrastavel";
 		card.id = `tarefa-${cardId}`;
-		card.value = card.id;
-		card.members = [];
+		card.value = cardId;
 		card.draggable = true;
 
 		const cardName = document.createElement("h2");
@@ -84,7 +89,7 @@ export default class CardCreator {
 			ws.send(JSON.stringify(edit));
 		});
 
-		card.append(cardName, cardContent);
+		card.append(cardName, cardContent, cardMembers);
 		parent.insertBefore(card, targetButton);
 
 		if (send) {
@@ -111,10 +116,14 @@ export default class CardCreator {
 		const parent = targetButton.parentElement;
 
 		const card = document.createElement("div");
+
 		card.className = "arrastavel";
 		card.id = `tarefa-${incomingCard.id}`;
 		card.value = incomingCard.id;
-		card.members = [incomingCard.colaboradores];
+		const cardMembers = document.createElement("input");
+		cardMembers.id = `colaboradores-${incomingCard.id}`;
+		cardMembers.type = "hidden";
+		cardMembers.value = incomingCard.colaboradores;
 		card.draggable = true;
 
 		const cardName = document.createElement("h2");
@@ -143,7 +152,7 @@ export default class CardCreator {
 			ws.send(JSON.stringify(edit));
 		});
 
-		card.append(cardName, cardContent);
+		card.append(cardName, cardContent, cardMembers);
 		parent.insertBefore(card, targetButton);
 
 		this.cardCounter++;
@@ -172,6 +181,7 @@ export default class CardCreator {
 	/* Cria o menu de select do card (Mobile) */
 	static cardSelect(card) {
 		const select = document.querySelector(".card-modal__move");
+		console.log(card);
 		let atualColumn = card.parentElement.id;
 		const targetColumn = select.value;
 
@@ -334,8 +344,9 @@ export default class CardCreator {
 			});
 
 			select.addEventListener("change", () => {
-				console.log("x");
-				realCard = document.getElementById(this.clickedCard.id);
+				const realCard = document.getElementById(
+					`tarefa-${this.clickedCard.id}`
+				);
 				this.cardSelect(realCard);
 				this.fillSelect(select, realCard.parentElement);
 				modal.classList.add("hidden");
@@ -356,6 +367,11 @@ export default class CardCreator {
 		};
 		const members = await Api.getUsersByProject(body);
 		const boardMembers = [];
+		const cardMembersInfo = document.getElementById(
+			`colaboradores-${card.value}`
+		);
+
+		const usableCardMembersList = JSON.parse(cardMembersInfo.value);
 		await members.projetos.forEach(async (member) => {
 			const info = await Api.getUserById(member.usuario_id);
 			const memberCard = document.createElement("li");
@@ -364,13 +380,18 @@ export default class CardCreator {
 			memberName.className = "text-2";
 			memberName.innerText = `${info.usuario} (${info.email})`;
 			memberCard.append(memberName);
-			if (!card.members.some((e) => e.username === info.usuario)) {
+			if (
+				!usableCardMembersList.some((e) => e.usuario === info.usuario)
+			) {
 				const addMemberButton = document.createElement("button");
 				addMemberButton.className = "adicionar-btn";
 				addMemberButton.innerText = "+";
 				addMemberButton.addEventListener("click", () => {
-					card.members.push(info);
+					usableCardMembersList.push(info);
 					membersModal.remove();
+					cardMembersInfo.value = JSON.stringify(
+						usableCardMembersList
+					);
 					this.renderMembers(card.value);
 					this.createMembersModal(card);
 				});
@@ -381,11 +402,22 @@ export default class CardCreator {
 				removeMemberButton.innerText = "-";
 
 				removeMemberButton.addEventListener("click", () => {
-					card.members.splice(card.members.indexOf(info), 1);
+					usableCardMembersList.forEach((element) => {
+						if (element.id == info.id) {
+							const position =
+								usableCardMembersList.indexOf(element);
+							usableCardMembersList.splice(position, 1);
+						}
+					});
+					console.log(usableCardMembersList);
 					membersModal.remove();
-					this.renderMembers(card);
+					cardMembersInfo.value = JSON.stringify(
+						usableCardMembersList
+					);
+					this.renderMembers(card.value);
 					this.createMembersModal(card);
 				});
+
 				memberCard.append(removeMemberButton);
 			}
 
@@ -422,30 +454,19 @@ export default class CardCreator {
 	}
 
 	static async renderMembers(id) {
-		console.log(id);
 		const realCard = document.getElementById(`tarefa-${id}`);
+		const nome = document.querySelector(`#tarefa-${id} h2`).innerText;
+		const conteudo = document.querySelector(`#tarefa-${id} p`).innerText;
 		const cardMembers = document.getElementById("membros--lista-membros");
+		const cardMembersList = document.getElementById(`colaboradores-${id}`);
+		const usableCardMembersList = JSON.parse(cardMembersList.value);
 		cardMembers.innerHTML = "";
-		realCard.members.forEach((element) => {
-			if (element != "[]") {
-				const taskMember = document.createElement("li");
-				taskMember.innerText = element.usuario;
-				taskMember.title = element.email;
-				cardMembers.append(taskMember);
-			}
+		usableCardMembersList.forEach((element) => {
+			const taskMember = document.createElement("li");
+			taskMember.innerText = element.usuario;
+			taskMember.title = element.email;
+			cardMembers.append(taskMember);
 		});
-		console.log(realCard.parentElement.value);
-		const body = {
-			nome: "",
-			ordem: "1",
-			tags: "",
-			anotacoes: "",
-			colaboradores: realCard.members,
-			coluna_id: realCard.parentElement.value,
-			id: id,
-		};
-		const request = await Api.modifyTask(body);
-		console.log(request);
 		const addMemberButton = document.createElement("button");
 		addMemberButton.innerText = "+";
 		addMemberButton.className = "adicionar-btn";

@@ -153,7 +153,6 @@ export default class Render {
 	}
 
 	static async renderColumn(columnElement) {
-		console.log(columnElement);
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
@@ -246,13 +245,6 @@ export default class Render {
 						`#coluna-${column.id} .adicionar-card`
 					);
 					CardCreator.renderCard(target.id, card);
-					/* 					const cardName = document.querySelector(
-						`#${card.id} .nome__card`
-					);
-					cardName.innerText = card.name;
-					const cardContent = document.querySelector(`#${card.id} p`);
-					cardContent.innerText = card.content;
-					CardCreator.updateCardMembers(card.members, card.id); */
 				});
 			}
 		});

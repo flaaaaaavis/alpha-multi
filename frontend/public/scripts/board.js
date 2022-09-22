@@ -83,7 +83,6 @@ ws.addEventListener("message", ({ data }) => {
 			apagar.remove();
 			break;
 		case "mover tarefa":
-			console.log(dados);
 			moveCard(dados);
 			break;
 		case "nova coluna":
@@ -91,7 +90,8 @@ ws.addEventListener("message", ({ data }) => {
 			break;
 		case "nova tarefa":
 			const target = document.querySelector(`#${dados.botao}`);
-			CardCreator.createCard(target.id, false);
+			console.log(target);
+			CardCreator.renderCard(target.id, false);
 			break;
 		case "mudança de nome - card":
 			card = document.querySelector(`#tarefa-${dados.id} .nome__card`);
@@ -120,7 +120,7 @@ ws.addEventListener("message", ({ data }) => {
 			card.classList.add("editavel");
 			break;
 		case "fechar modal":
-			card = document.getElementById(`tarefa-${dados.id}`);
+			card = document.getElementById(dados.id);
 			card.classList.remove("editavel");
 			break;
 	}
@@ -143,9 +143,8 @@ project.addEventListener("change", async () => {
 
 function moveCard(data) {
 	console.log(data);
-	const card = document.getElementById(`${data.id}`);
+	const card = document.getElementById(data.id);
 	const coluna = document.getElementById(data.coluna);
-	console.log(card, coluna);
 	let alvo;
 	if (data.acima) {
 		console.log(acima);
@@ -153,7 +152,7 @@ function moveCard(data) {
 		coluna.insertBefore(card, alvo);
 		card.classList.remove("arrastando");
 	} else {
-		alvo = document.querySelector(`#coluna-${data.coluna} .adicionar-card`);
+		alvo = document.querySelector(`#${data.coluna} .adicionar-card`);
 		console.log(alvo, card);
 		coluna.insertBefore(card, alvo);
 		card.classList.remove("arrastando");
@@ -189,10 +188,6 @@ function modalControl(modalId) {
 }
 
 const closeModal = document.querySelectorAll(".close-modal-x");
-// closeModal.addEventListener("click", (event) => {
-// 	event.preventDefault();
-// 	menuControl();
-// });
 
 const openButton = document.getElementById("menu--button__open");
 openButton.addEventListener("click", (event) => {
@@ -361,7 +356,6 @@ async function changePassword() {
 
 modalFunctions();
 async function getProjects() {
-	console.log(user.usuario.id);
 	const body = {
 		id: user.usuario.id,
 	};
@@ -369,8 +363,6 @@ async function getProjects() {
 	if (request.projetos) {
 		const projetosMenu = document.getElementById("lista-de-projetos");
 		const uniqueProjects = [...new Set(request.projetos)];
-
-		console.log(uniqueProjects);
 
 		uniqueProjects.forEach(async (project) => {
 			const newProject = await Api.getProjectbyId(project.projeto_id);
@@ -416,7 +408,6 @@ async function renderProjects(project, categories) {
 	udpateSala();
 	ws.send(JSON.stringify({ room: sala }));
 	Render.renderData(board);
-	console.log(board);
 }
 
 async function getMembers(project) {
@@ -429,7 +420,6 @@ async function getMembers(project) {
 	members.projetos.forEach(async (member) => {
 		const info = await Api.getUserById(member.usuario_id);
 		membersInfo.push(info);
-		console.log(info);
 		projectMembers.push(info);
 		const item = document.createElement("li");
 		item.className = "menu--accordion__sub-item";
@@ -481,7 +471,6 @@ async function recoverSession() {
 }
 
 const openProject = localStorage.getItem("@dm-kanban:id");
-console.log(openProject);
 /* if (openProject) {
 	recoverSession();
 } */
