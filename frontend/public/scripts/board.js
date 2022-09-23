@@ -1,9 +1,10 @@
 import CardCreator from "./CardCreator.js";
-import { ws, sala } from "./Websocket.js";
+import { ws, sala, udpateSala } from "./Websocket.js";
 import Render from "./Render.js";
 import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
 
+const projectMembers = [];
 const token = localStorage.getItem("@dmkanban-token");
 
 if (!token) {
@@ -12,9 +13,18 @@ if (!token) {
 
 const user = parseJwt(token);
 
-console.log(user);
 localStorage.setItem("@dmkanban-userId", user.usuario.id);
-let projectId;
+
+ws.addEventListener("open", () => {
+	console.log("conectado!!!");
+	ws.send(JSON.stringify({ room: sala }));
+	const newUser = {
+		tipo: "conexão",
+		usuario: user.usuario.usuario,
+		sala: sala,
+	};
+	ws.send(JSON.stringify(newUser));
+});
 
 const exitButton = document.getElementById("sair");
 exitButton.addEventListener("click", (e) => {
@@ -27,6 +37,7 @@ const newProject = document.getElementById("criar-quadro");
 newProject.addEventListener("click", async (e) => {
 	e.preventDefault();
 	let nome = document.getElementById("input-quadro").value;
+	menuControl();
 	if (nome.trim() == "") {
 		nome = "Novo quadro";
 	}
@@ -37,32 +48,12 @@ newProject.addEventListener("click", async (e) => {
 	};
 	projectId = await Api.createProject(project);
 	localStorage.setItem("@dm-kanban:id", projectId);
+	udpateSala();
+	ws.send(JSON.stringify({ room: projectId }));
 	Render.createBoard(3, nome, projectId);
 });
 
-/* renderizar o projeto */
-/* async function startBoard(nome, id) {
-	const board = ApiMock.getBoard(sala);
-	if (!board) {
-		Render.createBoard(3);
-	} else {
-		Render.createBoard(board.columns.length);
-		Render.renderData(board);
-	}
-} */
-
 /* Conectar ao websocket */
-
-ws.addEventListener("open", () => {
-	console.log("conectado!!!");
-	ws.send(JSON.stringify({ room: sala }));
-	const newUser = {
-		tipo: "conexão",
-		usuario: user.usuario.usuario,
-		sala: sala,
-	};
-	ws.send(JSON.stringify(newUser));
-});
 
 /* Respostas do websocket */
 
@@ -83,11 +74,11 @@ ws.addEventListener("message", ({ data }) => {
 			}, 5000);
 			break;
 		case "arrastando tarefa":
-			card = document.getElementById(dados.id);
+			card = document.getElementById(`${dados.id}`);
 			card.classList.add("arrastando");
 			break;
 		case "apagar coluna":
-			const apagar = document.getElementById(dados.id);
+			const apagar = document.getElementById(`tarefa-${dados.id}`);
 			apagar.remove();
 			break;
 		case "mover tarefa":
@@ -98,14 +89,15 @@ ws.addEventListener("message", ({ data }) => {
 			break;
 		case "nova tarefa":
 			const target = document.querySelector(`#${dados.botao}`);
-			CardCreator.createCard(target.id, false);
+			console.log(target);
+			CardCreator.renderCard(target.id, false);
 			break;
 		case "mudança de nome - card":
-			card = document.querySelector(`#${dados.id} .nome__card`);
+			card = document.querySelector(`#tarefa-${dados.id} .nome__card`);
 			card.innerText = dados.nome;
 			break;
 		case "mudança de nome - coluna":
-			const coluna = document.querySelector(`#${dados.id} input`);
+			const coluna = document.querySelector(`#coluna-${dados.id} input`);
 			coluna.value = dados.nome;
 			CardCreator.fillAllSelects();
 			break;
@@ -114,20 +106,21 @@ ws.addEventListener("message", ({ data }) => {
 			quadro.value = dados.nome;
 			break;
 		case "mudança de conteudo - card":
-			card = document.querySelector(`#${dados.id} p`);
+			card = document.querySelector(`#tarefa-${dados.id} p`);
 			card.innerText = dados.conteudo;
 			break;
 		case "excluir card":
-			card = document.getElementById(dados.id);
+			card = document.getElementById(`tarefa-${dados.id}`);
 			card.remove();
 			break;
 		case "editando tarefa":
-			console.log("entrou");
-			card = document.getElementById(dados.id);
+			console.log(dados.id);
+			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.add("editavel");
 			break;
 		case "fechar modal":
-			card = document.getElementById(dados.id);
+			console.log(dados.id);
+			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.remove("editavel");
 			break;
 	}
@@ -137,7 +130,7 @@ const project = document.getElementById("nome-projeto");
 project.addEventListener("change", async () => {
 	const request = await Api.modifyProject({
 		nome: project.value,
-		id: projectId,
+		id: localStorage.getItem("@dm-kanban:id"),
 	});
 	console.log(request);
 	const newName = {
@@ -152,7 +145,6 @@ function moveCard(data) {
 	console.log(data);
 	const card = document.getElementById(data.id);
 	const coluna = document.getElementById(data.coluna);
-	console.log(card, coluna);
 	let alvo;
 	if (data.acima) {
 		alvo = document.getElementById(data.acima);
@@ -180,20 +172,21 @@ function menuControl() {
 }
 
 function modalControl(modalId) {
-	const modal = document.getElementById(id)
-
+	const modal = document.getElementById(modalId);
 	if (window.getComputedStyle(modal).display === "none") {
 		modal.style.display = "flex";
 	} else {
 		modal.style.display = "none";
 	}
+	modal.addEventListener("click", (e) => {
+		e.preventDefault();
+		if (e.target == modal) {
+			modal.style.display = "none";
+		}
+	});
 }
 
-const closeModal = document.querySelectorAll('.close-modal-x')
-// closeModal.addEventListener("click", (event) => {
-// 	event.preventDefault();
-// 	menuControl();
-// });
+const closeModal = document.querySelectorAll(".close-modal-x");
 
 const openButton = document.getElementById("menu--button__open");
 openButton.addEventListener("click", (event) => {
@@ -207,25 +200,25 @@ closeButton.addEventListener("click", (event) => {
 	menuControl();
 });
 
-const deleteAccountButton = document.getElementById("excluir-conta")
+const deleteAccountButton = document.getElementById("excluir-conta");
 deleteAccountButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	modalControl("modal--delete-account__container");
 });
 
-const changeEmailButton = document.getElementById("mudar-email")
+const changeEmailButton = document.getElementById("mudar-email");
 changeEmailButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	modalControl("modal--change-email__container");
 });
 
-const changePassButton = document.getElementById("mudar-senha")
+const changePassButton = document.getElementById("mudar-senha");
 changePassButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	modalControl("modal--change-password__container");
 });
 
-const deleteBoardButton = document.getElementById("delete-board-button")
+const deleteBoardButton = document.getElementById("delete-board-button");
 deleteBoardButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	modalControl("modal--delete-board__container");
@@ -241,8 +234,6 @@ editMenuInfo();
 
 function modalFunctions() {
 	const modal = document.querySelector(".modal");
-	const emailModal = document.querySelector(".email-modal");
-	const emailButton = document.getElementById("mudar-email");
 	const openDeleteAccountModal = document.getElementById("excluir-conta");
 	const deleteAccountModal = document.getElementById(
 		"modal--delete-account__container"
@@ -277,23 +268,15 @@ function modalFunctions() {
 		}
 	});
 
-	emailButton.addEventListener("click", (e) => {
-		e.preventDefault();
-		modal.classList.remove("hidden");
-		emailModal.classList.remove("hidden");
-	});
-
 	modal.addEventListener("click", (e) => {
 		if (e.target == modal) {
 			console.log("entrou");
 			modal.classList.add("hidden");
-			emailModal.classList.add("hidden");
 		}
 	});
 
 	closeEmail.addEventListener("click", () => {
 		modal.classList.add("hidden");
-		emailModal.classList.add("hidden");
 	});
 
 	openDeleteAccountModal.addEventListener("click", () => {
@@ -371,3 +354,123 @@ async function changePassword() {
 }
 
 modalFunctions();
+async function getProjects() {
+	const body = {
+		id: user.usuario.id,
+	};
+	const request = await Api.getAllProjects(body);
+	if (request.projetos) {
+		const projetosMenu = document.getElementById("lista-de-projetos");
+		const uniqueProjects = [...new Set(request.projetos)];
+
+		uniqueProjects.forEach(async (project) => {
+			const newProject = await Api.getProjectbyId(project.projeto_id);
+			const item = document.createElement("li");
+			item.className = "menu--accordion__sub-item this-board__item";
+			const itemButton = document.createElement("button");
+			itemButton.innerText = newProject.nome;
+			itemButton.value = newProject.id;
+			itemButton.addEventListener("click", async (e) => {
+				e.preventDefault();
+				const categories = await Api.getCategoryByProject(
+					itemButton.value
+				);
+				console.log(categories);
+				renderProjects(project, categories);
+			});
+
+			item.append(itemButton);
+			projetosMenu.append(item);
+		});
+	}
+}
+
+async function renderProjects(project, categories) {
+	menuControl();
+	const fullProject = await Api.getProjectbyId(project.projeto_id);
+	const projectMembers = await getMembers(project);
+	let tasksArray = [];
+	const board = {
+		name: fullProject.nome,
+		members: projectMembers,
+		id: fullProject.id,
+		cardCount: tasksArray.length,
+		columns: categories,
+	};
+	Render.createBoard(
+		board.columns.length,
+		board.name,
+		board.id,
+		false,
+		board
+	);
+	localStorage.setItem("@dm-kanban:id", board.id);
+	udpateSala();
+	ws.send(JSON.stringify({ room: sala }));
+	Render.renderData(board);
+}
+
+async function getMembers(project) {
+	const body = {
+		id: project.projeto_id,
+	};
+	const membersInfo = [];
+	const list = document.getElementById("project-members-list");
+	const members = await Api.getUsersByProject(body);
+	members.projetos.forEach(async (member) => {
+		const info = await Api.getUserById(member.usuario_id);
+		membersInfo.push(info);
+		projectMembers.push(info);
+		const item = document.createElement("li");
+		item.className = "menu--accordion__sub-item";
+		const span = document.createElement("span");
+		span.innerText = info.usuario;
+		span.title = info.email;
+		const button = document.createElement("button");
+		const img = document.createElement("img");
+		img.src = "../assets/icons/close.png";
+		img.alt = "Excluir participante";
+		button.append(img);
+		item.append(span, button);
+		list.append(item);
+	});
+
+	return membersInfo;
+}
+
+async function addMemberToProject() {
+	const input = document.getElementById("adicionar-participante").value;
+	const email = validateEmail(input);
+	if (email) {
+		const body = {
+			projeto_id: localStorage.getItem("@dm-kanban:id"),
+			email: input.trim(),
+		};
+		const request = await Api.addUserToProjectByEmail(body);
+		if (request.result) {
+			alert(request.result);
+		} else {
+			alert("usuário não encontrado");
+		}
+	}
+}
+
+const addMemberButton = document.getElementById("add-participante-button");
+addMemberButton.addEventListener("click", (e) => {
+	e.preventDefault();
+	addMemberToProject();
+});
+
+getProjects();
+
+async function recoverSession() {
+	const categories = await Api.getCategoryByProject(
+		localStorage.getItem("@dm-kanban:id")
+	);
+	renderProjects(project, categories);
+}
+
+const openProject = localStorage.getItem("@dm-kanban:id");
+/* if (openProject) {
+	recoverSession();
+} */

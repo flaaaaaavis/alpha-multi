@@ -1,2 +1,6 @@
 export const ws = new WebSocket("ws://localhost:8000");
-export const sala = prompt("Digite o numero da sala");
+export let sala = localStorage.getItem("@dm-kanban:id");
+
+export function udpateSala() {
+	sala = localStorage.getItem("@dm-kanban:id");
+}

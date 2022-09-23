@@ -16,7 +16,7 @@
 
 	<body>
 		<header id="board--header">
-			<img class="logo" src="../assets/logo.png">
+			<img class="logo" src="../assets/logo.png" />
 			<input
 				class="title-1"
 				type="text"
@@ -90,7 +90,10 @@
 							</span>
 							<hr />
 
-							<ul class="menu--accordion__item-content">
+							<ul
+								class="menu--accordion__item-content"
+								id="lista-de-projetos"
+							>
 								<li class="menu--accordion__sub-item">
 									<form>
 										<input
@@ -102,31 +105,11 @@
 										<button id="criar-quadro">Criar</button>
 									</form>
 								</li>
-								<li
+								<!-- 								<li
 									class="menu--accordion__sub-item this-board__item"
 								>
 									<button>Quadro 1</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									<button>Quadro 2</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									<button>Quadro 3</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									<button>Quadro 4</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item this-board__item"
-								>
-									<button>Quadro 5</button>
-								</li>
+								</li> -->
 							</ul>
 						</li>
 					</ul>
@@ -136,7 +119,11 @@
 
 						<ul class="menu--main__accordion">
 							<li class="menu--accordion__item" id="members">
-								<a href="#members" id="members-row" class="item__title this-board__item">
+								<a
+									href="#members"
+									id="members-row"
+									class="item__title this-board__item"
+								>
 									<span>
 										<img
 											src="../assets/icons/group.png"
@@ -152,68 +139,37 @@
 									/>
 								</a>
 
-								<ul class="menu--accordion__item-content">
+								<ul
+									id="project-members-list"
+									class="menu--accordion__item-content"
+								>
 									<li class="menu--accordion__sub-item">
 										<form>
 											<input
 												type="email"
 												name=""
-												id=""
+												id="adicionar-participante"
 												placeholder="Adicionar participante"
 											/>
-											<button>Adicionar</button>
+											<button
+												id="add-participante-button"
+											>
+												Adicionar
+											</button>
 										</form>
-									</li>
-									<li class="menu--accordion__sub-item">
-										<span>Kenjinho</span>
-										<button>
-											<img
-												src="../assets/icons/close.png"
-												alt="Excluir participante"
-											/>
-										</button>
-									</li>
-									<li class="menu--accordion__sub-item">
-										<span>Animado</span>
-										<button>
-											<img
-												src="../assets/icons/close.png"
-												alt="Excluir participante"
-											/>
-										</button>
 									</li>
 								</ul>
 							</li>
 						</ul>
-						<a href="" class="this-board__item" id="delete-board-button">
+						<a
+							href=""
+							class="this-board__item"
+							id="delete-board-button"
+						>
 							<img src="../assets/icons/delete.png" alt="" />
 							Excluir quadro
 						</a>
 					</section>
-					<ul class="menu--main__accordion">
-						<li class="menu--accordion__item" id="your-boards">
-							<span id="your-boards__title">
-								<a href="#your-boards" class="item__title">Seus quadros</a>
-								<img src="../assets/icons/add.png" id="your-boards__new-board-button" alt="Criar novo quadro">
-							</span>
-							<hr />
-
-							<ul class="menu--accordion__item-content">
-								<li class="menu--accordion__sub-item">
-									<form>
-										<input type="email" name="" id="" placeholder="Novo quadro">
-										<button>Criar</button>
-									</form>
-								</li>
-								<li class="menu--accordion__sub-item this-board__item">
-									<button>Quadro 1</button>
-								</li>
-								<li class="menu--accordion__sub-item this-board__item">
-									<button>Quadro 2</button>
-								</li>
-							</ul>
-						</li>
-					</ul>
 				</main>
 			</nav>
 		</menu>
@@ -300,7 +256,12 @@
 
 		<div id="modal--delete-user-from-project__container">
 			<div id="modal--delete-user-from-project">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-user-from-project__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--delete-user-from-project__container')"
+				/>
 				<h2 id="modal--delete-user-from-project__title">AVISO</h2>
 
 				<p id="modal--delete-user-from-project__text">
@@ -316,7 +277,12 @@
 
 		<div id="modal--delete-account__container">
 			<div id="modal--delete-account">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-account__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--delete-account__container')"
+				/>
 				<h2 id="modal--delete-account__title">AVISO</h2>
 
 				<p id="modal--delete-account__text">
@@ -330,7 +296,12 @@
 
 		<div id="modal--change-password__container">
 			<div id="modal--change-password">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--change-password__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--change-password__container')"
+				/>
 				<h2 id="modal--change-password__title">Alterar senha</h2>
 
 				<form id="modal--change-password__form">
@@ -355,7 +326,12 @@
 
 		<div id="modal--change-email__container">
 			<div id="modal--change-email">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--change-email__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--change-email__container')"
+				/>
 				<h2 id="modal--change-email__title">Alterar email</h2>
 
 				<form id="modal--change-email__form">
@@ -379,7 +355,12 @@
 
 		<div id="modal--delete-board__container">
 			<div id="modal--delete-board">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-board__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--delete-board__container')"
+				/>
 				<h2 id="modal--delete-board__title">Excluir quadro</h2>
 
 				<p id="modal--delete-board__text">
@@ -394,7 +375,12 @@
 
 		<div id="modal--delete-card__container">
 			<div id="modal--delete-card">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-card__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--delete-card__container')"
+				/>
 				<h2 id="modal--delete-card__title">AVISO</h2>
 
 				<p id="modal--delete-card__text">
@@ -407,7 +393,12 @@
 
 		<div id="modal--delete-column__container">
 			<div id="modal--delete-column">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-column__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--delete-column__container')"
+				/>
 				<h2 id="modal--delete-column__title">AVISO</h2>
 
 				<p id="modal--delete-column__text">

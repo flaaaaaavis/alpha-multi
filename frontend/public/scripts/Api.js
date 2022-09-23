@@ -247,8 +247,8 @@ export default class Api {
 		return task;
 	}
 
-	static async modifyTask(body, id) {
-		const task = await fetch(`${this.baseUrl}/api/tarefa/${id}`, {
+	static async modifyTask(body) {
+		const task = await fetch(`${this.baseUrl}/api/tarefa/`, {
 			method: "PATCH",
 			body: JSON.stringify(body),
 			headers: {
@@ -268,8 +268,8 @@ export default class Api {
 		return task;
 	}
 
-	static async deleteTask(body, id) {
-		const task = await fetch(`${this.baseUrl}/api/tarefa/${id}`, {
+	static async deleteTask(body) {
+		const task = await fetch(`${this.baseUrl}/api/tarefa`, {
 			method: "DELETE",
 			body: JSON.stringify(body),
 			headers: {
@@ -289,7 +289,7 @@ export default class Api {
 		return task;
 	}
 
-	static async getTask(id) {
+	static async getTaskByCategory(id) {
 		const task = await fetch(`${this.baseUrl}/api/tarefa/${id}`, {
 			method: "GET",
 			headers: {
@@ -307,5 +307,128 @@ export default class Api {
 			});
 
 		return task;
+	}
+
+	static async getProjectbyId(id) {
+		const project = await fetch(`${this.baseUrl}/api/projeto/${id}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return project;
+	}
+
+	static async getCategoryByProject(id) {
+		const project = await fetch(`${this.baseUrl}/api/categoria/${id}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return project;
+	}
+
+	static async getUserById(id) {
+		const project = await fetch(`${this.baseUrl}/api/usuario/${id}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return project;
+	}
+
+	static async getAllProjects(body) {
+		const project = await fetch(`${this.baseUrl}/api/usuario/projetos`, {
+			method: "POST",
+			body: JSON.stringify(body),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return project;
+	}
+
+	static async getUsersByProject(body) {
+		const project = await fetch(`${this.baseUrl}/api/projeto/usuarios`, {
+			method: "POST",
+			body: JSON.stringify(body),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return project;
+	}
+
+	static async addUserToProjectByEmail(body) {
+		const project = await fetch(`${this.baseUrl}/api/projeto/membros`, {
+			method: "POST",
+			body: JSON.stringify(body),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return project;
 	}
 }

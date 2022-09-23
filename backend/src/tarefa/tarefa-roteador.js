@@ -31,7 +31,6 @@ TaskRouter.route("/")
 		};
 
 		const dbRes = await TaskService.insertTarefa(tarefa);
-		console.log(dbRes);
 
 		if (dbRes.rowCount === 1) {
 			res.status(201).json({
@@ -69,7 +68,7 @@ TaskRouter.route("/")
 		};
 
 		const dbRes = await TaskService.updateTarefa(id, tarefa);
-
+		console.log(dbRes);
 		if (dbRes.rowCount === 1) {
 			res.status(200).json({ result: "Tarefa alterada com sucesso!" });
 		} else {
@@ -102,6 +101,7 @@ TaskRouter.route("/:id_categoria").get(jsonBodyParser, async (req, res) => {
 
 	const dbRes = await TaskService.getTarefasPorColuna(id_categoria);
 	if (dbRes.length >= 1) return res.status(200).json(dbRes);
+	if (!dbRes.rows) return res.status(200).json({ erro: "Nenhuma tarefa" });
 	return res.status(500).json({ message: "Internal Server Error" });
 });
 
