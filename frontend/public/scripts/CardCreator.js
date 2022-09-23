@@ -380,7 +380,6 @@ export default class CardCreator {
 					tipo: "fechar modal",
 					id: this.clickedCard.id,
 				};
-				updateCard(this.clickedCard.id);
 				ws.send(JSON.stringify(edit));
 			});
 
