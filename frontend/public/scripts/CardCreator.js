@@ -207,8 +207,7 @@ export default class CardCreator {
 			const newColumn = document.getElementById(targetColumn);
 
 			newColumn.insertBefore(card, query);
-			card.value = targetColumn;
-
+			updateCard(card.value);
 			const move = {
 				sala: sala,
 				tipo: "mover tarefa",
@@ -222,7 +221,6 @@ export default class CardCreator {
 			};
 			ws.send(JSON.stringify(edit));
 			ws.send(JSON.stringify(move));
-			updateCard(card.value);
 		}
 	}
 
@@ -375,7 +373,8 @@ export default class CardCreator {
 				this.cardSelect(realCard);
 				this.fillSelect(select, realCard.parentElement);
 				modal.classList.add("hidden");
-				membersModal.classList.add("hidden");
+				const membersModal = document.querySelector(".membros--modal");
+				membersModal.remove();
 				const edit = {
 					sala: sala,
 					tipo: "fechar modal",
@@ -383,6 +382,15 @@ export default class CardCreator {
 				};
 				updateCard(this.clickedCard.id);
 				ws.send(JSON.stringify(edit));
+			});
+
+			modal.addEventListener("click", (event) => {
+				if (event.target == modal) {
+					modal.classList.add("hidden");
+					const membersModal =
+						document.querySelector(".membros--modal");
+					membersModal.remove();
+				}
 			});
 		}
 	}
