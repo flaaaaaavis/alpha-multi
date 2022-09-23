@@ -10,6 +10,21 @@
 	--pink: #FF6865;
 	--light-pink: #FF9A98;
 	--red: #E32F3A;
+
+	--brand-size: 18px;
+	--brand-weight: 700;
+
+	--column-title-size: 14px;
+	--column-title-weight: 600;
+
+	--card-title-size: 12px;
+	--card-title-weight: 400;
+
+	--card-content-size: 14px;
+	--card-content-weight: 400;
+
+	--button-text-size: 14px;
+	--button-text-weight: 400;
 }
 
 * {

@@ -2,7 +2,6 @@
 	--white: #FFFFFF;
 	--light-grey: #D9D9D9;
 	--grey: #4C4C4C;
-	--black: #000;
 	--blue: #212AD1;
 	--light-blue: #91F6F0;
 	--green: #68E79A;
@@ -10,6 +9,22 @@
 	--orange: #F26F21;
 	--pink: #FF6865;
 	--light-pink: #FF9A98;
+	--red: #E32F3A;
+
+	--brand-size: 18px;
+	--brand-weight: 700;
+
+	--column-title-size: 14px;
+	--column-title-weight: 600;
+
+	--card-title-size: 12px;
+	--card-title-weight: 400;
+
+	--card-content-size: 14px;
+	--card-content-weight: 400;
+
+	--button-text-size: 14px;
+	--button-text-weight: 400;
 }
 
 body {
@@ -128,7 +143,6 @@ body {
 
 	display: flex;
 	flex-direction: column;
-	/* row-gap: 5px; */
 	justify-content: stretch;
 	align-items: center;
 
@@ -150,11 +164,12 @@ body {
 
 .coluna header{
 	position: relative;
-	display: flex;
 	width: 90%;
 	height: 50px;
 	margin-top: 30px;
 	padding-bottom: 10px;
+
+	display: flex;
 	justify-content: center;
 	align-items: center;
 
@@ -168,11 +183,9 @@ body {
 	width: 70%;
 	align-self: center;
 
-	font-weight: 300;
-	font-size: 24px;
-	line-height: 29px;
+	font-weight: var(--column-title-weight);
+	font-size: var(--column-title-size);
 	text-align: center;
-	color: var(--blue);
 }
 
 .botao-delete {
@@ -191,21 +204,25 @@ body {
 }
 /* Card que pode ser arrastado */
 .arrastavel {
+	position: relative;
 	width: 90%;
-	cursor: grab;
-	display: flex;
 	height: 80px;
 	padding: 6px;
-	transition: 0.4s;
 	margin-top: 10px;
 	border-radius: 5px;
-	position: relative;
+
+	cursor: grab;
+
+	display: flex;
 	align-items: center;
 	flex-direction: column;
+	justify-content: space-around;
+
 	animation-duration: 0.6s;
 	animation-name: cartao-aparece;
+	transition: 0.4s;
+
 	background-color: #FF9A98;
-	justify-content: space-around;
 	border: 4px solid transparent;
 }
 
@@ -229,9 +246,8 @@ body {
 .nome__card {
 	width: 90%;
 
-	font-weight: 400;
-	font-size: 18px;
-	line-height: 22px;
+	font-weight: var(--card-title-weight);
+	font-size: var(--card-title-size);
 	text-align: center;
 	color: var(--black);
 }
@@ -244,17 +260,16 @@ body {
 .conteudo__card {
 	width: 90%;
 	max-height: 2.2em;
+	overflow: hidden;
 
-	font-weight: 300;
-	font-size: 15px;
-	line-height: 18px;
+	font-weight: var(--card-content-weight);
+	font-size: var(--card-content-size);
 	color: var(--grey);
+	text-overflow: ellipsis;
 
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 /* Menu que mostra para onde um card pode ser arrastado */
@@ -319,20 +334,23 @@ body {
 /* Notificações */
 
 .notifications{
-	display: flex;
-	right: 20px;
-	bottom: 20px;
+	position: absolute;
 	width: 200px;
 	height: 30px;
-	font-weight: 600;
-	position: absolute;
-	text-align: center;
+	right: 20px;
+	bottom: 20px;
 	border-radius: 5px;
+
+	display: flex;
 	align-items: center;
 	justify-content: center;
+	text-align: center;
+
+	font-weight: 600;
+	background-color: var(--white);
+	
 	animation-duration: 5s;
 	animation-fill-mode: forwards;
-	background-color: var(--white);
 	animation-name: notificacao-aparece;
 }
 

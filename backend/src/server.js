@@ -1,7 +1,7 @@
 import config from "./config.js";
 import { app } from "./app.js";
 
-import { pool } from "./db.js";
+// import { pool } from "./db.js";
 const { PORT } = config;
 import { v4 } from "uuid";
 
