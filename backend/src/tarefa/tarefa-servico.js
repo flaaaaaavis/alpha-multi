@@ -4,7 +4,10 @@ export const TaskService = {
 	async getTarefasPorColuna(coluna_id) {
 		try {
 			const data = await pool.query(
-				`SELECT * FROM tarefas WHERE coluna_id = ${coluna_id}`
+				`SELECT * FROM tarefas WHERE coluna_id = ${coluna_id}
+				ORDER BY
+					ordem ASC;
+				`
 			);
 			return data.rows;
 		} catch (e) {
@@ -31,13 +34,14 @@ export const TaskService = {
 	},
 	async updateTarefa(id, tarefa) {
 		try {
-			const query = `UPDATE tarefas SET coluna_id = ($1), nome = ($2), ordem = ($3), tags = ($4), anotacoes = ($5), colaboradores = ($6)  WHERE id = ($6);`;
+			const query = `UPDATE tarefas SET coluna_id = ($1), nome = ($2), ordem = ($3), tags = ($4), anotacoes = ($5), colaboradores = ($6)  WHERE id = ($7);`;
 			const values = [
 				tarefa.coluna_id,
 				tarefa.nome,
 				tarefa.ordem,
 				tarefa.tags,
 				tarefa.anotacoes,
+				tarefa.colaboradores,
 				id,
 			];
 			const data = await pool.query(query, values);

@@ -56,9 +56,8 @@ export default class Render {
 			nome: columnName,
 			ordem: this.columnCount,
 		};
-		console.log(id);
+		this.columnCount++;
 		const columnId = await Api.createCategory(body);
-		console.log(columnId);
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
@@ -70,7 +69,10 @@ export default class Render {
 		column.addEventListener("dragover", (event) => {
 			DragAndDrop.onDragOver(event);
 		});
-
+		const columnOrder = document.createElement("input");
+		columnOrder.type = "hidden";
+		columnOrder.value = body.ordem;
+		columnOrder.id = `coluna-${columnId[0].id}-ordem`;
 		const header = document.createElement("header");
 		header.className = "coluna--header";
 		const name = document.createElement("input");
@@ -81,7 +83,7 @@ export default class Render {
 			const change = {
 				projeto_id: id,
 				nome: name.value,
-				ordem: this.columnCount,
+				ordem: columnOrder.value,
 				id: column.id,
 			};
 			const request = await Api.modifyCategory(change, column.value);
@@ -138,7 +140,7 @@ export default class Render {
 			CardCreator.createCard(button.id, true, columnId);
 		});
 
-		column.append(header, button);
+		column.append(header, button, columnOrder);
 		board.insertBefore(column, document.querySelector(".adicionar-coluna"));
 		const newColumn = {
 			sala: sala,
@@ -149,7 +151,6 @@ export default class Render {
 		if (send) {
 			ws.send(JSON.stringify(newColumn));
 		}
-		this.columnCount++;
 	}
 
 	static async renderColumn(columnElement) {
@@ -158,6 +159,12 @@ export default class Render {
 		column.className = "coluna";
 		column.id = `coluna-${columnElement.id}`;
 		column.value = columnElement.id;
+
+		const columnOrder = document.createElement("input");
+		columnOrder.type = "hidden";
+		columnOrder.value = columnElement.ordem;
+		columnOrder.id = `coluna-${columnElement.id}-ordem`;
+
 		column.addEventListener("drop", (event) => {
 			DragAndDrop.onDrop(event);
 		});
@@ -168,15 +175,16 @@ export default class Render {
 		const header = document.createElement("header");
 		header.className = "coluna--header";
 		const name = document.createElement("input");
+
 		name.placeholder = "nome da coluna";
 		name.value = columnElement.nome;
 		name.addEventListener("change", async () => {
-			//const id = localStorage.getItem("@dm-kanban:id");
+			const id = localStorage.getItem("@dm-kanban:id");
 			const change = {
 				projeto_id: id,
 				nome: name.value,
-				ordem: this.columnCount,
-				id: column.id,
+				ordem: columnOrder.value,
+				id: column.value,
 			};
 			const request = await Api.modifyCategory(change, column.value);
 			console.log(request);
@@ -200,7 +208,7 @@ export default class Render {
 				) == true
 			) {
 				const change = {
-					id: column.id,
+					id: column.value,
 				};
 				const request = await Api.deleteCategory(change, column.value);
 				console.log(request);
@@ -231,7 +239,7 @@ export default class Render {
 			CardCreator.createCard(button.id, true, columnElement);
 		});
 
-		column.append(header, button);
+		column.append(header, button, columnOrder);
 		board.insertBefore(column, document.querySelector(".adicionar-coluna"));
 		this.columnCount++;
 	}

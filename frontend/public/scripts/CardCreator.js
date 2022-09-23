@@ -1,6 +1,7 @@
 import DragAndDrop from "./dragAndDrop.js";
 import { ws, sala } from "./Websocket.js";
 import Api from "./Api.js";
+import updateCard from "./updateCard.js";
 
 let salaAtual = sala;
 
@@ -37,11 +38,14 @@ export default class CardCreator {
 			if (colunaId == undefined) {
 				return false;
 			}
-			console.log(colunaId.id);
+			console.log(colunaId);
+			const order = document.querySelectorAll(
+				`#coluna-${colunaId.id} .arrastavel`
+			);
 			const body = {
 				coluna_id: colunaId.id,
 				nome: "Nome da tarefa",
-				ordem: this.cardCounter,
+				ordem: order.length(),
 				tags: "",
 				anotacoes: "Conteúdo da tarefa",
 				colaboradores: "[]",
@@ -172,6 +176,17 @@ export default class CardCreator {
 		});
 		card.addEventListener("drop", (event) => {
 			DragAndDrop.droppedOnColumnElement(event);
+			/* console.log(card.parentElement);
+			updateCard(card.value); */
+			console.log(card.parentElement);
+			const cards = document.querySelectorAll(
+				`#coluna-${card.parentElement.value} .arrastavel`
+			);
+			console.log(cards);
+			cards.forEach((uniqueCard) => {
+				console.log("entrou");
+				updateCard(uniqueCard.value);
+			});
 		});
 		card.addEventListener("dragend", () => {
 			card.classList.remove("arrastando");
@@ -207,6 +222,7 @@ export default class CardCreator {
 			};
 			ws.send(JSON.stringify(edit));
 			ws.send(JSON.stringify(move));
+			updateCard(card.value);
 		}
 	}
 
@@ -298,18 +314,25 @@ export default class CardCreator {
 				modal.classList.add("hidden");
 			});
 
-			deleteBtn.addEventListener("click", (e) => {
+			deleteBtn.addEventListener("click", async (e) => {
 				e.preventDefault();
 				if (
 					confirm("Tem certeza que deseja excluir esse card?") == true
 				) {
-					realCard = document.getElementById(this.clickedCard.id);
-					realCard.remove();
+					realCard = document.getElementById(
+						`tarefa-${this.clickedCard.id}`
+					);
+
 					const remove = {
 						sala: sala,
 						tipo: "excluir card",
 						id: this.clickedCard.id,
 					};
+					const request = await Api.deleteTask({
+						id: this.clickedCard.id,
+					});
+					console.log(request);
+					realCard.remove();
 					ws.send(JSON.stringify(remove));
 					modal.classList.add("hidden");
 				}
@@ -326,6 +349,7 @@ export default class CardCreator {
 					id: this.clickedCard.id,
 					conteudo: content.value,
 				};
+				updateCard(this.clickedCard.id);
 				ws.send(JSON.stringify(change));
 			});
 
@@ -340,6 +364,7 @@ export default class CardCreator {
 					id: this.clickedCard.id,
 					nome: title.value,
 				};
+				updateCard(this.clickedCard.id);
 				ws.send(JSON.stringify(change));
 			});
 
@@ -356,6 +381,7 @@ export default class CardCreator {
 					tipo: "fechar modal",
 					id: this.clickedCard.id,
 				};
+				updateCard(this.clickedCard.id);
 				ws.send(JSON.stringify(edit));
 			});
 		}
@@ -392,6 +418,7 @@ export default class CardCreator {
 					cardMembersInfo.value = JSON.stringify(
 						usableCardMembersList
 					);
+					updateCard(this.clickedCard.id);
 					this.renderMembers(card.value);
 					this.createMembersModal(card);
 				});
@@ -414,6 +441,7 @@ export default class CardCreator {
 					cardMembersInfo.value = JSON.stringify(
 						usableCardMembersList
 					);
+					updateCard(this.clickedCard.id);
 					this.renderMembers(card.value);
 					this.createMembersModal(card);
 				});

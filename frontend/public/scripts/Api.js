@@ -268,8 +268,8 @@ export default class Api {
 		return task;
 	}
 
-	static async deleteTask(body, id) {
-		const task = await fetch(`${this.baseUrl}/api/tarefa/${id}`, {
+	static async deleteTask(body) {
+		const task = await fetch(`${this.baseUrl}/api/tarefa`, {
 			method: "DELETE",
 			body: JSON.stringify(body),
 			headers: {

@@ -4,7 +4,10 @@ export const CategoryService = {
 	async getCategoriasPorProjeto(projeto_id) {
 		try {
 			const data = await pool.query(
-				`SELECT * FROM colunas WHERE projeto_id = '${projeto_id}'`
+				`SELECT * FROM colunas WHERE projeto_id = '${projeto_id}'
+				ORDER BY
+					ordem ASC;
+				`
 			);
 			return data.rows;
 		} catch (e) {

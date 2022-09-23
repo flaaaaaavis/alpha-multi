@@ -14,7 +14,6 @@ if (!token) {
 const user = parseJwt(token);
 
 localStorage.setItem("@dmkanban-userId", user.usuario.id);
-let projectId;
 
 ws.addEventListener("open", () => {
 	console.log("conectado!!!");
@@ -120,7 +119,8 @@ ws.addEventListener("message", ({ data }) => {
 			card.classList.add("editavel");
 			break;
 		case "fechar modal":
-			card = document.getElementById(dados.id);
+			console.log(dados.id);
+			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.remove("editavel");
 			break;
 	}
@@ -130,7 +130,7 @@ const project = document.getElementById("nome-projeto");
 project.addEventListener("change", async () => {
 	const request = await Api.modifyProject({
 		nome: project.value,
-		id: projectId,
+		id: localStorage.getItem("@dm-kanban:id"),
 	});
 	console.log(request);
 	const newName = {
@@ -147,7 +147,6 @@ function moveCard(data) {
 	const coluna = document.getElementById(data.coluna);
 	let alvo;
 	if (data.acima) {
-		console.log(acima);
 		alvo = document.getElementById(data.acima);
 		coluna.insertBefore(card, alvo);
 		card.classList.remove("arrastando");
@@ -376,6 +375,7 @@ async function getProjects() {
 				const categories = await Api.getCategoryByProject(
 					itemButton.value
 				);
+				console.log(categories);
 				renderProjects(project, categories);
 			});
 

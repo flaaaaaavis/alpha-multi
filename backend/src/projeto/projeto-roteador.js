@@ -56,7 +56,7 @@ ProjectRouter.route("/")
 		const dbRes = await ProjectService.updateProjeto(id, projeto);
 
 		if (dbRes) {
-			res.status(201).json(dbRes);
+			res.status(201).json({ result: "Projeto alterado com sucesso" });
 		} else {
 			res.status(500).json({ message: "Internal Server Error" });
 		}
