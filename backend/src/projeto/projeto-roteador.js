@@ -84,7 +84,6 @@ ProjectRouter.route("/:id").get(jsonBodyParser, async (req, res) => {
 	const { id } = req.params;
 
 	const dbRes = await ProjectService.getProjetosPorId(id);
-	console.log("87", dbRes);
 	if (dbRes == undefined) {
 		res.status(400);
 	} else if (dbRes.id) {

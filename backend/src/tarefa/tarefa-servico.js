@@ -1,4 +1,5 @@
 import { pool } from "../db.js";
+import { redis } from "../redis.js";
 
 export const TaskService = {
 	async getTarefasPorColuna(coluna_id) {

@@ -1,13 +1,22 @@
 import { pool } from "../db.js";
 import { v4 as uuidv4 } from "uuid";
+import { redis } from "../redis.js";
 
 export const ProjectService = {
 	async getProjetosPorId(projeto_id) {
 		try {
+			const projetos = await redis.hgetall(`projeto:${projeto_id}`);
+			if (projetos.id) {
+				console.log("entrou no cache", projetos);
+				return projetos;
+			}
+			console.log("entrou no pg");
 			const data = await pool.query(
 				`SELECT * FROM projetos WHERE id = '${projeto_id}' AND deletado IS NOT TRUE`
 			);
-			console.log(data.rows);
+			if (data.rows[0]) {
+				await redis.hmset(`projeto:${projeto_id}`, data.rows[0]);
+			}
 			return data.rows[0];
 		} catch (e) {
 			console.log(e);
