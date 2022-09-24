@@ -79,17 +79,6 @@ export const UserService = {
 			} else {
 				return projeto.rows;
 			}
-			/* 			console.log(id);
-			const projeto = await pool.query(
-				`SELECT projeto_id FROM projetos_usuarios WHERE usuario_id = '${id}'`
-			);
-			if (projeto.rowCount < 1) {
-				return false;
-			} else {
-				const query = `SELECT * FROM projetos WHERE id = '${projeto.rows[0].projeto_id}'`;
-				const data = await pool.query(query);
-				return data.rows;
-			} */
 		} catch (e) {
 			console.log("Testando");
 			console.log(e);
