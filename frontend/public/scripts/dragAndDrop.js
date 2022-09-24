@@ -1,5 +1,4 @@
 import { ws, sala } from "./Websocket.js";
-import Api from "./Api.js";
 import updateCard from "./updateCard.js";
 
 export default class DragAndDrop {

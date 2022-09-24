@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="../styles/sidebar-menu.css" />
 		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/board.css" />
+		<script type="module" defer src="../scripts/board.js"></script>
 
 		<title>DM Kanban - Quadro</title>
 	</head>
@@ -113,9 +114,8 @@
 							</ul>
 						</li>
 					</ul>
-					<section>
-						<h3 id="this-board__title">Este quadro</h3>
-						<hr />
+					<section id="projeto--membros" class="hidden">
+						<!-- <h3 id="this-board__title">Este quadro</h3> -->
 
 						<ul class="menu--main__accordion">
 							<li class="menu--accordion__item" id="members">
@@ -138,13 +138,14 @@
 										alt="Criar novo quadro"
 									/>
 								</a>
+								<hr />
 
 								<ul
 									id="project-members-list"
 									class="menu--accordion__item-content"
 								>
 									<li class="menu--accordion__sub-item">
-										<form>
+										<form id="add-part-form">
 											<input
 												type="email"
 												name=""
@@ -200,16 +201,7 @@
 						<button class="add-member">+</button>
 						<button id="add-membro" class="adicionar-btn">+</button>
 					</ul>
-					<div class="membros--modal hidden">
-						<header>
-							<h2 class="text-1">Membros</h2>
-							<span class="close-2">X</span>
-						</header>
-						<h3 class="text-2">Membros do quadro</h3>
-						<ul id="membros-modal--lista">
-							<li>Membro 1</li>
-						</ul>
-					</div>
+
 					<p>Descrição</p>
 					<textarea
 						class="card-modal__conteudo"
@@ -373,7 +365,7 @@
 			</div>
 		</div>
 
-		<div id="modal--delete-card__container">
+		<div id="modal--delete-card__container" class="hidden">
 			<div id="modal--delete-card">
 				<img
 					src="../assets/icons/close.png"
@@ -391,13 +383,12 @@
 			</div>
 		</div>
 
-		<div id="modal--delete-column__container">
+		<div id="modal--delete-column__container" class="hidden">
 			<div id="modal--delete-column">
 				<img
 					src="../assets/icons/close.png"
 					alt="Fechar"
 					class="close-modal-x"
-					onclick="modalControl('modal--delete-column__container')"
 				/>
 				<h2 id="modal--delete-column__title">AVISO</h2>
 
@@ -408,7 +399,5 @@
 				<button id="modal--delete-column__button">Excluir</button>
 			</div>
 		</div>
-
-		<script type="module" src="../scripts/board.js"></script>
 	</body>
 </html>

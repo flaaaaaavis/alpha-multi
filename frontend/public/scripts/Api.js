@@ -369,6 +369,29 @@ export default class Api {
 		return project;
 	}
 
+	static async getUserByEmail(email) {
+		const project = await fetch(
+			`${this.baseUrl}/api/usuario/email/${email}`,
+			{
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		)
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return project;
+	}
+
 	static async getAllProjects(body) {
 		const project = await fetch(`${this.baseUrl}/api/usuario/projetos`, {
 			method: "POST",

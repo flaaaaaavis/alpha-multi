@@ -7,7 +7,7 @@ export default class Render {
 	static columnCount = 1;
 	static addCardCount = 1;
 
-	static createBoard(
+	static async createBoard(
 		columnNum = 3,
 		name,
 		id,
@@ -31,16 +31,12 @@ export default class Render {
 		board.append(addColumnBtn);
 		if (newBoard) {
 			for (let i = 0; i < columnNum; i++) {
-				switch (i) {
-					case 0:
-						this.createColumn(false, "A fazer", id);
-						break;
-					case 1:
-						this.createColumn(false, "Fazendo", id);
-						break;
-					case 2:
-						this.createColumn(false, "Feito", id);
-						break;
+				if (i === 0) {
+					await this.createColumn(false, "A fazer", id);
+				} else if (i === 1) {
+					await this.createColumn(false, "Fazendo", id);
+				} else {
+					await this.createColumn(false, "Feito", id);
 				}
 			}
 		} else {
@@ -102,7 +98,9 @@ export default class Render {
 		const btnImg = document.createElement("img");
 		btnImg.src = "../assets/icons/delete.png";
 		deleteBtn.addEventListener("click", async () => {
-			if (
+			const deleteModal = document.getElementById("modal--delete-column");
+			deleteModal.classList.toggle("hidden");
+			/* if (
 				confirm(
 					"Tem certeza que deseja excluir a coluna? Ela e todos os dados que ela contém serão perdidos!"
 				) == true
@@ -119,7 +117,7 @@ export default class Render {
 					id: column.id,
 				};
 				ws.send(JSON.stringify(removeColumn));
-			}
+			} */
 		});
 
 		deleteBtn.append(btnImg);
@@ -136,8 +134,7 @@ export default class Render {
 
 		button.addEventListener("click", (event) => {
 			event.preventDefault();
-			console.log(columnId);
-			CardCreator.createCard(button.id, true, columnId);
+			CardCreator.createCard(button.id, true, columnId[0]);
 		});
 
 		column.append(header, button, columnOrder);
@@ -202,24 +199,26 @@ export default class Render {
 		const btnImg = document.createElement("img");
 		btnImg.src = "../assets/icons/delete.png";
 		deleteBtn.addEventListener("click", async () => {
-			if (
-				confirm(
-					"Tem certeza que deseja excluir a coluna? Ela e todos os dados que ela contém serão perdidos!"
-				) == true
-			) {
-				const change = {
-					id: column.value,
-				};
-				const request = await Api.deleteCategory(change, column.value);
-				console.log(request);
-				column.remove();
-				const removeColumn = {
-					sala: sala,
-					tipo: "apagar coluna",
-					id: column.id,
-				};
-				ws.send(JSON.stringify(removeColumn));
-			}
+			const deleteModal = document.getElementById("modal--delete-column");
+			deleteModal.classList.toggle("hidden");
+			/* if (
+					confirm(
+						"Tem certeza que deseja excluir a coluna? Ela e todos os dados que ela contém serão perdidos!"
+					) == true
+				) {
+					const change = {
+						id: column.id,
+					};
+					const request = await Api.deleteCategory(change, column.value);
+					console.log(request);
+					column.remove();
+					const removeColumn = {
+						sala: sala,
+						tipo: "apagar coluna",
+						id: column.id,
+					};
+					ws.send(JSON.stringify(removeColumn));
+				} */
 		});
 
 		deleteBtn.append(btnImg);

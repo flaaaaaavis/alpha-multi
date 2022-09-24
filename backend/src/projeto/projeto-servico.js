@@ -5,8 +5,9 @@ export const ProjectService = {
 	async getProjetosPorId(projeto_id) {
 		try {
 			const data = await pool.query(
-				`SELECT * FROM projetos WHERE id = '${projeto_id}'`
+				`SELECT * FROM projetos WHERE id = '${projeto_id}' AND deletado IS NOT TRUE`
 			);
+			console.log(data.rows);
 			return data.rows[0];
 		} catch (e) {
 			console.log(e);
@@ -17,10 +18,17 @@ export const ProjectService = {
 			const query = `SELECT id FROM usuarios WHERE email = '${email}'`;
 			const data = await pool.query(query);
 			const usuario_id = data.rows[0].id;
-			const query2 = `INSERT INTO projetos_usuarios (usuario_id, projeto_id) VALUES ($1, $2)`;
+			const query2 = `SELECT * FROM projetos_usuarios WHERE usuario_id = $1 AND projeto_id = $2`;
 			const values2 = [usuario_id, projeto_id];
 			const data2 = await pool.query(query2, values2);
-			return data2;
+			if (data2.rows[0]) {
+				console.log(data2.rows);
+				return "existe";
+			}
+			const query3 = `INSERT INTO projetos_usuarios (usuario_id, projeto_id) VALUES ($1, $2)`;
+			const values3 = [usuario_id, projeto_id];
+			const data3 = await pool.query(query3, values3);
+			return data3;
 		} catch (e) {
 			console.log(e);
 		}
@@ -52,7 +60,7 @@ export const ProjectService = {
 	async deleteProjeto(id) {
 		try {
 			const data = await pool.query(
-				"DELETE FROM projetos WHERE id = '" + id + "'"
+				"UPDATE projetos SET deletado = TRUE WHERE id = '" + id + "'"
 			);
 			return data.rows;
 		} catch (e) {

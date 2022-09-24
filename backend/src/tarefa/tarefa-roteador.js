@@ -63,13 +63,13 @@ TaskRouter.route("/")
 			nome: nome,
 			ordem: parseInt(ordem),
 			tags: tags,
-			anotacoes: anotacoes || "",
-			colaboradores: colaboradores || "[]",
+			anotacoes: anotacoes,
+			colaboradores: colaboradores,
 		};
 
 		const dbRes = await TaskService.updateTarefa(id, tarefa);
-		console.log(dbRes);
-		if (dbRes.rowCount === 1) {
+
+		if (dbRes) {
 			res.status(200).json({ result: "Tarefa alterada com sucesso!" });
 		} else {
 			res.status(500).json({ message: "Internal Server Error" });
