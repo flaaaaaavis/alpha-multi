@@ -45,7 +45,7 @@ export const TaskService = {
 				id,
 			];
 			const data = await pool.query(query, values);
-			return data;
+			return data.rows;
 		} catch (e) {
 			console.log(e);
 		}

@@ -6,7 +6,7 @@ export const UserService = {
 	async getUsuario(id) {
 		try {
 			const data = await pool.query(
-				`SELECT * FROM usuarios WHERE id = '${id}'`
+				`SELECT id, email, usuario FROM usuarios WHERE id = '${id}'`
 			);
 			return data.rows[0];
 		} catch (e) {
@@ -15,8 +15,9 @@ export const UserService = {
 	},
 	async getUsuarioByEmail(email) {
 		try {
+			console.log("email", email);
 			const data = await pool.query(
-				`SELECT * FROM usuarios WHERE email = '${email}'`
+				`SELECT id, email, usuario, senha FROM usuarios WHERE email = '${email}'`
 			);
 			return data.rows[0];
 		} catch (e) {

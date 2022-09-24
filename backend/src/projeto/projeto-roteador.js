@@ -84,7 +84,10 @@ ProjectRouter.route("/:id").get(jsonBodyParser, async (req, res) => {
 	const { id } = req.params;
 
 	const dbRes = await ProjectService.getProjetosPorId(id);
-	if (dbRes.id) {
+	console.log("87", dbRes);
+	if (dbRes == undefined) {
+		res.status(400);
+	} else if (dbRes.id) {
 		res.status(200).json(dbRes);
 	} else {
 		res.status(500).json({ error: "Internal Server Error" });
@@ -106,7 +109,11 @@ ProjectRouter.route("/membros").post(jsonBodyParser, async (req, res) => {
 	const { email, projeto_id } = req.body;
 
 	const dbRes = await ProjectService.insertUsuarioProjeto(email, projeto_id);
-	if (dbRes) {
+	if (dbRes == "existe") {
+		res.status(400).json({
+			erro: "Usuario já está no projeto",
+		});
+	} else if (dbRes) {
 		res.status(201).json({
 			result: "Usuario adicionado ao projeto com sucesso!",
 		});

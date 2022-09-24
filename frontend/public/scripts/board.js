@@ -5,7 +5,8 @@ import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
 
 const projectMembers = [];
-const token = localStorage.getItem("@dmkanban-token");
+const token = localStorage.getItem("@dm-kanban-token");
+const openProject = localStorage.getItem("@dm-kanban:id");
 
 if (!token) {
 	location.replace("../index.html");
@@ -13,15 +14,16 @@ if (!token) {
 
 const user = parseJwt(token);
 
-localStorage.setItem("@dmkanban-userId", user.usuario.id);
+localStorage.setItem("@dm-kanban-userId", user.usuario.id);
 
 ws.addEventListener("open", () => {
 	console.log("conectado!!!");
 	ws.send(JSON.stringify({ room: sala }));
 	const newUser = {
 		tipo: "conexão",
-		usuario: user.usuario.usuario,
+		usuario: user.usuario.id,
 		sala: sala,
+		nome_usuario: user.usuario.usuario,
 	};
 	ws.send(JSON.stringify(newUser));
 });
@@ -29,7 +31,7 @@ ws.addEventListener("open", () => {
 const exitButton = document.getElementById("sair");
 exitButton.addEventListener("click", (e) => {
 	e.preventDefault();
-	localStorage.removeItem("@dmkanban-token");
+	localStorage.removeItem("@dm-kanban-token");
 	location.replace("../index.html");
 });
 
@@ -46,14 +48,30 @@ newProject.addEventListener("click", async (e) => {
 		nome: nome,
 		adm: user.usuario.id,
 	};
-	projectId = await Api.createProject(project);
+	const projectId = await Api.createProject(project);
 	localStorage.setItem("@dm-kanban:id", projectId);
 	udpateSala();
-	ws.send(JSON.stringify({ room: projectId }));
+	const projectList = document.getElementById("lista-de-projetos");
+	const item = document.createElement("li");
+	item.className = "menu--accordion__sub-item this-board__item";
+	const listButton = document.createElement("button");
+	listButton.value = projectId;
+	listButton.innerText = nome.trim();
+	listButton.addEventListener("click", async (e) => {
+		e.preventDefault();
+		const categories = await Api.getCategoryByProject(listButton.value);
+		console.log(categories);
+		renderProjects(project, categories);
+	});
+
+	item.append(listButton);
+	projectList.append(item);
+
+	ws.send(
+		JSON.stringify({ tipo: "conexão", room: projectId, sala: projectId })
+	);
 	Render.createBoard(3, nome, projectId);
 });
-
-/* Conectar ao websocket */
 
 /* Respostas do websocket */
 
@@ -63,12 +81,13 @@ ws.addEventListener("message", ({ data }) => {
 
 	switch (dados.tipo) {
 		case "conexão":
+			console.log(dados);
 			const notifications = document.querySelector(".notifications");
 			const notificationUser = document.getElementById(
 				"notifications-username"
 			);
 			notifications.classList.remove("hidden");
-			notificationUser.innerText = dados.usuario;
+			notificationUser.innerText = dados.nome_usuario;
 			setTimeout(() => {
 				notifications.classList.add("hidden");
 			}, 5000);
@@ -88,9 +107,10 @@ ws.addEventListener("message", ({ data }) => {
 			Render.createColumn(false);
 			break;
 		case "nova tarefa":
+			console.log(dados);
 			const target = document.querySelector(`#${dados.botao}`);
 			console.log(target);
-			CardCreator.renderCard(target.id, false);
+			CardCreator.renderCard(target.id, dados);
 			break;
 		case "mudança de nome - card":
 			card = document.querySelector(`#tarefa-${dados.id} .nome__card`);
@@ -123,6 +143,8 @@ ws.addEventListener("message", ({ data }) => {
 			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.remove("editavel");
 			break;
+		case "adicionar membro":
+			console.log(dados);
 	}
 });
 
@@ -222,7 +244,18 @@ const deleteBoardButton = document.getElementById("delete-board-button");
 deleteBoardButton.addEventListener("click", (event) => {
 	event.preventDefault();
 	modalControl("modal--delete-board__container");
+	deleteProject();
 });
+
+async function deleteProject() {
+	const deleteBtn = document.getElementById("modal--delete-board__button");
+	deleteBtn.addEventListener("click", async (e) => {
+		e.preventDefault();
+
+		const request = await Api.deleteProject({ id: openProject });
+		console.log(request);
+	});
+}
 
 function editMenuInfo() {
 	const username = document.getElementById("user-username");
@@ -242,7 +275,9 @@ function modalFunctions() {
 		"modal--delete-user-from-project__button"
 	);
 	const closeEmail = document.querySelector(".email-modal header span");
-	const changeEmailInput = document.getElementById("mudar-email-input");
+	const changeEmailButton = document.getElementById(
+		"modal--change-email__button"
+	);
 
 	const passwordModal = document.getElementById(
 		"modal--change-password__container"
@@ -294,18 +329,26 @@ function modalFunctions() {
 		e.preventDefault();
 		const request = await Api.deleteUser({ id: user.usuario.id });
 		alert(request.result);
-		localStorage.removeItem("@dmkanban-token");
+		localStorage.removeItem("@dm-kanban-token");
 		location.replace("../index.html");
 	});
 
-	changeEmailInput.addEventListener("click", async (e) => {
+	changeEmailButton.addEventListener("click", async (e) => {
 		const request = await changeEmail();
 		alert(request);
 	});
 }
 
 async function changeEmail() {
-	const email = document.getElementById("input-email").value;
+	const email = document.getElementById(
+		"modal--change-email__new-email"
+	).value;
+	const confirmEmail = document.getElementById(
+		"modal--change-email__repeat-new-email"
+	).value;
+	if (email != confirmEmail) {
+		return alert("Os e-mails não são iguais");
+	}
 	if (email.trim() === "") {
 		return alert("Por favor digite um email");
 	} else if (!validateEmail(email)) {
@@ -361,10 +404,20 @@ async function getProjects() {
 	const request = await Api.getAllProjects(body);
 	if (request.projetos) {
 		const projetosMenu = document.getElementById("lista-de-projetos");
-		const uniqueProjects = [...new Set(request.projetos)];
+		console.log(request.projetos);
+		const uniqueIds = [];
+		const uniqueProjects = request.projetos.filter((element) => {
+			const isDuplicate = uniqueIds.includes(element.projeto_id);
 
-		uniqueProjects.forEach(async (project) => {
-			const newProject = await Api.getProjectbyId(project.projeto_id);
+			if (!isDuplicate) {
+				uniqueIds.push(element.projeto_id);
+
+				return true;
+			}
+		});
+
+		uniqueIds.forEach(async (project) => {
+			const newProject = await Api.getProjectbyId(project);
 			const item = document.createElement("li");
 			item.className = "menu--accordion__sub-item this-board__item";
 			const itemButton = document.createElement("button");
@@ -387,7 +440,9 @@ async function getProjects() {
 
 async function renderProjects(project, categories) {
 	menuControl();
-	const fullProject = await Api.getProjectbyId(project.projeto_id);
+	const colaborators = document.getElementById("projeto--membros");
+	colaborators.classList.remove("hidden");
+	const fullProject = await Api.getProjectbyId(project);
 	const projectMembers = await getMembers(project);
 	let tasksArray = [];
 	const board = {
@@ -412,7 +467,7 @@ async function renderProjects(project, categories) {
 
 async function getMembers(project) {
 	const body = {
-		id: project.projeto_id,
+		id: project,
 	};
 	const membersInfo = [];
 	const list = document.getElementById("project-members-list");
@@ -446,9 +501,21 @@ async function addMemberToProject() {
 			projeto_id: localStorage.getItem("@dm-kanban:id"),
 			email: input.trim(),
 		};
+		const newMember = await Api.getUserByEmail(input.trim());
+		const projectName = document.getElementById("nome-projeto").value;
 		const request = await Api.addUserToProjectByEmail(body);
 		if (request.result) {
 			alert(request.result);
+			ws.send(
+				JSON.stringify({
+					tipo: "adicionar membro",
+					para: newMember.id,
+					por: user.usuario.usuario,
+					nome_projeto: projectName,
+				})
+			);
+		} else if (request.erro) {
+			alert(request.erro);
 		} else {
 			alert("usuário não encontrado");
 		}
@@ -461,16 +528,13 @@ addMemberButton.addEventListener("click", (e) => {
 	addMemberToProject();
 });
 
-getProjects();
+await getProjects();
 
 async function recoverSession() {
-	const categories = await Api.getCategoryByProject(
-		localStorage.getItem("@dm-kanban:id")
-	);
-	renderProjects(project, categories);
+	const categories = await Api.getCategoryByProject(openProject);
+	renderProjects(openProject, categories);
 }
 
-const openProject = localStorage.getItem("@dm-kanban:id");
-/* if (openProject) {
+if (openProject) {
 	recoverSession();
-} */
+}

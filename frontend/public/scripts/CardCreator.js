@@ -38,14 +38,15 @@ export default class CardCreator {
 			if (colunaId == undefined) {
 				return false;
 			}
-			console.log(colunaId);
 			const order = document.querySelectorAll(
 				`#coluna-${colunaId.id} .arrastavel`
 			);
+			console.log(order.length);
+			console.log(colunaId);
 			const body = {
 				coluna_id: colunaId.id,
 				nome: "Nome da tarefa",
-				ordem: order.length(),
+				ordem: order.length,
 				tags: "",
 				anotacoes: "Conteúdo da tarefa",
 				colaboradores: "[]",
@@ -61,7 +62,7 @@ export default class CardCreator {
 		const cardMembers = document.createElement("input");
 		cardMembers.id = `colaboradores-${cardId}`;
 		cardMembers.type = "hidden";
-		cardMembers.value = [];
+		cardMembers.value = "[]";
 		card.className = "arrastavel";
 		card.id = `tarefa-${cardId}`;
 		card.value = cardId;
@@ -105,7 +106,7 @@ export default class CardCreator {
 				botao: targetButton.id,
 				nome: "Nome da Tarefa",
 				id: cardId,
-				conteudo: "Adicione o conteúdo",
+				anotacoes: "Conteúdo da tarefa",
 				membros: [],
 			};
 			//card.value = JSON.stringify(cardObject);
@@ -116,6 +117,7 @@ export default class CardCreator {
 	}
 
 	static async renderCard(target, incomingCard) {
+		console.log(incomingCard);
 		const targetButton = document.getElementById(target);
 		const parent = targetButton.parentElement;
 
@@ -308,6 +310,10 @@ export default class CardCreator {
 					tipo: "fechar modal",
 					id: this.clickedCard.id,
 				};
+				const cardMembers = document.querySelector(".membros--modal");
+				if (cardMembers) {
+					cardMembers.remove();
+				}
 				ws.send(JSON.stringify(edit));
 				modal.classList.add("hidden");
 			});
@@ -399,7 +405,6 @@ export default class CardCreator {
 			id: localStorage.getItem("@dm-kanban:id"),
 		};
 		const members = await Api.getUsersByProject(body);
-		const boardMembers = [];
 		const cardMembersInfo = document.getElementById(
 			`colaboradores-${card.value}`
 		);
@@ -489,9 +494,8 @@ export default class CardCreator {
 	}
 
 	static async renderMembers(id) {
+		console.log(id);
 		const realCard = document.getElementById(`tarefa-${id}`);
-		const nome = document.querySelector(`#tarefa-${id} h2`).innerText;
-		const conteudo = document.querySelector(`#tarefa-${id} p`).innerText;
 		const cardMembers = document.getElementById("membros--lista-membros");
 		const cardMembersList = document.getElementById(`colaboradores-${id}`);
 		const usableCardMembersList = JSON.parse(cardMembersList.value);

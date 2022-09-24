@@ -71,9 +71,10 @@ CategoryRouter.route("/:category_uuid")
 		}
 
 		const { id } = req.body;
+		console.log(id);
 
 		const dbRes = await CategoryService.deleteCategoria(id);
-
+		console.log("76", dbRes);
 		if (dbRes) {
 			res.status(201).json(dbRes);
 		} else {

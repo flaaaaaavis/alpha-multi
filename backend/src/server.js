@@ -18,21 +18,29 @@ const wss = new WebSocketServer({ server });
 
 wss.on("connection", (ws) => {
 	console.log("novo cliente conectado");
-	ws.id = v4();
+	/* 	ws.id = v4();
 	wss.clients.forEach((client) => {
 		console.log("Client.ID: " + client.id);
-	});
+	}); */
 
 	ws.on("message", (data) => {
 		const mensagem = JSON.parse(data);
-		if (mensagem.room) {
+		console.log("recebida");
+		if (mensagem.tipo == "conexão") {
+			ws.id = mensagem.usuario;
+			console.log("id", ws.id);
+		} else if (mensagem.room) {
 			ws.room = mensagem.room;
 		}
 		console.log(mensagem);
 		wss.clients.forEach((client) => {
 			if (client !== ws && client.readyState === WebSocket.OPEN) {
 				/* console.log(client.room, mensagem.sala); */
-				if (client.room == mensagem.sala) {
+				console.log(client.id);
+				if (
+					client.room == mensagem.sala ||
+					client.id == mensagem.para
+				) {
 					client.send(JSON.stringify(mensagem));
 				}
 			}

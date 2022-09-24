@@ -1,16 +1,6 @@
 import Api from "./Api.js";
 
 export default async function updateCard(cardId) {
-	/* const cardObject = {
-		sala: sala,
-		tipo: "nova tarefa",
-		local: parent.id,
-		botao: targetButton.id,
-		nome: "Nome da Tarefa",
-		id: cardId,
-		conteudo: "Adicione o conteúdo",
-		membros: [],
-	}; */
 	const baseId = `tarefa-${cardId}`;
 	const card = document.getElementById(baseId);
 	const cardName = document.querySelector(`#${baseId} h2`).innerText;
@@ -33,6 +23,7 @@ export default async function updateCard(cardId) {
 		id: cardId,
 		colaboradores: members,
 	};
+	console.log(cardObject);
 	const request = await Api.modifyTask(cardObject);
 	console.log(request);
 }
