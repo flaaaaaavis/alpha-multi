@@ -5,6 +5,7 @@ import Api from "./Api.js";
 
 export default class Render {
 	static columnCount = 1;
+	static renderColumnCount = 1;
 	static addCardCount = 1;
 
 	static async createBoard(
@@ -14,6 +15,8 @@ export default class Render {
 		newBoard = true,
 		loadedBoard = ""
 	) {
+		this.renderColumnCount = 1;
+		this.columnCount = 1;
 		const projectTitle = document.getElementById("nome-projeto");
 		const board = document.querySelector(".quadro");
 		projectTitle.value = name;
@@ -47,6 +50,8 @@ export default class Render {
 	}
 
 	static async createColumn(send, columnName = "Nova coluna", id) {
+		this.renderColumnCount = 1;
+
 		const body = {
 			projeto_id: id,
 			nome: columnName,
@@ -100,13 +105,13 @@ export default class Render {
 		deleteBtn.addEventListener("click", async () => {
 			const deleteModal = document.getElementById("modal--delete-column");
 			deleteModal.classList.toggle("hidden");
-			/* if (
+			if (
 				confirm(
 					"Tem certeza que deseja excluir a coluna? Ela e todos os dados que ela contém serão perdidos!"
 				) == true
 			) {
 				const change = {
-					id: column.id,
+					id: column.value,
 				};
 				const request = await Api.deleteCategory(change, column.value);
 				console.log(request);
@@ -117,7 +122,7 @@ export default class Render {
 					id: column.id,
 				};
 				ws.send(JSON.stringify(removeColumn));
-			} */
+			}
 		});
 
 		deleteBtn.append(btnImg);
@@ -151,6 +156,7 @@ export default class Render {
 	}
 
 	static async renderColumn(columnElement) {
+		this.columnCount = columnElement.ordem;
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
@@ -201,24 +207,24 @@ export default class Render {
 		deleteBtn.addEventListener("click", async () => {
 			const deleteModal = document.getElementById("modal--delete-column");
 			deleteModal.classList.toggle("hidden");
-			/* if (
-					confirm(
-						"Tem certeza que deseja excluir a coluna? Ela e todos os dados que ela contém serão perdidos!"
-					) == true
-				) {
-					const change = {
-						id: column.id,
-					};
-					const request = await Api.deleteCategory(change, column.value);
-					console.log(request);
-					column.remove();
-					const removeColumn = {
-						sala: sala,
-						tipo: "apagar coluna",
-						id: column.id,
-					};
-					ws.send(JSON.stringify(removeColumn));
-				} */
+			if (
+				confirm(
+					"Tem certeza que deseja excluir a coluna? Ela e todos os dados que ela contém serão perdidos!"
+				) == true
+			) {
+				const change = {
+					id: column.value,
+				};
+				const request = await Api.deleteCategory(change, column.value);
+				console.log(request);
+				column.remove();
+				const removeColumn = {
+					sala: sala,
+					tipo: "apagar coluna",
+					id: column.id,
+				};
+				ws.send(JSON.stringify(removeColumn));
+			}
 		});
 
 		deleteBtn.append(btnImg);
