@@ -236,6 +236,12 @@ function modalControl(modalId) {
 }
 
 const closeModal = document.querySelectorAll(".close-modal-x");
+closeModal.forEach((element) => {
+	element.addEventListener("click", (e) => {
+		const target = e.target.parentElement.parentElement;
+		modalControl(target.id);
+	});
+});
 
 const openButton = document.getElementById("menu--button__open");
 openButton.addEventListener("click", (event) => {
@@ -285,7 +291,7 @@ async function deleteProject() {
 		if (request == 201) {
 			localStorage.removeItem("@dm-kanban:id");
 			alert("projeto excluido com sucesso");
-			//location.reload();
+			location.reload();
 		} else if (request == 400) {
 			alert("Somente o administrador do projeto pode exclui-lo");
 		}
@@ -455,7 +461,6 @@ async function getProjects() {
 
 		uniqueIds.forEach(async (project) => {
 			const newProject2 = await Api.getProjectbyId(project);
-			console.log(newProject2);
 			const item = document.createElement("li");
 			item.className = "menu--accordion__sub-item this-board__item";
 			const itemButton = document.createElement("button");
