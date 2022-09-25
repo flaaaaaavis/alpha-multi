@@ -1,6 +1,6 @@
 import Api from "./Api.js";
 
-const token = localStorage.getItem("@dmkanban-user");
+const token = localStorage.getItem("@dm-kanban-user");
 
 if (token) {
 	location.replace("./board.html");

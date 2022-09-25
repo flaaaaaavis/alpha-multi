@@ -136,7 +136,7 @@
 }
 
 #members-row {
-	width: 80%;
+	width: 93%;
 
 	display: flex;
 	justify-content: space-between;
@@ -194,7 +194,7 @@
 }
 
 .this-board__item {
-	margin-left: 10%;
+	margin-left: 5%;
 	margin-top: 20px;
 
 	display: flex;
@@ -231,7 +231,7 @@
 .menu--accordion__sub-item {
 	margin-top: 10px;
 	margin-left: 12%;
-	padding-right: 20px;
+	margin-right: 10px;
 
 	font-weight: var(--card-content-weight) !important;
 	font-size: var(--card-content-size) !important;
@@ -241,6 +241,15 @@
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+}
+
+#add-part-form{
+	margin-right: 0px;
+}
+
+#add-participante-button{
+	width: 35%;
+	margin-left: 10px;
 }
 
 .menu--accordion__sub-item img {

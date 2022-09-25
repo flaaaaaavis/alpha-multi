@@ -10,13 +10,14 @@
 		<link rel="stylesheet" href="../styles/sidebar-menu.css" />
 		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/board.css" />
+		<script type="module" defer src="../scripts/board.js"></script>
 
 		<title>DM Kanban - Quadro</title>
 	</head>
 
 	<body>
 		<header id="board--header">
-			<img class="logo" src="../assets/logo.png">
+			<img class="logo" src="../assets/logo.png" />
 			<input
 				class="title-1"
 				type="text"
@@ -90,8 +91,11 @@
 							</span>
 							<hr />
 
-							<ul class="menu--accordion__item-content">
-								<li class="menu--accordion__sub-item sub-item">
+							<ul
+								class="menu--accordion__item-content"
+								id="lista-de-projetos"
+							>
+								<li class="menu--accordion__sub-item">
 									<form>
 										<input
 											type="text"
@@ -102,31 +106,24 @@
 										<button id="criar-quadro">Criar</button>
 									</form>
 								</li>
-								<li
-									class="menu--accordion__sub-item sub-item this-board__item"
+								<!-- 								<li
+									class="menu--accordion__sub-item this-board__item"
 								>
 									<button>Quadro 1</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item sub-item this-board__item"
-								>
-									<button>Quadro 2</button>
-								</li>
-								<li
-									class="menu--accordion__sub-item sub-item this-board__item"
-								>
-									<button>Quadro 3</button>
-								</li>
+								</li> -->
 							</ul>
 						</li>
 					</ul>
-					<section>
-						<h3 id="this-board__title">Este quadro</h3>
-						<hr />
+					<section id="projeto--membros" class="hidden">
+						<!-- <h3 id="this-board__title">Este quadro</h3> -->
 
 						<ul class="menu--main__accordion">
 							<li class="menu--accordion__item" id="members">
-								<a href="#members" id="members-row" class="item__title this-board__item">
+								<a
+									href="#members"
+									id="members-row"
+									class="item__title this-board__item"
+								>
 									<span>
 										<img
 											src="../assets/icons/group.png"
@@ -136,69 +133,39 @@
 									</span>
 									<img src="../assets/icons/add.png" id="your-boards__new-board-button" alt="Criar novo quadro" />
 								</a>
+								<hr />
 
-								<ul class="menu--accordion__item-content">
-									<li class="menu--accordion__sub-item sub-item">
-										<form>
+								<ul
+									id="project-members-list"
+									class="menu--accordion__item-content"
+								>
+									<li class="menu--accordion__sub-item">
+										<form id="add-part-form">
 											<input
 												type="email"
 												name=""
-												id=""
+												id="adicionar-participante"
 												placeholder="Adicionar participante"
 											/>
-											<button>Adicionar</button>
+											<button
+												id="add-participante-button"
+											>
+												Adicionar
+											</button>
 										</form>
-									</li>
-									<li class="menu--accordion__sub-item sub-item">
-										<span>Kenjinho</span>
-										<button>
-											<img
-												src="../assets/icons/close.png"
-												alt="Excluir participante"
-											/>
-										</button>
-									</li>
-									<li class="menu--accordion__sub-item sub-item">
-										<span>Animado</span>
-										<button>
-											<img
-												src="../assets/icons/close.png"
-												alt="Excluir participante"
-											/>
-										</button>
 									</li>
 								</ul>
 							</li>
 						</ul>
-						<a href="" class="this-board__item" id="delete-board-button">
+						<a
+							href=""
+							class="this-board__item"
+							id="delete-board-button"
+						>
 							<img src="../assets/icons/delete.png" alt="" />
 							Excluir quadro
 						</a>
 					</section>
-					<!-- <ul class="menu--main__accordion">
-						<li class="menu--accordion__item" id="your-boards">
-							<span id="your-boards__title">
-								<a href="#your-boards" class="item__title">Seus quadros</a>
-								<img src="../assets/icons/add.png" id="your-boards__new-board-button" alt="Criar novo quadro">
-							</span>
-							<hr />
-
-							<ul class="menu--accordion__item-content">
-								<li class="menu--accordion__sub-item sub-item">
-									<form>
-										<input type="email" name="" id="" placeholder="Novo quadro">
-										<button>Criar</button>
-									</form>
-								</li>
-								<li class="menu--accordion__sub-item sub-item this-board__item">
-									<button>Quadro 1</button>
-								</li>
-								<li class="menu--accordion__sub-item sub-item this-board__item">
-									<button>Quadro 2</button>
-								</li>
-							</ul>
-						</li>
-					</ul> -->
 				</main>
 			</nav>
 		</menu>
@@ -229,16 +196,7 @@
 						<button class="add-member">+</button>
 						<button id="add-membro" class="adicionar-btn">+</button>
 					</ul>
-					<div class="membros--modal hidden">
-						<header>
-							<h2 class="text-1">Membros</h2>
-							<span class="close-2">X</span>
-						</header>
-						<h3 class="text-2">Membros do quadro</h3>
-						<ul id="membros-modal--lista">
-							<li>Membro 1</li>
-						</ul>
-					</div>
+
 					<p>Descrição</p>
 					<textarea
 						class="card-modal__conteudo"
@@ -285,7 +243,12 @@
 
 		<div id="modal--delete-user-from-project__container">
 			<div id="modal--delete-user-from-project">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-user-from-project__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--delete-user-from-project__container')"
+				/>
 				<h2 id="modal--delete-user-from-project__title">AVISO</h2>
 
 				<p id="modal--delete-user-from-project__text">
@@ -301,7 +264,12 @@
 
 		<div id="modal--delete-account__container">
 			<div id="modal--delete-account">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-account__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--delete-account__container')"
+				/>
 				<h2 id="modal--delete-account__title">AVISO</h2>
 
 				<p id="modal--delete-account__text">
@@ -315,7 +283,12 @@
 
 		<div id="modal--change-password__container">
 			<div id="modal--change-password">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--change-password__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--change-password__container')"
+				/>
 				<h2 id="modal--change-password__title">Alterar senha</h2>
 
 				<form id="modal--change-password__form">
@@ -340,7 +313,12 @@
 
 		<div id="modal--change-email__container">
 			<div id="modal--change-email">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--change-email__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--change-email__container')"
+				/>
 				<h2 id="modal--change-email__title">Alterar email</h2>
 
 				<form id="modal--change-email__form">
@@ -364,7 +342,12 @@
 
 		<div id="modal--delete-board__container">
 			<div id="modal--delete-board">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-board__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--delete-board__container')"
+				/>
 				<h2 id="modal--delete-board__title">Excluir quadro</h2>
 
 				<p id="modal--delete-board__text">
@@ -377,9 +360,14 @@
 			</div>
 		</div>
 
-		<div id="modal--delete-card__container">
+		<div id="modal--delete-card__container" class="hidden">
 			<div id="modal--delete-card">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-card__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+					onclick="modalControl('modal--delete-card__container')"
+				/>
 				<h2 id="modal--delete-card__title">AVISO</h2>
 
 				<p id="modal--delete-card__text">
@@ -390,9 +378,13 @@
 			</div>
 		</div>
 
-		<div id="modal--delete-column__container">
+		<div id="modal--delete-column__container" class="hidden">
 			<div id="modal--delete-column">
-				<img src="../assets/icons/close.png" alt="Fechar" class="close-modal-x" onclick="modalControl('modal--delete-column__container')">
+				<img
+					src="../assets/icons/close.png"
+					alt="Fechar"
+					class="close-modal-x"
+				/>
 				<h2 id="modal--delete-column__title">AVISO</h2>
 
 				<p id="modal--delete-column__text">
@@ -402,7 +394,5 @@
 				<button id="modal--delete-column__button">Excluir</button>
 			</div>
 		</div>
-
-		<script type="module" src="../scripts/board.js"></script>
 	</body>
 </html>

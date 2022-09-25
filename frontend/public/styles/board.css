@@ -42,7 +42,7 @@ body {
 	#board--header img {
 		position: absolute;
 		height: 40px;
-		left: 30px;
+		left: 80px;
 
 		display: block;
 	}
@@ -272,6 +272,10 @@ body {
 	cursor: pointer;
 	margin-top: 5px;
 	margin-left: 5px;
+}
+
+.menu--accordion__item-content{
+	overflow-y: auto;
 }
 
 .adicionar-card {
