@@ -181,6 +181,11 @@ ws.addEventListener("message", ({ data }) => {
 				`colaboradores-${dados.id}`
 			);
 			membros.value = JSON.stringify(dados.membros);
+			break;
+		case "excluir projeto":
+			localStorage.removeItem("@dm-kanban:id");
+			alert(dados.mensagem);
+			location.reload();
 	}
 });
 
@@ -301,6 +306,13 @@ async function deleteProject() {
 		});
 		if (request == 201) {
 			localStorage.removeItem("@dm-kanban:id");
+			const change = {
+				sala: sala,
+				tipo: "excluir projeto",
+				mensagem:
+					"Esse projeto foi excluido pelo administrador, ele será fechado a seguir.",
+			};
+			ws.send(JSON.stringify(change));
 			alert("projeto excluido com sucesso");
 			location.reload();
 		} else if (request == 400) {
