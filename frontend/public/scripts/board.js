@@ -172,6 +172,13 @@ ws.addEventListener("message", ({ data }) => {
 			break;
 		case "adicionar membro":
 			console.log(dados);
+			break;
+		case "mudança de membros - card":
+			console.log(dados);
+			const membros = document.getElementById(
+				`colaboradores-${dados.id}`
+			);
+			membros.value = JSON.stringify(dados.membros);
 	}
 });
 

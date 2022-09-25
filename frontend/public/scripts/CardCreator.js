@@ -427,6 +427,13 @@ export default class CardCreator {
 						usableCardMembersList
 					);
 					updateCard(this.clickedCard.id);
+					const change = {
+						sala: sala,
+						tipo: "mudança de membros - card",
+						id: this.clickedCard.id,
+						membros: usableCardMembersList,
+					};
+					ws.send(JSON.stringify(change));
 					this.renderMembers(card.value);
 					this.createMembersModal(card);
 				});
@@ -450,6 +457,13 @@ export default class CardCreator {
 						usableCardMembersList
 					);
 					updateCard(this.clickedCard.id);
+					const change = {
+						sala: sala,
+						tipo: "mudança de membros - card",
+						id: this.clickedCard.id,
+						membros: usableCardMembersList,
+					};
+					ws.send(JSON.stringify(change));
 					this.renderMembers(card.value);
 					this.createMembersModal(card);
 				});
