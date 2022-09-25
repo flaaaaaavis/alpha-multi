@@ -44,13 +44,15 @@ export const ProjectService = {
 	},
 	async insertProjeto(projeto) {
 		try {
+			//const projetos = await redis.hgetall(`projeto:${projeto_id}`);
 			const id = uuidv4();
-			const query = `INSERT INTO projetos (id, nome, adm, data_criacao, ultimo_acesso) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+			const query = `INSERT INTO projetos (id, nome, adm, data_criacao, ultimo_acesso) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *`;
 			const values = [id, projeto.nome, projeto.adm];
-			await pool.query(query, values);
+			const data = await pool.query(query, values);
+			await redis.hmset(`projeto:${id}`, data.rows[0]);
 			const query2 = `INSERT INTO projetos_usuarios (usuario_id, projeto_id) VALUES ($1, $2)`;
 			const values2 = [projeto.adm, id];
-			const data = await pool.query(query2, values2);
+			const data2 = await pool.query(query2, values2);
 			return id;
 		} catch (e) {
 			console.log(e);
@@ -58,6 +60,9 @@ export const ProjectService = {
 	},
 	async updateProjeto(id, projeto) {
 		try {
+			await redis.hset(`projeto:${id}`, "nome", projeto.nome);
+			const projetos = await redis.hgetall(`projeto:${id}`);
+			console.log("redis update", projetos);
 			const query = `UPDATE projetos SET nome = ($1), ultimo_acesso = (CURRENT_TIMESTAMP)  WHERE id = ($2);`;
 			const values = [projeto.nome, id];
 			const data = await pool.query(query, values);
@@ -68,6 +73,9 @@ export const ProjectService = {
 	},
 	async deleteProjeto(id) {
 		try {
+			await redis.del(`projeto:${id}`);
+			const projetos = await redis.hgetall(`projeto:${id}`);
+			console.log("redis delete", projetos);
 			const data = await pool.query(
 				"UPDATE projetos SET deletado = TRUE WHERE id = '" + id + "'"
 			);
