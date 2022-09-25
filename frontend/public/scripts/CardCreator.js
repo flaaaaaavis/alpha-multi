@@ -117,7 +117,6 @@ export default class CardCreator {
 	}
 
 	static async renderCard(target, incomingCard) {
-		console.log(incomingCard);
 		const targetButton = document.getElementById(target);
 		const parent = targetButton.parentElement;
 
@@ -178,13 +177,10 @@ export default class CardCreator {
 		});
 		card.addEventListener("drop", (event) => {
 			DragAndDrop.droppedOnColumnElement(event);
-			/* console.log(card.parentElement);
-			updateCard(card.value); */
 			console.log(card.parentElement);
 			const cards = document.querySelectorAll(
 				`#coluna-${card.parentElement.value} .arrastavel`
 			);
-			console.log(cards);
 			cards.forEach((uniqueCard) => {
 				console.log("entrou");
 				updateCard(uniqueCard.value);

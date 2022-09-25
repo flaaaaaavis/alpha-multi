@@ -25,10 +25,8 @@ wss.on("connection", (ws) => {
 
 	ws.on("message", (data) => {
 		const mensagem = JSON.parse(data);
-		console.log("recebida");
 		if (mensagem.tipo == "conexão") {
 			ws.id = mensagem.usuario;
-			console.log("id", ws.id);
 		} else if (mensagem.room) {
 			ws.room = mensagem.room;
 		}

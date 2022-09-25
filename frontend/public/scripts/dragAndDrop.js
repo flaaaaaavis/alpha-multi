@@ -14,7 +14,6 @@ export default class DragAndDrop {
 	}
 
 	static async onDrop(event) {
-		console.log(event.currentTarget);
 		const myColumn = event.currentTarget.id;
 		if (myColumn != "") {
 			const query = `#${myColumn} .adicionar-card`;
@@ -26,7 +25,6 @@ export default class DragAndDrop {
 				dropzone = event.currentTarget;
 			}
 			if (dropzone.classList.contains("coluna")) {
-				console.log(dragger, button);
 				dropzone.insertBefore(dragger, button);
 				const move = {
 					sala: sala,
@@ -37,18 +35,18 @@ export default class DragAndDrop {
 				const cards = document.querySelectorAll(
 					`.coluna-${myColumn.value} .arrastavel`
 				);
-				console.log(cards);
 				cards.forEach((card) => {
-					console.log("entrou");
 					updateCard(card.value);
 				});
+				if (!cards.length) {
+					updateCard(dragger.value);
+				}
 				ws.send(JSON.stringify(move));
 			}
 		}
 	}
 
 	static droppedOnColumnElement(event) {
-		console.log(event.currentTarget);
 		const myColumn = event.currentTarget.parentElement;
 		if (myColumn.id != "") {
 			const card = event.currentTarget;
@@ -60,7 +58,6 @@ export default class DragAndDrop {
 				const button = document.querySelector(
 					`#${myColumn.id} .adicionar-card`
 				);
-				console.log(button);
 				myColumn.insertBefore(arrastavel, card);
 				const move = {
 					sala: sala,

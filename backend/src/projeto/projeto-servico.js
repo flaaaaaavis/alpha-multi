@@ -6,7 +6,7 @@ export const ProjectService = {
 	async getProjetosPorId(projeto_id) {
 		try {
 			const projetos = await redis.hgetall(`projeto:${projeto_id}`);
-			if (projetos.id) {
+			if (projetos.id && projetos.deletado != "true") {
 				console.log("entrou no cache", projetos);
 				return projetos;
 			}
@@ -16,6 +16,7 @@ export const ProjectService = {
 			);
 			if (data.rows[0]) {
 				await redis.hmset(`projeto:${projeto_id}`, data.rows[0]);
+				await redis.expire(`projeto:${projeto_id}`, 60 * 60 * 24);
 			}
 			return data.rows[0];
 		} catch (e) {
@@ -50,6 +51,7 @@ export const ProjectService = {
 			const values = [id, projeto.nome, projeto.adm];
 			const data = await pool.query(query, values);
 			await redis.hmset(`projeto:${id}`, data.rows[0]);
+			await redis.expire(`projeto:${id}`, 60 * 60 * 24);
 			const query2 = `INSERT INTO projetos_usuarios (usuario_id, projeto_id) VALUES ($1, $2)`;
 			const values2 = [projeto.adm, id];
 			const data2 = await pool.query(query2, values2);
@@ -61,6 +63,7 @@ export const ProjectService = {
 	async updateProjeto(id, projeto) {
 		try {
 			await redis.hset(`projeto:${id}`, "nome", projeto.nome);
+			await redis.expire(`projeto:${id}`, 60 * 60 * 24);
 			const projetos = await redis.hgetall(`projeto:${id}`);
 			console.log("redis update", projetos);
 			const query = `UPDATE projetos SET nome = ($1), ultimo_acesso = (CURRENT_TIMESTAMP)  WHERE id = ($2);`;
@@ -71,15 +74,21 @@ export const ProjectService = {
 			console.log(e);
 		}
 	},
-	async deleteProjeto(id) {
+	async deleteProjeto(id, adm) {
 		try {
-			await redis.del(`projeto:${id}`);
-			const projetos = await redis.hgetall(`projeto:${id}`);
-			console.log("redis delete", projetos);
 			const data = await pool.query(
-				"UPDATE projetos SET deletado = TRUE WHERE id = '" + id + "'"
+				`UPDATE projetos SET deletado = TRUE WHERE id = '${id}' AND adm = '${adm}' RETURNING id`
 			);
-			return data.rows;
+			console.log("data", data.rows[0]);
+			if (data.rows[0] != undefined) {
+				console.log("excluindo");
+				await redis.hset(`projeto:${id}`, "deletado", true);
+				const projetos = await redis.hgetall(`projeto:${id}`);
+				console.log("redis delete", projetos);
+				console.log("pg delete", data.rows);
+				return data.rows;
+			}
+			return "not adm";
 		} catch (e) {
 			console.log(e);
 		}
