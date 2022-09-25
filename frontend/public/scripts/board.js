@@ -150,6 +150,8 @@ ws.addEventListener("message", ({ data }) => {
 			break;
 		case "mudança de nome - quadro":
 			const quadro = document.getElementById("nome-projeto");
+			const menuProject = document.getElementById(`projeto-${sala}`);
+			menuProject.innerText = dados.nome;
 			quadro.value = dados.nome;
 			break;
 		case "mudança de conteudo - card":
@@ -188,6 +190,8 @@ project.addEventListener("change", async () => {
 		nome: project.value,
 		id: localStorage.getItem("@dm-kanban:id"),
 	});
+	const menuProject = document.getElementById(`projeto-${sala}`);
+	menuProject.innerText = project.value;
 	console.log(request);
 	const newName = {
 		sala: sala,
@@ -472,6 +476,7 @@ async function getProjects() {
 			item.className = "menu--accordion__sub-item this-board__item";
 			const itemButton = document.createElement("button");
 			itemButton.innerText = newProject2.nome;
+			itemButton.id = `projeto-${newProject2.id}`;
 			itemButton.value = newProject2.id;
 			itemButton.addEventListener("click", async (e) => {
 				console.log(console.log(itemButton.value));
