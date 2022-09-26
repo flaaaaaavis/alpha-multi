@@ -148,38 +148,6 @@ ws.addEventListener("message", ({ data }) => {
 	}
 });
 
-const project = document.getElementById("nome-projeto");
-project.addEventListener("change", async () => {
-	const request = await Api.modifyProject({
-		nome: project.value,
-		id: localStorage.getItem("@dm-kanban:id"),
-	});
-	console.log(request);
-	const newName = {
-		sala: sala,
-		tipo: "mudança de nome - quadro",
-		nome: project.value,
-	};
-	ws.send(JSON.stringify(newName));
-});
-
-function moveCard(data) {
-	console.log(data);
-	const card = document.getElementById(data.id);
-	const coluna = document.getElementById(data.coluna);
-	let alvo;
-	if (data.acima) {
-		alvo = document.getElementById(data.acima);
-		coluna.insertBefore(card, alvo);
-		card.classList.remove("arrastando");
-	} else {
-		alvo = document.querySelector(`#${data.coluna} .adicionar-card`);
-		console.log(alvo, card);
-		coluna.insertBefore(card, alvo);
-		card.classList.remove("arrastando");
-	}
-}
-
 function menuControl() {
 	let menu = document.getElementById("sidebar-menu");
 	const openButton = document.getElementById("menu--button__open");
@@ -241,23 +209,6 @@ changePassButton.addEventListener("click", (event) => {
 	modalControl("modal--change-password__container");
 });
 
-const deleteBoardButton = document.getElementById("delete-board-button");
-deleteBoardButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	modalControl("modal--delete-board__container");
-	deleteProject();
-});
-
-async function deleteProject() {
-	const deleteBtn = document.getElementById("modal--delete-board__button");
-	deleteBtn.addEventListener("click", async (e) => {
-		e.preventDefault();
-
-		const request = await Api.deleteProject({ id: openProject });
-		console.log(request);
-	});
-}
-
 function editMenuInfo() {
 	const username = document.getElementById("user-username");
 	username.innerText = user.usuario.usuario;
@@ -267,13 +218,9 @@ function editMenuInfo() {
 editMenuInfo();
 
 function modalFunctions() {
-	const modal = document.querySelector(".modal");
 	const openDeleteAccountModal = document.getElementById("excluir-conta");
 	const deleteAccountModal = document.getElementById(
 		"modal--delete-account__container"
-	);
-	const deleteModalButton = document.getElementById(
-		"modal--delete-user-from-project__button"
 	);
 	const closeEmail = document.querySelector(".email-modal header span");
 	const changeEmailButton = document.getElementById(
@@ -304,17 +251,6 @@ function modalFunctions() {
 		}
 	});
 
-	modal.addEventListener("click", (e) => {
-		if (e.target == modal) {
-			console.log("entrou");
-			modal.classList.add("hidden");
-		}
-	});
-
-	closeEmail.addEventListener("click", () => {
-		modal.classList.add("hidden");
-	});
-
 	openDeleteAccountModal.addEventListener("click", () => {
 		deleteAccountModal.style.display = "flex";
 	});
@@ -324,14 +260,6 @@ function modalFunctions() {
 		if (e.target == deleteAccountModal) {
 			deleteAccountModal.style.display = "none";
 		}
-	});
-
-	deleteModalButton.addEventListener("click", async (e) => {
-		e.preventDefault();
-		const request = await Api.deleteUser({ id: user.usuario.id });
-		// alert(request.result);
-		localStorage.removeItem("@dmkanban-token");
-		location.replace("../index.html");
 	});
 
 	changeEmailButton.addEventListener("click", async (e) => {
@@ -441,8 +369,6 @@ async function getProjects() {
 
 async function renderProjects(project, categories) {
 	menuControl();
-	const colaborators = document.getElementById("projeto--membros");
-	colaborators.classList.remove("hidden");
 	const fullProject = await Api.getProjectbyId(project);
 	const projectMembers = await getMembers(project);
 	let tasksArray = [];
@@ -464,6 +390,10 @@ async function renderProjects(project, categories) {
 	udpateSala();
 	ws.send(JSON.stringify({ room: sala }));
 	Render.renderData(board);
+}
+
+async function renderAllProjectsPage() {
+	const data = await Api.getAllProjects()
 }
 
 async function getMembers(project) {
@@ -522,12 +452,6 @@ async function addMemberToProject() {
 		}
 	}
 }
-
-const addMemberButton = document.getElementById("add-participante-button");
-addMemberButton.addEventListener("click", (e) => {
-	e.preventDefault();
-	addMemberToProject();
-});
 
 await getProjects();
 
