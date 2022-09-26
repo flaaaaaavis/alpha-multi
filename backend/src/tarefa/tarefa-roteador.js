@@ -1,6 +1,5 @@
 import express from "express";
 import { TaskService } from "./tarefa-servico.js";
-import { redis } from "../redis.js";
 
 const jsonBodyParser = express.json();
 const TaskRouter = express.Router();
@@ -31,8 +30,6 @@ TaskRouter.route("/")
 			colaboradores: colaboradores || "[]",
 		};
 		const dbRes = await TaskService.insertTarefa(tarefa);
-		console.log(dbRes.rows[0]);
-		await redis.hmset(`tarefa:${dbRes.rows[0].id}`, tarefa);
 
 		if (dbRes.rowCount === 1) {
 			res.status(201).json({
@@ -101,7 +98,6 @@ TaskRouter.route("/:id_categoria").get(jsonBodyParser, async (req, res) => {
 
 	const { id_categoria } = req.params;
 
-	//console.log("redis", task);
 	const dbRes = await TaskService.getTarefasPorColuna(id_categoria);
 	if (dbRes.length >= 1) return res.status(200).json(dbRes);
 	if (!dbRes.rows) return res.status(200).json({ erro: "Nenhuma tarefa" });
