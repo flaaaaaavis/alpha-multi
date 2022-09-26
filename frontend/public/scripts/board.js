@@ -113,14 +113,14 @@ ws.addEventListener("message", ({ data }) => {
 			card.classList.add("arrastando");
 			break;
 		case "apagar coluna":
-			const apagar = document.getElementById(`tarefa-${dados.id}`);
+			console.log(dados);
+			const apagar = document.getElementById(dados.id);
 			apagar.remove();
 			break;
 		case "mover tarefa":
 			moveCard(dados);
 			break;
 		case "nova coluna":
-			console.log(dados);
 			Render.createColumn(false, "nova coluna", dados.sala);
 			break;
 		case "nova tarefa":
@@ -165,7 +165,6 @@ ws.addEventListener("message", ({ data }) => {
 			console.log(dados);
 			break;
 		case "mudança de membros - card":
-			console.log(dados);
 			const membros = document.getElementById(
 				`colaboradores-${dados.id}`
 			);

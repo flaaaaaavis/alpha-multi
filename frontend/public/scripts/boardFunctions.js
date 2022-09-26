@@ -244,7 +244,6 @@ async function changeEmail() {
 		document.getElementById("user-email").innerText = email.trim();
 		return request.result;
 	}
-	console.log(request);
 	return request;
 }
 
