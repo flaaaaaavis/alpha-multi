@@ -393,7 +393,43 @@ async function renderProjects(project, categories) {
 }
 
 async function renderAllProjectsPage() {
-	const data = await Api.getAllProjects()
+	const ul = document.getElementById('all-boards__list')
+	const body = {
+		id: user.usuario.id,
+	};
+
+	const projectsIds = await Api.getAllProjects(body)
+	// console.log(projectsIds.projetos)
+
+	if ( projectsIds ) {
+		projectsIds.projetos.forEach(async (project) => {
+			// const data = await Api.getProjectbyId(project.projeto_id)
+			console.log(project.projeto_id)
+
+			// data.forEach(item => {
+			// 	const li = document.createElement('li')
+			// 	li.classList.add('all-boards--list__item')
+
+			// 	const p = document.createElement('p')
+			// 	p.textContent = item.nome
+
+			// 	const a = document.createElement('a')
+			// 	a.setAttribute('onclick', `() => {
+			// 		localStorage.setItem("@dm-kanban:id", project)
+			// 	}`)
+			// 	a.href = 'board.html'
+
+			// 	const editIcon = document.createElement('img')
+			// 	editIcon.src = '../assets/icons/edit_FILL0_wght400_GRAD0_opsz48 (1).svg'
+
+			// 	li.appendChild(p)
+			// 	a.appendChild(editIcon)
+			// 	li.appendChild(a)
+
+			// 	ul.appendChild(li)
+			// })
+		})
+	}
 }
 
 async function getMembers(project) {

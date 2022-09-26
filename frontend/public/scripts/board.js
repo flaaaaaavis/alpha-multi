@@ -544,6 +544,7 @@ async function getMembers(project) {
 	list.innerHTML = "";
 	list.append(addMemberItem);
 	const members = await Api.getUsersByProject(body);
+	
 	members.projetos.forEach(async (member) => {
 		const info = await Api.getUserById(member.usuario_id);
 		membersInfo.push(info);
