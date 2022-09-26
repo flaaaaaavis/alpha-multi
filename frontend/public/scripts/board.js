@@ -120,7 +120,8 @@ ws.addEventListener("message", ({ data }) => {
 			moveCard(dados);
 			break;
 		case "nova coluna":
-			Render.createColumn(false);
+			console.log(dados);
+			Render.createColumn(false, "nova coluna", dados.sala);
 			break;
 		case "nova tarefa":
 			const target = document.querySelector(`#${dados.botao}`);
@@ -282,6 +283,7 @@ async function renderProjects(project, categories) {
 		false,
 		board
 	);
+	console.log(board.id, "board 285");
 	localStorage.setItem("@dm-kanban:id", board.id);
 	udpateSala();
 	ws.send(JSON.stringify({ room: sala }));
