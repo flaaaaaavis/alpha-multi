@@ -237,7 +237,8 @@ function menuControl() {
 }
 
 function modalControl(modalId) {
-	const modal = document.getElementById(modalId);
+	const modal = document.getElementById(modalId)
+
 	if (window.getComputedStyle(modal).display === "none") {
 		modal.style.display = "flex";
 	} else {
@@ -392,14 +393,14 @@ function modalFunctions() {
 	deleteModalButton.addEventListener("click", async (e) => {
 		e.preventDefault();
 		const request = await Api.deleteUser({ id: user.usuario.id });
-		alert(request.result);
-		localStorage.removeItem("@dm-kanban-token");
+		// alert(request.result);
+		localStorage.removeItem("@dmkanban-token");
 		location.replace("../index.html");
 	});
 
 	changeEmailButton.addEventListener("click", async (e) => {
 		const request = await changeEmail();
-		alert(request);
+		// alert(request);
 	});
 }
 
@@ -414,9 +415,9 @@ async function changeEmail() {
 		return alert("Os e-mails não são iguais");
 	}
 	if (email.trim() === "") {
-		return alert("Por favor digite um email");
+		// return alert("Por favor digite um email");
 	} else if (!validateEmail(email)) {
-		return alert("Por favor digite um email valido");
+		// return alert("Por favor digite um email valido");
 	}
 	const body = {
 		id: user.usuario.id,
@@ -446,7 +447,7 @@ async function changePassword() {
 		"modal--change-password__repeat-new-pass"
 	).value;
 	if (newPassword.trim() != newPasswordRepeat.trim()) {
-		return alert("As senhas não são iguais");
+		// return alert("As senhas não são iguais");
 	}
 	const body = {
 		id: user.usuario.id,
@@ -455,7 +456,7 @@ async function changePassword() {
 	const request = await Api.editUserPassword(body);
 	console.log(request);
 	if (request.result) {
-		return alert(request.result);
+		// return alert(request.result);
 	}
 	return request;
 }
