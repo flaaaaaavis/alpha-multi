@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="../styles/animations.css" />
 		<link rel="stylesheet" href="../styles/sidebar-menu.css" />
 		<link rel="stylesheet" href="../styles/modal.css" />
-		<link rel="stylesheet" href="../styles/board.css" />
+		<link rel="stylesheet" href="../styles/board-alt.css" />
 		<script type="module" defer src="../scripts/board.js"></script>
 
 		<title>DM Kanban - Quadro</title>
@@ -95,7 +95,10 @@
 								class="menu--accordion__item-content"
 								id="lista-de-projetos"
 							>
-								<li class="menu--accordion__sub-item">
+								<li
+									class="menu--accordion__sub-item"
+									id="add-projetos"
+								>
 									<form>
 										<input
 											type="text"
@@ -139,7 +142,10 @@
 									id="project-members-list"
 									class="menu--accordion__item-content"
 								>
-									<li class="menu--accordion__sub-item">
+									<li
+										class="menu--accordion__sub-item"
+										id="add-member-form"
+									>
 										<form id="add-part-form">
 											<input
 												type="email"
@@ -247,7 +253,6 @@
 					src="../assets/icons/close.png"
 					alt="Fechar"
 					class="close-modal-x"
-					onclick="modalControl('modal--delete-user-from-project__container')"
 				/>
 				<h2 id="modal--delete-user-from-project__title">AVISO</h2>
 
@@ -268,7 +273,6 @@
 					src="../assets/icons/close.png"
 					alt="Fechar"
 					class="close-modal-x"
-					onclick="modalControl('modal--delete-account__container')"
 				/>
 				<h2 id="modal--delete-account__title">AVISO</h2>
 
@@ -287,7 +291,6 @@
 					src="../assets/icons/close.png"
 					alt="Fechar"
 					class="close-modal-x"
-					onclick="modalControl('modal--change-password__container')"
 				/>
 				<h2 id="modal--change-password__title">Alterar senha</h2>
 
@@ -317,7 +320,6 @@
 					src="../assets/icons/close.png"
 					alt="Fechar"
 					class="close-modal-x"
-					onclick="modalControl('modal--change-email__container')"
 				/>
 				<h2 id="modal--change-email__title">Alterar email</h2>
 
@@ -346,7 +348,6 @@
 					src="../assets/icons/close.png"
 					alt="Fechar"
 					class="close-modal-x"
-					onclick="modalControl('modal--delete-board__container')"
 				/>
 				<h2 id="modal--delete-board__title">Excluir quadro</h2>
 
@@ -366,7 +367,6 @@
 					src="../assets/icons/close.png"
 					alt="Fechar"
 					class="close-modal-x"
-					onclick="modalControl('modal--delete-card__container')"
 				/>
 				<h2 id="modal--delete-card__title">AVISO</h2>
 

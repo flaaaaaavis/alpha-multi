@@ -1,0 +1,416 @@
+:root {
+	--white: #FFFFFF;
+	--light-grey: #D9D9D9;
+	--grey: #4C4C4C;
+	--blue: #212AD1;
+	--light-blue: #91F6F0;
+	--green: #68E79A;
+	--yellow: #FFE787;
+	--orange: #F26F21;
+	--pink: #FF6865;
+	--light-pink: #FF9A98;
+	--red: #E32F3A;
+
+	--brand-size: 18px;
+	--brand-weight: 700;
+
+	--column-title-size: 14px;
+	--column-title-weight: 600;
+
+	--card-title-size: 14px;
+	--card-title-weight: 400;
+
+	--card-content-size: 12px;
+	--card-content-weight: 400;
+
+	--button-text-size: 14px;
+	--button-text-weight: 400;
+}
+
+body {
+	height: fit-content;
+	overflow-x: hidden;
+	background-color: var(--blue);
+	background-image: url('../assets/logos/background.svg');
+	background-repeat: repeat;
+	background-size: auto;
+}
+
+button{
+	cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  	width: 5px;
+  	height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  	background: var(--light-grey);
+  	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  	background: var(--grey);
+}
+
+#board--header {
+	max-width: 100vw;
+	height: 50px;
+	top: 0;
+	padding: 0 20px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background-color: var(--white);
+	box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+#board--header img {
+	display: none;
+}
+@media (min-width: 768px) {
+	#board--header img {
+		position: absolute;
+		height: 30px;
+		left: 80px;
+		display: block;
+	}
+}
+
+.title-1 {
+	font-weight: 500;
+	font-size: 18px;
+	line-height: auto;
+	text-align: center;
+	color: var(--black);
+}
+
+#menu--button__open {
+	width: 40px;
+	height: 40px;
+	top: 70px;
+	left: 20px;
+	position: absolute;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border-radius: 10px;
+	background-color: var(--white);
+	filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+}
+/* @media (min-width: 481px) {
+	#menu--button__open {
+		width: 60px;
+		height: 60px;
+		top: 5px;
+		left: 0;
+
+		filter: none;
+	}
+} */
+
+#menu--button__open img {
+	width: 25px;
+	height: 25px;
+}
+
+/* Onde ficam as colunas e cards */
+.quadro {
+	min-height: calc(100vh - 150px);
+	height: fit-content;
+	margin-top: 80px;
+	padding-left: 55px;
+	overflow-x: auto;
+
+	display: flex;
+	align-items: flex-start;
+	column-gap: 30px;
+
+	background-color: transparent;
+
+	scroll-behavior: smooth;
+	scroll-snap-type: x mandatory;
+}
+
+  /* Design das colunas */
+.coluna {
+	min-width: 300px;
+	margin: 20px 0 20px 10px;
+	border-radius: 5px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: stretch;
+	align-items: center;
+
+	transition: 0.4s;
+	scroll-margin: 20px;
+	scroll-snap-align: start;
+
+	background-color: var(--white);
+
+	animation-duration: 0.6s;
+	animation-name: coluna-aparece;
+}
+
+.coluna:hover {
+	transition: 0.4s;
+}
+
+/* Nome da coluna */
+
+.coluna header{
+	position: relative;
+	width: 90%;
+	height: 50px;
+	margin-top: 10px;
+	padding-bottom: 10px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background: linear-gradient(to right, black 25%, rgba(255, 255, 255, 0) 0%);
+	background-position: bottom;
+	background-repeat: repeat-x;
+	background-size: 10px 1px;
+}
+
+.coluna header > input {
+	width: 70%;
+	align-self: center;
+
+	font-weight: var(--column-title-weight);
+	font-size: var(--column-title-size);
+	text-align: center;
+}
+
+.botao-delete {
+	position: absolute;
+	right: 10px;
+	border-radius: 50%;
+	padding: 5px;
+	width: 30px;
+	height: 30px;
+}
+
+.botao-delete img {
+	object-fit: contain;
+	width: 20px;
+	height: 20px;
+}
+/* Card que pode ser arrastado */
+.arrastavel {
+	position: relative;
+	width: 90%;
+	height: 60px;
+	padding: 6px;
+	margin-top: 10px;
+	border-radius: 5px;
+
+	cursor: grab;
+
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	justify-content: space-around;
+
+	animation-duration: 0.6s;
+	animation-name: cartao-aparece;
+	transition: 0.4s;
+
+	background-color: #FF9A98;
+	border: 4px solid transparent;
+}
+
+.arrastando{
+	opacity: 0.3;
+	cursor: move;
+}
+
+.editavel{
+	transition: 1s;
+	border: 4px solid var(--grey);
+}
+
+.dropzone {
+	flex-grow: 1;
+	padding: 10px;
+	flex-basis: 100%;
+	background-color: var(--white);
+}
+
+.nome__card {
+	width: 90%;
+
+	font-weight: var(--card-title-weight);
+	font-size: var(--card-title-size);
+	text-align: center;
+	color: var(--black);
+}
+
+.nome__card::placeholder {
+	color: #4D4D4D;
+	text-align: center;
+}
+
+.conteudo__card {
+	width: 90%;
+	max-height: 2.2em;
+	overflow: hidden;
+
+	font-weight: var(--card-content-weight);
+	font-size: var(--card-content-size);
+	color: var(--grey);
+	text-overflow: ellipsis;
+
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+/* Menu que mostra para onde um card pode ser arrastado */
+.arrastavel__menu {
+	position: absolute;
+	bottom: -30px;
+	z-index: 2;
+	right: 0;
+	border-radius: 4px;
+	background-color: white;
+	border: 1px solid black;
+}
+
+.arrastavel__menu select {
+	height: 30px;
+	width: 150px;
+	border-radius: 5px;
+}
+
+.card__opcoes {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.card__botao {
+	width: 25px;
+	height: 25px;
+	align-self: end;
+	cursor: pointer;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+.menu--accordion__item-content{
+	overflow-y: auto;
+}
+
+.adicionar-card {
+	height: fit-content;
+	width: 2.5em;
+	margin: 20px 0;
+
+	cursor: pointer;
+}
+
+.adicionar-card img {
+	width: 100%;
+}
+
+.adicionar-coluna {
+	min-width: 2.5em;
+	margin: 90px 100px 0 70px;
+
+	cursor: pointer;
+
+	scroll-snap-align: start;
+	scroll-margin: 20px;
+}
+
+
+
+/* Notificações */
+
+.notifications{
+	position: absolute;
+	width: 200px;
+	height: 30px;
+	right: 20px;
+	bottom: 20px;
+	border-radius: 5px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+
+	font-weight: 600;
+	background-color: var(--white);
+
+	animation-duration: 5s;
+	animation-fill-mode: forwards;
+	animation-name: notificacao-aparece;
+}
+
+.hidden {
+	display: none;
+}
+
+@media screen and (min-width: 768px) {
+	.menu {
+		width: 275px;
+	}
+
+	#menu--button__open {
+		width: 40px;
+		height: 40px;
+		top: 5px;
+		left: 10px;
+
+		filter: none;
+	}
+
+	.quadro {
+		min-height: calc(100vh - 70px);
+		margin-top: 0;
+		padding: 0;
+		padding-left: 20px;
+		column-gap: 0px;
+	}
+
+	.coluna {
+		min-width: 250px;
+		margin: 10px 10px 0px 0px;
+	}
+
+	.arrastavel__menu{
+		display: none;
+	}
+
+	.card__move{
+		display: none;
+	}
+
+	.adicionar-coluna {
+		margin: 90px 10px 0 10px;
+		width: 40px;
+		height: 40px;
+		cursor: pointer;
+
+		scroll-snap-align: start;
+		scroll-margin: 20px;
+	}
+
+	.adicionar-coluna img{
+		width: 40px;
+		height: 40px;
+	}
+
+	.hidden{
+		display: none;
+	}
+}
