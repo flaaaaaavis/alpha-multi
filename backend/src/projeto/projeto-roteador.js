@@ -67,11 +67,13 @@ ProjectRouter.route("/")
 			return res.status(400).json({ Error: `Missing request body` });
 		}
 
-		const { id } = req.body;
+		const { id, adm } = req.body;
 
-		const dbRes = await ProjectService.deleteProjeto(id);
+		const dbRes = await ProjectService.deleteProjeto(id, adm);
 
-		if (dbRes) {
+		if (dbRes == "not adm") {
+			res.status(400).json(dbRes);
+		} else if (dbRes) {
 			res.status(201).json(dbRes);
 		} else {
 			res.status(500).json({ message: "Internal Server Error" });
@@ -84,7 +86,6 @@ ProjectRouter.route("/:id").get(jsonBodyParser, async (req, res) => {
 	const { id } = req.params;
 
 	const dbRes = await ProjectService.getProjetosPorId(id);
-	console.log("87", dbRes);
 	if (dbRes == undefined) {
 		res.status(400);
 	} else if (dbRes.id) {

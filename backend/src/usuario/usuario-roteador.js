@@ -127,7 +127,7 @@ UserRouter.route("/senha").patch(jsonBodyParser, async (req, res) => {
 	const novaSenha = hashPwd(senha);
 
 	const dbRes = await UserService.updateUsuarioSenha(id, novaSenha);
-
+	console.log("senha", dbRes.rowCount);
 	if (dbRes.rowCount === 1) {
 		res.status(200).json({ result: "Senha alterada!" });
 	} else {

@@ -23,7 +23,6 @@ export default async function updateCard(cardId) {
 		id: cardId,
 		colaboradores: members,
 	};
-	console.log(cardObject);
 	const request = await Api.modifyTask(cardObject);
 	console.log(request);
 }

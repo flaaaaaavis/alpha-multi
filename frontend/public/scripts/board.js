@@ -13,19 +13,40 @@ if (!token) {
 }
 
 const user = parseJwt(token);
+console.log(user);
 
 localStorage.setItem("@dm-kanban-userId", user.usuario.id);
 
 ws.addEventListener("open", () => {
 	console.log("conectado!!!");
-	ws.send(JSON.stringify({ room: sala }));
-	const newUser = {
-		tipo: "conexão",
-		usuario: user.usuario.id,
-		sala: sala,
-		nome_usuario: user.usuario.usuario,
-	};
-	ws.send(JSON.stringify(newUser));
+	if (sala != "TypeError: Failed to fetch") {
+		console.log(sala);
+		ws.send(JSON.stringify({ room: sala }));
+		const newUser = {
+			tipo: "conexão",
+			usuario: user.usuario.id,
+			sala: sala,
+			nome_usuario: user.usuario.usuario,
+		};
+		ws.send(JSON.stringify(newUser));
+	} else {
+		ws.send(JSON.stringify({ room: user.usuario.id }));
+	}
+});
+
+ws.addEventListener("close", (e) => {
+	console.log(
+		"Socket is closed. Reconnect will be attempted in 5 seconds.",
+		e.reason
+	);
+	setTimeout(function () {
+		location.reload();
+	}, 5000);
+});
+
+ws.addEventListener("error", (e) => {
+	console.error("Socket encountered error: ", err.message, "Closing socket");
+	ws.close();
 });
 
 const exitButton = document.getElementById("sair");
@@ -35,8 +56,7 @@ exitButton.addEventListener("click", (e) => {
 	location.replace("../index.html");
 });
 
-const newProject = document.getElementById("criar-quadro");
-newProject.addEventListener("click", async (e) => {
+async function fillProjectMenu(e) {
 	e.preventDefault();
 	let nome = document.getElementById("input-quadro").value;
 	menuControl();
@@ -58,6 +78,7 @@ newProject.addEventListener("click", async (e) => {
 	listButton.value = projectId;
 	listButton.innerText = nome.trim();
 	listButton.addEventListener("click", async (e) => {
+		console.log("clicado");
 		e.preventDefault();
 		const categories = await Api.getCategoryByProject(listButton.value);
 		console.log(categories);
@@ -71,6 +92,13 @@ newProject.addEventListener("click", async (e) => {
 		JSON.stringify({ tipo: "conexão", room: projectId, sala: projectId })
 	);
 	Render.createBoard(3, nome, projectId);
+	getProjects();
+}
+
+const newProject = document.getElementById("criar-quadro");
+newProject.addEventListener("click", async (e) => {
+	await fillProjectMenu(e);
+	console.log("entrou");
 });
 
 /* Respostas do websocket */
@@ -107,7 +135,6 @@ ws.addEventListener("message", ({ data }) => {
 			Render.createColumn(false);
 			break;
 		case "nova tarefa":
-			console.log(dados);
 			const target = document.querySelector(`#${dados.botao}`);
 			console.log(target);
 			CardCreator.renderCard(target.id, dados);
@@ -123,6 +150,8 @@ ws.addEventListener("message", ({ data }) => {
 			break;
 		case "mudança de nome - quadro":
 			const quadro = document.getElementById("nome-projeto");
+			const menuProject = document.getElementById(`projeto-${sala}`);
+			menuProject.innerText = dados.nome;
 			quadro.value = dados.nome;
 			break;
 		case "mudança de conteudo - card":
@@ -145,6 +174,18 @@ ws.addEventListener("message", ({ data }) => {
 			break;
 		case "adicionar membro":
 			console.log(dados);
+			break;
+		case "mudança de membros - card":
+			console.log(dados);
+			const membros = document.getElementById(
+				`colaboradores-${dados.id}`
+			);
+			membros.value = JSON.stringify(dados.membros);
+			break;
+		case "excluir projeto":
+			localStorage.removeItem("@dm-kanban:id");
+			alert(dados.mensagem);
+			location.reload();
 	}
 });
 
@@ -154,6 +195,8 @@ project.addEventListener("change", async () => {
 		nome: project.value,
 		id: localStorage.getItem("@dm-kanban:id"),
 	});
+	const menuProject = document.getElementById(`projeto-${sala}`);
+	menuProject.innerText = project.value;
 	console.log(request);
 	const newName = {
 		sala: sala,
@@ -210,6 +253,12 @@ function modalControl(modalId) {
 }
 
 const closeModal = document.querySelectorAll(".close-modal-x");
+closeModal.forEach((element) => {
+	element.addEventListener("click", (e) => {
+		const target = e.target.parentElement.parentElement;
+		modalControl(target.id);
+	});
+});
 
 const openButton = document.getElementById("menu--button__open");
 openButton.addEventListener("click", (event) => {
@@ -252,9 +301,24 @@ async function deleteProject() {
 	const deleteBtn = document.getElementById("modal--delete-board__button");
 	deleteBtn.addEventListener("click", async (e) => {
 		e.preventDefault();
-
-		const request = await Api.deleteProject({ id: openProject });
-		console.log(request);
+		const request = await Api.deleteProject({
+			id: localStorage.getItem("@dm-kanban:id"),
+			adm: user.usuario.id,
+		});
+		if (request == 201) {
+			localStorage.removeItem("@dm-kanban:id");
+			const change = {
+				sala: sala,
+				tipo: "excluir projeto",
+				mensagem:
+					"Esse projeto foi excluido pelo administrador, ele será fechado a seguir.",
+			};
+			ws.send(JSON.stringify(change));
+			alert("projeto excluido com sucesso");
+			location.reload();
+		} else if (request == 400) {
+			alert("Somente o administrador do projeto pode exclui-lo");
+		}
 	});
 }
 
@@ -405,7 +469,9 @@ async function getProjects() {
 	const request = await Api.getAllProjects(body);
 	if (request.projetos) {
 		const projetosMenu = document.getElementById("lista-de-projetos");
-		console.log(request.projetos);
+		const addProjetos = document.getElementById("add-projetos");
+		projetosMenu.innerHTML = "";
+		projetosMenu.append(addProjetos);
 		const uniqueIds = [];
 		const uniqueProjects = request.projetos.filter((element) => {
 			const isDuplicate = uniqueIds.includes(element.projeto_id);
@@ -418,13 +484,15 @@ async function getProjects() {
 		});
 
 		uniqueIds.forEach(async (project) => {
-			const newProject = await Api.getProjectbyId(project);
+			const newProject2 = await Api.getProjectbyId(project);
 			const item = document.createElement("li");
 			item.className = "your-boards__item";
 			const itemButton = document.createElement("button");
-			itemButton.innerText = newProject.nome;
-			itemButton.value = newProject.id;
+			itemButton.innerText = newProject2.nome;
+			itemButton.id = `projeto-${newProject2.id}`;
+			itemButton.value = newProject2.id;
 			itemButton.addEventListener("click", async (e) => {
+				console.log(console.log(itemButton.value));
 				e.preventDefault();
 				const categories = await Api.getCategoryByProject(
 					itemButton.value
@@ -472,6 +540,9 @@ async function getMembers(project) {
 	};
 	const membersInfo = [];
 	const list = document.getElementById("project-members-list");
+	const addMemberItem = document.getElementById("add-member-form");
+	list.innerHTML = "";
+	list.append(addMemberItem);
 	const members = await Api.getUsersByProject(body);
 	members.projetos.forEach(async (member) => {
 		const info = await Api.getUserById(member.usuario_id);

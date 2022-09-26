@@ -117,7 +117,6 @@ export default class CardCreator {
 	}
 
 	static async renderCard(target, incomingCard) {
-		console.log(incomingCard);
 		const targetButton = document.getElementById(target);
 		const parent = targetButton.parentElement;
 
@@ -178,13 +177,10 @@ export default class CardCreator {
 		});
 		card.addEventListener("drop", (event) => {
 			DragAndDrop.droppedOnColumnElement(event);
-			/* console.log(card.parentElement);
-			updateCard(card.value); */
 			console.log(card.parentElement);
 			const cards = document.querySelectorAll(
 				`#coluna-${card.parentElement.value} .arrastavel`
 			);
-			console.log(cards);
 			cards.forEach((uniqueCard) => {
 				console.log("entrou");
 				updateCard(uniqueCard.value);
@@ -431,6 +427,13 @@ export default class CardCreator {
 						usableCardMembersList
 					);
 					updateCard(this.clickedCard.id);
+					const change = {
+						sala: sala,
+						tipo: "mudança de membros - card",
+						id: this.clickedCard.id,
+						membros: usableCardMembersList,
+					};
+					ws.send(JSON.stringify(change));
 					this.renderMembers(card.value);
 					this.createMembersModal(card);
 				});
@@ -454,6 +457,13 @@ export default class CardCreator {
 						usableCardMembersList
 					);
 					updateCard(this.clickedCard.id);
+					const change = {
+						sala: sala,
+						tipo: "mudança de membros - card",
+						id: this.clickedCard.id,
+						membros: usableCardMembersList,
+					};
+					ws.send(JSON.stringify(change));
 					this.renderMembers(card.value);
 					this.createMembersModal(card);
 				});
