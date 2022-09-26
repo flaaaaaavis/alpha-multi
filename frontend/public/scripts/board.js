@@ -3,6 +3,7 @@ import { ws, sala, udpateSala } from "./Websocket.js";
 import Render from "./Render.js";
 import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
+import boardFunctions from "./boardFunctions.js";
 
 const projectMembers = [];
 const token = localStorage.getItem("@dm-kanban-token");
@@ -49,14 +50,7 @@ ws.addEventListener("error", (e) => {
 	ws.close();
 });
 
-const exitButton = document.getElementById("sair");
-exitButton.addEventListener("click", (e) => {
-	e.preventDefault();
-	localStorage.removeItem("@dm-kanban-token");
-	location.replace("../index.html");
-});
-
-async function fillProjectMenu(e) {
+/* async function fillProjectMenu(e) {
 	e.preventDefault();
 	let nome = document.getElementById("input-quadro").value;
 	menuControl();
@@ -93,13 +87,7 @@ async function fillProjectMenu(e) {
 	);
 	Render.createBoard(3, nome, projectId);
 	getProjects();
-}
-
-const newProject = document.getElementById("criar-quadro");
-newProject.addEventListener("click", async (e) => {
-	await fillProjectMenu(e);
-	console.log("entrou");
-});
+} */
 
 /* Respostas do websocket */
 
@@ -189,23 +177,6 @@ ws.addEventListener("message", ({ data }) => {
 	}
 });
 
-const project = document.getElementById("nome-projeto");
-project.addEventListener("change", async () => {
-	const request = await Api.modifyProject({
-		nome: project.value,
-		id: localStorage.getItem("@dm-kanban:id"),
-	});
-	const menuProject = document.getElementById(`projeto-${sala}`);
-	menuProject.innerText = project.value;
-	console.log(request);
-	const newName = {
-		sala: sala,
-		tipo: "mudança de nome - quadro",
-		nome: project.value,
-	};
-	ws.send(JSON.stringify(newName));
-});
-
 function moveCard(data) {
 	console.log(data);
 	const card = document.getElementById(data.id);
@@ -223,105 +194,6 @@ function moveCard(data) {
 	}
 }
 
-function menuControl() {
-	let menu = document.getElementById("sidebar-menu");
-	const openButton = document.getElementById("menu--button__open");
-
-	if (window.getComputedStyle(menu).display === "none") {
-		menu.style.display = "flex";
-		openButton.style.display = "none";
-	} else {
-		menu.style.display = "none";
-		openButton.style.display = "flex";
-	}
-}
-
-function modalControl(modalId) {
-	const modal = document.getElementById(modalId)
-
-	if (window.getComputedStyle(modal).display === "none") {
-		modal.style.display = "flex";
-	} else {
-		modal.style.display = "none";
-	}
-	modal.addEventListener("click", (e) => {
-		e.preventDefault();
-		if (e.target == modal) {
-			modal.style.display = "none";
-		}
-	});
-}
-
-const closeModal = document.querySelectorAll(".close-modal-x");
-closeModal.forEach((element) => {
-	element.addEventListener("click", (e) => {
-		const target = e.target.parentElement.parentElement;
-		modalControl(target.id);
-	});
-});
-
-const openButton = document.getElementById("menu--button__open");
-openButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	menuControl();
-});
-
-const closeButton = document.getElementById("closeMenuButton");
-closeButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	menuControl();
-});
-
-const deleteAccountButton = document.getElementById("excluir-conta");
-deleteAccountButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	modalControl("modal--delete-account__container");
-});
-
-const changeEmailButton = document.getElementById("mudar-email");
-changeEmailButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	modalControl("modal--change-email__container");
-});
-
-const changePassButton = document.getElementById("mudar-senha");
-changePassButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	modalControl("modal--change-password__container");
-});
-
-const deleteBoardButton = document.getElementById("delete-board-button");
-deleteBoardButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	modalControl("modal--delete-board__container");
-	deleteProject();
-});
-
-async function deleteProject() {
-	const deleteBtn = document.getElementById("modal--delete-board__button");
-	deleteBtn.addEventListener("click", async (e) => {
-		e.preventDefault();
-		const request = await Api.deleteProject({
-			id: localStorage.getItem("@dm-kanban:id"),
-			adm: user.usuario.id,
-		});
-		if (request == 201) {
-			localStorage.removeItem("@dm-kanban:id");
-			const change = {
-				sala: sala,
-				tipo: "excluir projeto",
-				mensagem:
-					"Esse projeto foi excluido pelo administrador, ele será fechado a seguir.",
-			};
-			ws.send(JSON.stringify(change));
-			alert("projeto excluido com sucesso");
-			location.reload();
-		} else if (request == 400) {
-			alert("Somente o administrador do projeto pode exclui-lo");
-		}
-	});
-}
-
 function editMenuInfo() {
 	const username = document.getElementById("user-username");
 	username.innerText = user.usuario.usuario;
@@ -330,138 +202,7 @@ function editMenuInfo() {
 }
 editMenuInfo();
 
-function modalFunctions() {
-	const modal = document.querySelector(".modal");
-	const openDeleteAccountModal = document.getElementById("excluir-conta");
-	const deleteAccountModal = document.getElementById(
-		"modal--delete-account__container"
-	);
-	const deleteModalButton = document.getElementById(
-		"modal--delete-user-from-project__button"
-	);
-	const closeEmail = document.querySelector(".email-modal header span");
-	const changeEmailButton = document.getElementById(
-		"modal--change-email__button"
-	);
-
-	const passwordModal = document.getElementById(
-		"modal--change-password__container"
-	);
-	const openPasswordModal = document.getElementById("mudar-senha");
-	const changePasswordButton = document.getElementById(
-		"modal--change-password__button"
-	);
-	changePasswordButton.addEventListener("click", (e) => {
-		e.preventDefault();
-		changePassword();
-	});
-
-	openPasswordModal.addEventListener("click", (e) => {
-		e.preventDefault();
-		passwordModal.style.display = "flex";
-	});
-
-	passwordModal.addEventListener("click", (e) => {
-		e.preventDefault();
-		if (e.target == passwordModal) {
-			passwordModal.style.display = "none";
-		}
-	});
-
-	modal.addEventListener("click", (e) => {
-		if (e.target == modal) {
-			console.log("entrou");
-			modal.classList.add("hidden");
-		}
-	});
-
-	closeEmail.addEventListener("click", () => {
-		modal.classList.add("hidden");
-	});
-
-	openDeleteAccountModal.addEventListener("click", () => {
-		deleteAccountModal.style.display = "flex";
-	});
-
-	deleteAccountModal.addEventListener("click", (e) => {
-		e.preventDefault();
-		if (e.target == deleteAccountModal) {
-			deleteAccountModal.style.display = "none";
-		}
-	});
-
-	deleteModalButton.addEventListener("click", async (e) => {
-		e.preventDefault();
-		const request = await Api.deleteUser({ id: user.usuario.id });
-		// alert(request.result);
-		localStorage.removeItem("@dmkanban-token");
-		location.replace("../index.html");
-	});
-
-	changeEmailButton.addEventListener("click", async (e) => {
-		const request = await changeEmail();
-		// alert(request);
-	});
-}
-
-async function changeEmail() {
-	const email = document.getElementById(
-		"modal--change-email__new-email"
-	).value;
-	const confirmEmail = document.getElementById(
-		"modal--change-email__repeat-new-email"
-	).value;
-	if (email != confirmEmail) {
-		return alert("Os e-mails não são iguais");
-	}
-	if (email.trim() === "") {
-		// return alert("Por favor digite um email");
-	} else if (!validateEmail(email)) {
-		// return alert("Por favor digite um email valido");
-	}
-	const body = {
-		id: user.usuario.id,
-		usuario: user.usuario.usuario,
-		email: email.trim(),
-	};
-	const request = await Api.modifyUser(body);
-	console.log(request);
-	if (request.result) {
-		document.getElementById("user-email").innerText = email.trim();
-		return request.result;
-	}
-	console.log(request);
-	return request;
-}
-
-function validateEmail(email) {
-	var re = /\S+@\S+\.\S+/;
-	return re.test(email);
-}
-
-async function changePassword() {
-	const newPassword = document.getElementById(
-		"modal--change-password__new-pass"
-	).value;
-	const newPasswordRepeat = document.getElementById(
-		"modal--change-password__repeat-new-pass"
-	).value;
-	if (newPassword.trim() != newPasswordRepeat.trim()) {
-		// return alert("As senhas não são iguais");
-	}
-	const body = {
-		id: user.usuario.id,
-		senha: newPassword.trim(),
-	};
-	const request = await Api.editUserPassword(body);
-	console.log(request);
-	if (request.result) {
-		// return alert(request.result);
-	}
-	return request;
-}
-
-modalFunctions();
+/* modalFunctions(); */
 async function getProjects() {
 	const body = {
 		id: user.usuario.id,
@@ -504,6 +245,19 @@ async function getProjects() {
 			item.append(itemButton);
 			projetosMenu.append(item);
 		});
+	}
+}
+
+function menuControl() {
+	let menu = document.getElementById("sidebar-menu");
+	const openButton = document.getElementById("menu--button__open");
+
+	if (window.getComputedStyle(menu).display === "none") {
+		menu.style.display = "flex";
+		openButton.style.display = "none";
+	} else {
+		menu.style.display = "none";
+		openButton.style.display = "flex";
 	}
 }
 
@@ -601,6 +355,7 @@ addMemberButton.addEventListener("click", (e) => {
 });
 
 await getProjects();
+boardFunctions();
 
 async function recoverSession() {
 	const categories = await Api.getCategoryByProject(openProject);

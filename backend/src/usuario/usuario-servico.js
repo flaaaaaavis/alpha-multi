@@ -52,7 +52,9 @@ export const UserService = {
 	async deleteUsuario(id) {
 		try {
 			const data = await pool.query(
-				`DELETE FROM usuarios WHERE id = '${id}'`
+				`
+				DELETE FROM projetos_usuarios WHERE usuario_id = '${id}';
+				DELETE FROM usuarios WHERE id = '${id}'`
 			);
 			return data;
 		} catch (e) {
