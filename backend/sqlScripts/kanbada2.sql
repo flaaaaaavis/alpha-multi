@@ -17,6 +17,7 @@ CREATE TABLE public.projetos (
 	"data_criacao" TIMESTAMP NOT NULL,
 	"ultimo_acesso" TIMESTAMP NOT NULL,
 	"adm" varchar(64) NOT NULL,
+	"deletado" boolean,
 	CONSTRAINT "projetos_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
