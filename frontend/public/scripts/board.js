@@ -225,6 +225,10 @@ async function getProjects() {
 
 		uniqueIds.forEach(async (project) => {
 			const newProject2 = await Api.getProjectbyId(project);
+			console.log(newProject2);
+			if (newProject2.erro) {
+				return false;
+			}
 			const item = document.createElement("li");
 			item.className = "menu--accordion__sub-item this-board__item";
 			const itemButton = document.createElement("button");
