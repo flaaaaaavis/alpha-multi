@@ -52,7 +52,6 @@ export default class Render {
 
 	static async createColumn(send, columnName = "Nova coluna", id) {
 		this.renderColumnCount = 1;
-		console.log(id);
 		const body = {
 			projeto_id: id,
 			nome: columnName,
