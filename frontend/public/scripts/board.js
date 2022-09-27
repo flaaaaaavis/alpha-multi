@@ -13,7 +13,7 @@ if (!token) {
 	location.replace("../index.html");
 }
 
-const user = parseJwt(token);
+export const user = parseJwt(token);
 console.log(user);
 
 localStorage.setItem("@dm-kanban-userId", user.usuario.id);
@@ -21,7 +21,6 @@ localStorage.setItem("@dm-kanban-userId", user.usuario.id);
 ws.addEventListener("open", () => {
 	console.log("conectado!!!");
 	if (sala != "TypeError: Failed to fetch") {
-		console.log(sala);
 		ws.send(JSON.stringify({ room: sala }));
 		const newUser = {
 			tipo: "conexão",
@@ -365,4 +364,9 @@ async function recoverSession() {
 
 if (openProject) {
 	recoverSession();
+}
+
+function validateEmail(email) {
+	var re = /\S+@\S+\.\S+/;
+	return re.test(email);
 }

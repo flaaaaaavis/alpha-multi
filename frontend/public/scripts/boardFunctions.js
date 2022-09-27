@@ -1,11 +1,8 @@
 import { ws, sala, udpateSala } from "./Websocket.js";
 import Api from "./Api.js";
-import parseJwt from "./userInfo.js";
+//import parseJwt from "./userInfo.js";
 import Render from "./Render.js";
-
-const token = localStorage.getItem("@dm-kanban-token");
-
-const user = parseJwt(token);
+import { user } from "./board.js";
 
 export default async function boardFunctions() {
 	const exitButton = document.getElementById("sair");
@@ -239,8 +236,9 @@ async function changeEmail() {
 		email: email.trim(),
 	};
 	const request = await Api.modifyUser(body);
-	console.log(request);
 	if (request.result) {
+		console.log(request);
+		user.usuario.email = email.trim();
 		document.getElementById("user-email").innerText = email.trim();
 		return request.result;
 	}
@@ -260,7 +258,7 @@ async function changePassword() {
 		"modal--change-password__repeat-new-pass"
 	).value;
 	if (newPassword.trim() != newPasswordRepeat.trim()) {
-		// return alert("As senhas não são iguais");
+		return alert("As senhas não são iguais");
 	}
 	const body = {
 		id: user.usuario.id,
@@ -269,7 +267,7 @@ async function changePassword() {
 	const request = await Api.editUserPassword(body);
 	console.log(request);
 	if (request.result) {
-		// return alert(request.result);
+		return alert(request.result);
 	}
 	return request;
 }
