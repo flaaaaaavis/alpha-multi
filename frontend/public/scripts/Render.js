@@ -87,7 +87,7 @@ export default class Render {
 				projeto_id: id,
 				nome: name.value,
 				ordem: columnOrder.value,
-				id: column.id,
+				id: column.value,
 			};
 			const request = await Api.modifyCategory(change, column.value);
 			console.log(request);
