@@ -115,7 +115,6 @@ export default class Render {
 				const change = {
 					id: column.value,
 				};
-				console.log(column.value);
 				const request = await Api.deleteCategory(change, column.value);
 				console.log(request);
 				column.remove();
@@ -150,7 +149,7 @@ export default class Render {
 		const newColumn = {
 			sala: sala,
 			tipo: "nova coluna",
-			id: column.value,
+			id: column.id,
 			contagem: this.columnCount,
 		};
 		if (send) {
@@ -159,7 +158,7 @@ export default class Render {
 	}
 
 	static async renderColumn(columnElement) {
-		this.columnCount = columnElement.contagem;
+		this.columnCount = columnElement.ordem;
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
@@ -168,7 +167,7 @@ export default class Render {
 
 		const columnOrder = document.createElement("input");
 		columnOrder.type = "hidden";
-		columnOrder.value = columnElement.contagem;
+		columnOrder.value = columnElement.ordem;
 		columnOrder.id = `coluna-${columnElement.id}-ordem`;
 
 		column.addEventListener("drop", (event) => {
@@ -218,7 +217,6 @@ export default class Render {
 				const change = {
 					id: column.value,
 				};
-				console.log(column.value);
 				const request = await Api.deleteCategory(change, column.value);
 				console.log(request);
 				column.remove();
