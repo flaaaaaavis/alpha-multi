@@ -58,7 +58,7 @@ export default class Render {
 			nome: columnName,
 			ordem: this.columnCount,
 		};
-		this.columnCount++;
+
 		const columnId = await Api.createCategory(body);
 		console.log(columnId);
 		const board = document.querySelector(".quadro");
@@ -156,6 +156,8 @@ export default class Render {
 		if (send) {
 			ws.send(JSON.stringify(newColumn));
 		}
+
+		this.columnCount++;
 	}
 
 	static async renderColumn(columnElement) {
