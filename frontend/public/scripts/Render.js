@@ -150,7 +150,7 @@ export default class Render {
 		const newColumn = {
 			sala: sala,
 			tipo: "nova coluna",
-			id: column.id,
+			id: column.value,
 			contagem: this.columnCount,
 		};
 		if (send) {
@@ -159,7 +159,7 @@ export default class Render {
 	}
 
 	static async renderColumn(columnElement) {
-		this.columnCount = columnElement.ordem;
+		this.columnCount = columnElement.contagem;
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
@@ -168,7 +168,7 @@ export default class Render {
 
 		const columnOrder = document.createElement("input");
 		columnOrder.type = "hidden";
-		columnOrder.value = columnElement.ordem;
+		columnOrder.value = columnElement.contagem;
 		columnOrder.id = `coluna-${columnElement.id}-ordem`;
 
 		column.addEventListener("drop", (event) => {
