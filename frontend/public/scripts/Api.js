@@ -1,6 +1,6 @@
 export default class Api {
-	//static baseUrl = "http://207.246.126.10:8000";
-	static baseUrl = "http://localhost:8000";
+	static baseUrl = "http://207.246.126.10:8000";
+	//static baseUrl = "http://localhost:8000";
 	static async register(body) {
 		const usuario = await fetch(`${this.baseUrl}/api/usuario/`, {
 			method: "POST",
