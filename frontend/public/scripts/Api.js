@@ -454,4 +454,25 @@ export default class Api {
 
 		return project;
 	}
+
+	static async removeUserFromProject(body) {
+		const project = await fetch(`${this.baseUrl}/api/projeto/membros`, {
+			method: "DELETE",
+			body: JSON.stringify(body),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				return data;
+			})
+			.catch((err) => {
+				return err;
+			});
+
+		return project;
+	}
 }

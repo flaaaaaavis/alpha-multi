@@ -45,7 +45,7 @@ export const ProjectService = {
 	},
 	async insertProjeto(projeto) {
 		try {
-			//const projetos = await redis.hgetall(`projeto:${projeto_id}`);
+			const projetos = await redis.hgetall(`projeto:${projeto_id}`);
 			const id = uuidv4();
 			const query = `INSERT INTO projetos (id, nome, adm, data_criacao, ultimo_acesso) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *`;
 			const values = [id, projeto.nome, projeto.adm];
@@ -96,8 +96,9 @@ export const ProjectService = {
 
 	async deleteUsuarioProjeto(usuario_id, projeto_id) {
 		try {
+			console.log("99", usuario_id, projeto_id);
 			const data = await pool.query(
-				`DELETE FROM projetos_usuarios WHERE usuario_id = ${usuario_id} AND projeto_id = ${projeto_id} LIMIT 1`
+				`DELETE FROM projetos_usuarios WHERE usuario_id = '${usuario_id}' AND projeto_id = '${projeto_id}'`
 			);
 			return data;
 		} catch (e) {

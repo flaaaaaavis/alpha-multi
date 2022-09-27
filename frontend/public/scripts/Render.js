@@ -15,6 +15,7 @@ export default class Render {
 		newBoard = true,
 		loadedBoard = ""
 	) {
+		console.log(id);
 		this.renderColumnCount = 1;
 		this.columnCount = 1;
 		const projectTitle = document.getElementById("nome-projeto");
@@ -51,7 +52,6 @@ export default class Render {
 
 	static async createColumn(send, columnName = "Nova coluna", id) {
 		this.renderColumnCount = 1;
-
 		const body = {
 			projeto_id: id,
 			nome: columnName,
@@ -59,6 +59,7 @@ export default class Render {
 		};
 		this.columnCount++;
 		const columnId = await Api.createCategory(body);
+		console.log(columnId);
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";

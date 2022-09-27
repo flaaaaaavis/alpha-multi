@@ -52,7 +52,9 @@ export const UserService = {
 	async deleteUsuario(id) {
 		try {
 			const data = await pool.query(
-				`DELETE FROM usuarios WHERE id = '${id}'`
+				`
+				DELETE FROM projetos_usuarios WHERE usuario_id = '${id}';
+				DELETE FROM usuarios WHERE id = '${id}'`
 			);
 			return data;
 		} catch (e) {
@@ -98,7 +100,7 @@ export const UserService = {
 	async deleteUsuarioProjeto(usuario_id, projeto_id) {
 		try {
 			const data = await pool.query(
-				`DELETE FROM projetos_usuarios WHERE usuario_id = ${usuario_id} AND projeto_id = ${projeto_id} LIMIT 1`
+				`DELETE FROM projetos_usuarios WHERE usuario_id = '${usuario_id}' AND projeto_id = '${projeto_id}' LIMIT 1`
 			);
 			return data;
 		} catch (e) {

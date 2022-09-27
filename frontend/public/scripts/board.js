@@ -3,6 +3,7 @@ import { ws, sala, udpateSala } from "./Websocket.js";
 import Render from "./Render.js";
 import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
+import boardFunctions from "./boardFunctions.js";
 
 const projectMembers = [];
 const token = localStorage.getItem("@dm-kanban-token");
@@ -12,7 +13,7 @@ if (!token) {
 	location.replace("../index.html");
 }
 
-const user = parseJwt(token);
+export const user = parseJwt(token);
 console.log(user);
 
 localStorage.setItem("@dm-kanban-userId", user.usuario.id);
@@ -20,7 +21,6 @@ localStorage.setItem("@dm-kanban-userId", user.usuario.id);
 ws.addEventListener("open", () => {
 	console.log("conectado!!!");
 	if (sala != "TypeError: Failed to fetch") {
-		console.log(sala);
 		ws.send(JSON.stringify({ room: sala }));
 		const newUser = {
 			tipo: "conexão",
@@ -49,14 +49,7 @@ ws.addEventListener("error", (e) => {
 	ws.close();
 });
 
-const exitButton = document.getElementById("sair");
-exitButton.addEventListener("click", (e) => {
-	e.preventDefault();
-	localStorage.removeItem("@dm-kanban-token");
-	location.replace("../index.html");
-});
-
-async function fillProjectMenu(e) {
+/* async function fillProjectMenu(e) {
 	e.preventDefault();
 	let nome = document.getElementById("input-quadro").value;
 	menuControl();
@@ -93,13 +86,7 @@ async function fillProjectMenu(e) {
 	);
 	Render.createBoard(3, nome, projectId);
 	getProjects();
-}
-
-const newProject = document.getElementById("criar-quadro");
-newProject.addEventListener("click", async (e) => {
-	await fillProjectMenu(e);
-	console.log("entrou");
-});
+} */
 
 /* Respostas do websocket */
 
@@ -125,14 +112,15 @@ ws.addEventListener("message", ({ data }) => {
 			card.classList.add("arrastando");
 			break;
 		case "apagar coluna":
-			const apagar = document.getElementById(`tarefa-${dados.id}`);
+			console.log(dados);
+			const apagar = document.getElementById(dados.id);
 			apagar.remove();
 			break;
 		case "mover tarefa":
 			moveCard(dados);
 			break;
 		case "nova coluna":
-			Render.createColumn(false);
+			Render.createColumn(false, "nova coluna", dados.sala);
 			break;
 		case "nova tarefa":
 			const target = document.querySelector(`#${dados.botao}`);
@@ -176,7 +164,6 @@ ws.addEventListener("message", ({ data }) => {
 			console.log(dados);
 			break;
 		case "mudança de membros - card":
-			console.log(dados);
 			const membros = document.getElementById(
 				`colaboradores-${dados.id}`
 			);
@@ -187,23 +174,6 @@ ws.addEventListener("message", ({ data }) => {
 			alert(dados.mensagem);
 			location.reload();
 	}
-});
-
-const project = document.getElementById("nome-projeto");
-project.addEventListener("change", async () => {
-	const request = await Api.modifyProject({
-		nome: project.value,
-		id: localStorage.getItem("@dm-kanban:id"),
-	});
-	const menuProject = document.getElementById(`projeto-${sala}`);
-	menuProject.innerText = project.value;
-	console.log(request);
-	const newName = {
-		sala: sala,
-		tipo: "mudança de nome - quadro",
-		nome: project.value,
-	};
-	ws.send(JSON.stringify(newName));
 });
 
 function moveCard(data) {
@@ -223,105 +193,6 @@ function moveCard(data) {
 	}
 }
 
-function menuControl() {
-	let menu = document.getElementById("sidebar-menu");
-	const openButton = document.getElementById("menu--button__open");
-
-	if (window.getComputedStyle(menu).display === "none") {
-		menu.style.display = "flex";
-		openButton.style.display = "none";
-	} else {
-		menu.style.display = "none";
-		openButton.style.display = "flex";
-	}
-}
-
-function modalControl(modalId) {
-	const modal = document.getElementById(modalId)
-
-	if (window.getComputedStyle(modal).display === "none") {
-		modal.style.display = "flex";
-	} else {
-		modal.style.display = "none";
-	}
-	modal.addEventListener("click", (e) => {
-		e.preventDefault();
-		if (e.target == modal) {
-			modal.style.display = "none";
-		}
-	});
-}
-
-const closeModal = document.querySelectorAll(".close-modal-x");
-closeModal.forEach((element) => {
-	element.addEventListener("click", (e) => {
-		const target = e.target.parentElement.parentElement;
-		modalControl(target.id);
-	});
-});
-
-const openButton = document.getElementById("menu--button__open");
-openButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	menuControl();
-});
-
-const closeButton = document.getElementById("closeMenuButton");
-closeButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	menuControl();
-});
-
-const deleteAccountButton = document.getElementById("excluir-conta");
-deleteAccountButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	modalControl("modal--delete-account__container");
-});
-
-const changeEmailButton = document.getElementById("mudar-email");
-changeEmailButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	modalControl("modal--change-email__container");
-});
-
-const changePassButton = document.getElementById("mudar-senha");
-changePassButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	modalControl("modal--change-password__container");
-});
-
-const deleteBoardButton = document.getElementById("delete-board-button");
-deleteBoardButton.addEventListener("click", (event) => {
-	event.preventDefault();
-	modalControl("modal--delete-board__container");
-	deleteProject();
-});
-
-async function deleteProject() {
-	const deleteBtn = document.getElementById("modal--delete-board__button");
-	deleteBtn.addEventListener("click", async (e) => {
-		e.preventDefault();
-		const request = await Api.deleteProject({
-			id: localStorage.getItem("@dm-kanban:id"),
-			adm: user.usuario.id,
-		});
-		if (request == 201) {
-			localStorage.removeItem("@dm-kanban:id");
-			const change = {
-				sala: sala,
-				tipo: "excluir projeto",
-				mensagem:
-					"Esse projeto foi excluido pelo administrador, ele será fechado a seguir.",
-			};
-			ws.send(JSON.stringify(change));
-			alert("projeto excluido com sucesso");
-			location.reload();
-		} else if (request == 400) {
-			alert("Somente o administrador do projeto pode exclui-lo");
-		}
-	});
-}
-
 function editMenuInfo() {
 	const username = document.getElementById("user-username");
 	username.innerText = user.usuario.usuario;
@@ -330,138 +201,7 @@ function editMenuInfo() {
 }
 editMenuInfo();
 
-function modalFunctions() {
-	const modal = document.querySelector(".modal");
-	const openDeleteAccountModal = document.getElementById("excluir-conta");
-	const deleteAccountModal = document.getElementById(
-		"modal--delete-account__container"
-	);
-	const deleteModalButton = document.getElementById(
-		"modal--delete-user-from-project__button"
-	);
-	const closeEmail = document.querySelector(".email-modal header span");
-	const changeEmailButton = document.getElementById(
-		"modal--change-email__button"
-	);
-
-	const passwordModal = document.getElementById(
-		"modal--change-password__container"
-	);
-	const openPasswordModal = document.getElementById("mudar-senha");
-	const changePasswordButton = document.getElementById(
-		"modal--change-password__button"
-	);
-	changePasswordButton.addEventListener("click", (e) => {
-		e.preventDefault();
-		changePassword();
-	});
-
-	openPasswordModal.addEventListener("click", (e) => {
-		e.preventDefault();
-		passwordModal.style.display = "flex";
-	});
-
-	passwordModal.addEventListener("click", (e) => {
-		e.preventDefault();
-		if (e.target == passwordModal) {
-			passwordModal.style.display = "none";
-		}
-	});
-
-	modal.addEventListener("click", (e) => {
-		if (e.target == modal) {
-			console.log("entrou");
-			modal.classList.add("hidden");
-		}
-	});
-
-	closeEmail.addEventListener("click", () => {
-		modal.classList.add("hidden");
-	});
-
-	openDeleteAccountModal.addEventListener("click", () => {
-		deleteAccountModal.style.display = "flex";
-	});
-
-	deleteAccountModal.addEventListener("click", (e) => {
-		e.preventDefault();
-		if (e.target == deleteAccountModal) {
-			deleteAccountModal.style.display = "none";
-		}
-	});
-
-	deleteModalButton.addEventListener("click", async (e) => {
-		e.preventDefault();
-		const request = await Api.deleteUser({ id: user.usuario.id });
-		// alert(request.result);
-		localStorage.removeItem("@dmkanban-token");
-		location.replace("../index.html");
-	});
-
-	changeEmailButton.addEventListener("click", async (e) => {
-		const request = await changeEmail();
-		// alert(request);
-	});
-}
-
-async function changeEmail() {
-	const email = document.getElementById(
-		"modal--change-email__new-email"
-	).value;
-	const confirmEmail = document.getElementById(
-		"modal--change-email__repeat-new-email"
-	).value;
-	if (email != confirmEmail) {
-		return alert("Os e-mails não são iguais");
-	}
-	if (email.trim() === "") {
-		// return alert("Por favor digite um email");
-	} else if (!validateEmail(email)) {
-		// return alert("Por favor digite um email valido");
-	}
-	const body = {
-		id: user.usuario.id,
-		usuario: user.usuario.usuario,
-		email: email.trim(),
-	};
-	const request = await Api.modifyUser(body);
-	console.log(request);
-	if (request.result) {
-		document.getElementById("user-email").innerText = email.trim();
-		return request.result;
-	}
-	console.log(request);
-	return request;
-}
-
-function validateEmail(email) {
-	var re = /\S+@\S+\.\S+/;
-	return re.test(email);
-}
-
-async function changePassword() {
-	const newPassword = document.getElementById(
-		"modal--change-password__new-pass"
-	).value;
-	const newPasswordRepeat = document.getElementById(
-		"modal--change-password__repeat-new-pass"
-	).value;
-	if (newPassword.trim() != newPasswordRepeat.trim()) {
-		// return alert("As senhas não são iguais");
-	}
-	const body = {
-		id: user.usuario.id,
-		senha: newPassword.trim(),
-	};
-	const request = await Api.editUserPassword(body);
-	console.log(request);
-	if (request.result) {
-		// return alert(request.result);
-	}
-	return request;
-}
-
-modalFunctions();
+/* modalFunctions(); */
 async function getProjects() {
 	const body = {
 		id: user.usuario.id,
@@ -485,6 +225,9 @@ async function getProjects() {
 
 		uniqueIds.forEach(async (project) => {
 			const newProject2 = await Api.getProjectbyId(project);
+			if (newProject2.erro) {
+				return false;
+			}
 			const item = document.createElement("li");
 			item.className = "your-boards__item";
 			const itemButton = document.createElement("button");
@@ -507,11 +250,26 @@ async function getProjects() {
 	}
 }
 
+function menuControl() {
+	let menu = document.getElementById("sidebar-menu");
+	const openButton = document.getElementById("menu--button__open");
+
+	if (window.getComputedStyle(menu).display === "none") {
+		menu.style.display = "flex";
+		openButton.style.display = "none";
+	} else {
+		menu.style.display = "none";
+		openButton.style.display = "flex";
+	}
+}
+
 async function renderProjects(project, categories) {
 	menuControl();
 	const colaborators = document.getElementById("projeto--membros");
 	colaborators.classList.remove("hidden");
 	const fullProject = await Api.getProjectbyId(project);
+	console.log(fullProject);
+	localStorage.setItem("@dm-kanban:adm", fullProject.adm);
 	const projectMembers = await getMembers(project);
 	let tasksArray = [];
 	const board = {
@@ -528,6 +286,7 @@ async function renderProjects(project, categories) {
 		false,
 		board
 	);
+	console.log(board.id, "board 285");
 	localStorage.setItem("@dm-kanban:id", board.id);
 	udpateSala();
 	ws.send(JSON.stringify({ room: sala }));
@@ -544,9 +303,10 @@ async function getMembers(project) {
 	list.innerHTML = "";
 	list.append(addMemberItem);
 	const members = await Api.getUsersByProject(body);
-	
+
 	members.projetos.forEach(async (member) => {
 		const info = await Api.getUserById(member.usuario_id);
+		console.log(info);
 		membersInfo.push(info);
 		projectMembers.push(info);
 		const item = document.createElement("li");
@@ -555,10 +315,38 @@ async function getMembers(project) {
 		span.innerText = info.usuario;
 		span.title = info.email;
 		const button = document.createElement("button");
+		button.value = info.id;
 		const img = document.createElement("img");
 		img.src = "../assets/icons/close.png";
 		img.alt = "Excluir participante";
 		button.append(img);
+
+		button.addEventListener("click", async (e) => {
+			e.preventDefault();
+			const adm = localStorage.getItem("@dm-kanban:adm");
+			if (adm != user.usuario.id) {
+				alert(
+					"Somente o criador do projeto pode excluir membros do projeto"
+				);
+			}
+			if (adm == button.value) {
+				return alert("Você não pode se excluir do projeto");
+			}
+
+			const body = {
+				usuario_id: button.value,
+				projeto_id: localStorage.getItem("@dm-kanban:id"),
+			};
+			if (
+				confirm(
+					"Tem certeza que deseja excluir esse membro do projeto?"
+				) == true
+			) {
+				const request = await Api.removeUserFromProject(body);
+				item.remove();
+				alert(request.mensagem);
+			}
+		});
 		item.append(span, button);
 		list.append(item);
 	});
@@ -602,6 +390,7 @@ addMemberButton.addEventListener("click", (e) => {
 });
 
 await getProjects();
+boardFunctions();
 
 async function recoverSession() {
 	const categories = await Api.getCategoryByProject(openProject);
@@ -610,4 +399,9 @@ async function recoverSession() {
 
 if (openProject) {
 	recoverSession();
+}
+
+function validateEmail(email) {
+	const re = /\S+@\S+\.\S+/;
+	return re.test(email);
 }

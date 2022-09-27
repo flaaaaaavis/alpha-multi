@@ -34,11 +34,11 @@ wss.on("connection", (ws) => {
 		wss.clients.forEach((client) => {
 			if (client !== ws && client.readyState === WebSocket.OPEN) {
 				/* console.log(client.room, mensagem.sala); */
-				console.log(client.id);
-				if (
-					client.room == mensagem.sala ||
-					client.id == mensagem.para
-				) {
+				if (client.room == mensagem.sala) {
+					client.send(JSON.stringify(mensagem));
+				}
+				if (client.id == mensagem.para) {
+					console.log("para", client.id);
 					client.send(JSON.stringify(mensagem));
 				}
 			}
