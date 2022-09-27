@@ -37,10 +37,10 @@ wss.on("connection", (ws) => {
 				if (client.room == mensagem.sala) {
 					client.send(JSON.stringify(mensagem));
 				}
-				if (client.id == mensagem.para) {
-					console.log("para", client.id);
-					client.send(JSON.stringify(mensagem));
-				}
+				//if (client.id == mensagem.para) {
+				//	console.log("para", client.id);
+				//	client.send(JSON.stringify(mensagem));
+				//}
 			}
 		});
 	});
