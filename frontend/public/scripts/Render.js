@@ -149,9 +149,9 @@ export default class Render {
 		const newColumn = {
 			sala: sala,
 			tipo: "nova coluna",
-			id: column.id,
-			value: column.value,
-			contagem: this.columnCount,
+			id: column.value,
+			nome: "nova coluna",
+			ordem: this.columnCount,
 		};
 		if (send) {
 			ws.send(JSON.stringify(newColumn));
