@@ -3,7 +3,6 @@ import { ws, sala, udpateSala } from "./Websocket.js";
 import Render from "./Render.js";
 import Api from "./Api.js";
 import parseJwt from "./userInfo.js";
-import boardFunctions from "./boardFunctions.js";
 
 const projectMembers = [];
 const token = localStorage.getItem("@dm-kanban-token");
@@ -13,43 +12,31 @@ if (!token) {
 	location.replace("../index.html");
 }
 
-export const user = parseJwt(token);
-console.log(user);
+const user = parseJwt(token);
 
 localStorage.setItem("@dm-kanban-userId", user.usuario.id);
 
 ws.addEventListener("open", () => {
 	console.log("conectado!!!");
-	if (sala != "TypeError: Failed to fetch") {
-		ws.send(JSON.stringify({ room: sala }));
-		const newUser = {
-			tipo: "conexão",
-			usuario: user.usuario.id,
-			sala: sala,
-			nome_usuario: user.usuario.usuario,
-		};
-		ws.send(JSON.stringify(newUser));
-	} else {
-		ws.send(JSON.stringify({ room: user.usuario.id }));
-	}
+	ws.send(JSON.stringify({ room: sala }));
+	const newUser = {
+		tipo: "conexão",
+		usuario: user.usuario.id,
+		sala: sala,
+		nome_usuario: user.usuario.usuario,
+	};
+	ws.send(JSON.stringify(newUser));
 });
 
-ws.addEventListener("close", (e) => {
-	console.log(
-		"Socket is closed. Reconnect will be attempted in 5 seconds.",
-		e.reason
-	);
-	setTimeout(function () {
-		location.reload();
-	}, 5000);
+const exitButton = document.getElementById("sair");
+exitButton.addEventListener("click", (e) => {
+	e.preventDefault();
+	localStorage.removeItem("@dm-kanban-token");
+	location.replace("../index.html");
 });
 
-ws.addEventListener("error", (e) => {
-	console.error("Socket encountered error: ", err.message, "Closing socket");
-	ws.close();
-});
-
-/* async function fillProjectMenu(e) {
+const newProject = document.getElementById("criar-quadro");
+newProject.addEventListener("click", async (e) => {
 	e.preventDefault();
 	let nome = document.getElementById("input-quadro").value;
 	menuControl();
@@ -71,7 +58,6 @@ ws.addEventListener("error", (e) => {
 	listButton.value = projectId;
 	listButton.innerText = nome.trim();
 	listButton.addEventListener("click", async (e) => {
-		console.log("clicado");
 		e.preventDefault();
 		const categories = await Api.getCategoryByProject(listButton.value);
 		console.log(categories);
@@ -85,8 +71,7 @@ ws.addEventListener("error", (e) => {
 		JSON.stringify({ tipo: "conexão", room: projectId, sala: projectId })
 	);
 	Render.createBoard(3, nome, projectId);
-	getProjects();
-} */
+});
 
 /* Respostas do websocket */
 
@@ -112,17 +97,17 @@ ws.addEventListener("message", ({ data }) => {
 			card.classList.add("arrastando");
 			break;
 		case "apagar coluna":
-			console.log(dados);
-			const apagar = document.getElementById(dados.id);
+			const apagar = document.getElementById(`tarefa-${dados.id}`);
 			apagar.remove();
 			break;
 		case "mover tarefa":
 			moveCard(dados);
 			break;
 		case "nova coluna":
-			Render.createColumn(false, "nova coluna", dados.sala);
+			Render.createColumn(false);
 			break;
 		case "nova tarefa":
+			console.log(dados);
 			const target = document.querySelector(`#${dados.botao}`);
 			console.log(target);
 			CardCreator.renderCard(target.id, dados);
@@ -138,8 +123,6 @@ ws.addEventListener("message", ({ data }) => {
 			break;
 		case "mudança de nome - quadro":
 			const quadro = document.getElementById("nome-projeto");
-			const menuProject = document.getElementById(`projeto-${sala}`);
-			menuProject.innerText = dados.nome;
 			quadro.value = dados.nome;
 			break;
 		case "mudança de conteudo - card":
@@ -162,93 +145,8 @@ ws.addEventListener("message", ({ data }) => {
 			break;
 		case "adicionar membro":
 			console.log(dados);
-			break;
-		case "mudança de membros - card":
-			const membros = document.getElementById(
-				`colaboradores-${dados.id}`
-			);
-			membros.value = JSON.stringify(dados.membros);
-			break;
-		case "excluir projeto":
-			localStorage.removeItem("@dm-kanban:id");
-			alert(dados.mensagem);
-			location.reload();
 	}
 });
-
-function moveCard(data) {
-	console.log(data);
-	const card = document.getElementById(data.id);
-	const coluna = document.getElementById(data.coluna);
-	let alvo;
-	if (data.acima) {
-		alvo = document.getElementById(data.acima);
-		coluna.insertBefore(card, alvo);
-		card.classList.remove("arrastando");
-	} else {
-		alvo = document.querySelector(`#${data.coluna} .adicionar-card`);
-		console.log(alvo, card);
-		coluna.insertBefore(card, alvo);
-		card.classList.remove("arrastando");
-	}
-}
-
-function editMenuInfo() {
-	const username = document.getElementById("user-username");
-	username.innerText = user.usuario.usuario;
-	const email = document.getElementById("user-email");
-	email.innerText = user.usuario.email;
-}
-editMenuInfo();
-
-/* modalFunctions(); */
-async function getProjects() {
-	const body = {
-		id: user.usuario.id,
-	};
-	const request = await Api.getAllProjects(body);
-	if (request.projetos) {
-		const projetosMenu = document.getElementById("lista-de-projetos");
-		const addProjetos = document.getElementById("add-projetos");
-		projetosMenu.innerHTML = "";
-		projetosMenu.append(addProjetos);
-		const uniqueIds = [];
-		const uniqueProjects = request.projetos.filter((element) => {
-			const isDuplicate = uniqueIds.includes(element.projeto_id);
-
-			if (!isDuplicate) {
-				uniqueIds.push(element.projeto_id);
-
-				return true;
-			}
-		});
-
-		uniqueIds.forEach(async (project) => {
-			const newProject2 = await Api.getProjectbyId(project);
-			if (newProject2.erro) {
-				return false;
-			}
-			const item = document.createElement("li");
-			item.className = "your-boards__item";
-			const itemButton = document.createElement("button");
-			itemButton.innerText = newProject2.nome;
-			itemButton.id = `projeto-${newProject2.id}`;
-			itemButton.value = newProject2.id;
-			itemButton.addEventListener("click", async (e) => {
-				console.log(console.log(itemButton.value));
-				e.preventDefault();
-				const categories = await Api.getCategoryByProject(
-					itemButton.value
-				);
-				console.log(categories);
-				renderProjects(project, categories);
-			});
-
-			item.append(itemButton);
-			projetosMenu.append(item);
-		});
-	}
-}
 
 function menuControl() {
 	let menu = document.getElementById("sidebar-menu");
@@ -263,13 +161,215 @@ function menuControl() {
 	}
 }
 
+function modalControl(modalId) {
+	const modal = document.getElementById(modalId)
+
+	if (window.getComputedStyle(modal).display === "none") {
+		modal.style.display = "flex";
+	} else {
+		modal.style.display = "none";
+	}
+	modal.addEventListener("click", (e) => {
+		e.preventDefault();
+		if (e.target == modal) {
+			modal.style.display = "none";
+		}
+	});
+}
+
+const closeModal = document.querySelectorAll(".close-modal-x");
+
+const openButton = document.getElementById("menu--button__open");
+openButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	menuControl();
+});
+
+const closeButton = document.getElementById("closeMenuButton");
+closeButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	menuControl();
+});
+
+const deleteAccountButton = document.getElementById("excluir-conta");
+deleteAccountButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	modalControl("modal--delete-account__container");
+});
+
+const changeEmailButton = document.getElementById("mudar-email");
+changeEmailButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	modalControl("modal--change-email__container");
+});
+
+const changePassButton = document.getElementById("mudar-senha");
+changePassButton.addEventListener("click", (event) => {
+	event.preventDefault();
+	modalControl("modal--change-password__container");
+});
+
+function editMenuInfo() {
+	const username = document.getElementById("user-username");
+	username.innerText = user.usuario.usuario;
+	const email = document.getElementById("user-email");
+	email.innerText = user.usuario.email;
+}
+editMenuInfo();
+
+function modalFunctions() {
+	const openDeleteAccountModal = document.getElementById("excluir-conta");
+	const deleteAccountModal = document.getElementById(
+		"modal--delete-account__container"
+	);
+	const closeEmail = document.querySelector(".email-modal header span");
+	const changeEmailButton = document.getElementById(
+		"modal--change-email__button"
+	);
+
+	const passwordModal = document.getElementById(
+		"modal--change-password__container"
+	);
+	const openPasswordModal = document.getElementById("mudar-senha");
+	const changePasswordButton = document.getElementById(
+		"modal--change-password__button"
+	);
+	changePasswordButton.addEventListener("click", (e) => {
+		e.preventDefault();
+		changePassword();
+	});
+
+	openPasswordModal.addEventListener("click", (e) => {
+		e.preventDefault();
+		passwordModal.style.display = "flex";
+	});
+
+	passwordModal.addEventListener("click", (e) => {
+		e.preventDefault();
+		if (e.target == passwordModal) {
+			passwordModal.style.display = "none";
+		}
+	});
+
+	openDeleteAccountModal.addEventListener("click", () => {
+		deleteAccountModal.style.display = "flex";
+	});
+
+	deleteAccountModal.addEventListener("click", (e) => {
+		e.preventDefault();
+		if (e.target == deleteAccountModal) {
+			deleteAccountModal.style.display = "none";
+		}
+	});
+
+	changeEmailButton.addEventListener("click", async (e) => {
+		const request = await changeEmail();
+		// alert(request);
+	});
+}
+
+async function changeEmail() {
+	const email = document.getElementById(
+		"modal--change-email__new-email"
+	).value;
+	const confirmEmail = document.getElementById(
+		"modal--change-email__repeat-new-email"
+	).value;
+	if (email != confirmEmail) {
+		return alert("Os e-mails não são iguais");
+	}
+	if (email.trim() === "") {
+		// return alert("Por favor digite um email");
+	} else if (!validateEmail(email)) {
+		// return alert("Por favor digite um email valido");
+	}
+	const body = {
+		id: user.usuario.id,
+		usuario: user.usuario.usuario,
+		email: email.trim(),
+	};
+	const request = await Api.modifyUser(body);
+	console.log(request);
+	if (request.result) {
+		document.getElementById("user-email").innerText = email.trim();
+		return request.result;
+	}
+	console.log(request);
+	return request;
+}
+
+function validateEmail(email) {
+	var re = /\S+@\S+\.\S+/;
+	return re.test(email);
+}
+
+async function changePassword() {
+	const newPassword = document.getElementById(
+		"modal--change-password__new-pass"
+	).value;
+	const newPasswordRepeat = document.getElementById(
+		"modal--change-password__repeat-new-pass"
+	).value;
+	if (newPassword.trim() != newPasswordRepeat.trim()) {
+		// return alert("As senhas não são iguais");
+	}
+	const body = {
+		id: user.usuario.id,
+		senha: newPassword.trim(),
+	};
+	const request = await Api.editUserPassword(body);
+	console.log(request);
+	if (request.result) {
+		// return alert(request.result);
+	}
+	return request;
+}
+
+modalFunctions();
+async function getProjects() {
+	const body = {
+		id: user.usuario.id,
+	};
+	const request = await Api.getAllProjects(body);
+	if (request.projetos) {
+		const projetosMenu = document.getElementById("lista-de-projetos");
+		console.log(request.projetos);
+		const uniqueIds = [];
+		const uniqueProjects = request.projetos.filter((element) => {
+			const isDuplicate = uniqueIds.includes(element.projeto_id);
+
+			if (!isDuplicate) {
+				uniqueIds.push(element.projeto_id);
+
+				return true;
+			}
+		});
+
+		uniqueIds.forEach(async (project) => {
+			const newProject = await Api.getProjectbyId(project);
+			const item = document.createElement("li");
+			item.className = "your-boards__item";
+			const itemButton = document.createElement("button");
+			itemButton.innerText = newProject.nome;
+			itemButton.value = newProject.id;
+			itemButton.addEventListener("click", async (e) => {
+				e.preventDefault();
+				const categories = await Api.getCategoryByProject(
+					itemButton.value
+				);
+				console.log(categories);
+				renderProjects(project, categories);
+			});
+
+			item.append(itemButton);
+			projetosMenu.append(item);
+		});
+	}
+}
+
 async function renderProjects(project, categories) {
 	menuControl();
-	const colaborators = document.getElementById("projeto--membros");
-	colaborators.classList.remove("hidden");
 	const fullProject = await Api.getProjectbyId(project);
-	console.log(fullProject);
-	localStorage.setItem("@dm-kanban:adm", fullProject.adm);
 	const projectMembers = await getMembers(project);
 	let tasksArray = [];
 	const board = {
@@ -286,11 +386,50 @@ async function renderProjects(project, categories) {
 		false,
 		board
 	);
-	console.log(board.id, "board 285");
 	localStorage.setItem("@dm-kanban:id", board.id);
 	udpateSala();
 	ws.send(JSON.stringify({ room: sala }));
 	Render.renderData(board);
+}
+
+async function renderAllProjectsPage() {
+	const ul = document.getElementById('all-boards__list')
+	const body = {
+		id: user.usuario.id,
+	};
+
+	const projectsIds = await Api.getAllProjects(body)
+	// console.log(projectsIds.projetos)
+
+	if ( projectsIds ) {
+		projectsIds.projetos.forEach(async (project) => {
+			// const data = await Api.getProjectbyId(project.projeto_id)
+			console.log(project.projeto_id)
+
+			// data.forEach(item => {
+			// 	const li = document.createElement('li')
+			// 	li.classList.add('all-boards--list__item')
+
+			// 	const p = document.createElement('p')
+			// 	p.textContent = item.nome
+
+			// 	const a = document.createElement('a')
+			// 	a.setAttribute('onclick', `() => {
+			// 		localStorage.setItem("@dm-kanban:id", project)
+			// 	}`)
+			// 	a.href = 'board.html'
+
+			// 	const editIcon = document.createElement('img')
+			// 	editIcon.src = '../assets/icons/edit_FILL0_wght400_GRAD0_opsz48 (1).svg'
+
+			// 	li.appendChild(p)
+			// 	a.appendChild(editIcon)
+			// 	li.appendChild(a)
+
+			// 	ul.appendChild(li)
+			// })
+		})
+	}
 }
 
 async function getMembers(project) {
@@ -299,14 +438,9 @@ async function getMembers(project) {
 	};
 	const membersInfo = [];
 	const list = document.getElementById("project-members-list");
-	const addMemberItem = document.getElementById("add-member-form");
-	list.innerHTML = "";
-	list.append(addMemberItem);
 	const members = await Api.getUsersByProject(body);
-
 	members.projetos.forEach(async (member) => {
 		const info = await Api.getUserById(member.usuario_id);
-		console.log(info);
 		membersInfo.push(info);
 		projectMembers.push(info);
 		const item = document.createElement("li");
@@ -315,38 +449,10 @@ async function getMembers(project) {
 		span.innerText = info.usuario;
 		span.title = info.email;
 		const button = document.createElement("button");
-		button.value = info.id;
 		const img = document.createElement("img");
 		img.src = "../assets/icons/close.png";
 		img.alt = "Excluir participante";
 		button.append(img);
-
-		button.addEventListener("click", async (e) => {
-			e.preventDefault();
-			const adm = localStorage.getItem("@dm-kanban:adm");
-			if (adm != user.usuario.id) {
-				alert(
-					"Somente o criador do projeto pode excluir membros do projeto"
-				);
-			}
-			if (adm == button.value) {
-				return alert("Você não pode se excluir do projeto");
-			}
-
-			const body = {
-				usuario_id: button.value,
-				projeto_id: localStorage.getItem("@dm-kanban:id"),
-			};
-			if (
-				confirm(
-					"Tem certeza que deseja excluir esse membro do projeto?"
-				) == true
-			) {
-				const request = await Api.removeUserFromProject(body);
-				item.remove();
-				alert(request.mensagem);
-			}
-		});
 		item.append(span, button);
 		list.append(item);
 	});
@@ -383,14 +489,7 @@ async function addMemberToProject() {
 	}
 }
 
-const addMemberButton = document.getElementById("add-participante-button");
-addMemberButton.addEventListener("click", (e) => {
-	e.preventDefault();
-	addMemberToProject();
-});
-
 await getProjects();
-boardFunctions();
 
 async function recoverSession() {
 	const categories = await Api.getCategoryByProject(openProject);
@@ -399,9 +498,4 @@ async function recoverSession() {
 
 if (openProject) {
 	recoverSession();
-}
-
-function validateEmail(email) {
-	var re = /\S+@\S+\.\S+/;
-	return re.test(email);
 }

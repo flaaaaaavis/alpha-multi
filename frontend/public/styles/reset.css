@@ -37,6 +37,7 @@
 	box-sizing: border-box;
 	font-family: 'Lato', sans-serif;
 	font-style: normal;
+	font-size: inherit;
 }
 
 html, body, div, span, applet, object, iframe,
