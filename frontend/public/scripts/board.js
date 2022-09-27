@@ -342,6 +342,7 @@ async function getMembers(project) {
 				) == true
 			) {
 				const request = await Api.removeUserFromProject(body);
+				item.remove();
 				alert(request.mensagem);
 			}
 		});
