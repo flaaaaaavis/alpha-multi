@@ -95,7 +95,7 @@ ws.addEventListener("message", ({ data }) => {
 			card.innerText = dados.nome;
 			break;
 		case "mudança de nome - coluna":
-			const coluna = document.querySelector(`#${dados.id} input`);
+			const coluna = document.querySelector(`#${dados.id} header input`);
 			coluna.value = dados.nome;
 			CardCreator.fillAllSelects();
 			break;
