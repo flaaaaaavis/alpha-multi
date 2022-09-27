@@ -17,7 +17,14 @@ registerBtn.addEventListener("click", async (e) => {
 	).value;
 	if (password.trim() !== confirmPassword.trim()) {
 		const erro = document.getElementById("erro");
+		erro.style.display = "flex";
 		erro.innerText = "As senhas não são iguais";
+		return false;
+	}
+	if (password.trim().length < 4) {
+		const erro = document.getElementById("erro");
+		erro.style.display = "flex";
+		erro.innerText = "A senha deve ter no mínimo 4 dígitos";
 		return false;
 	}
 	if (password.trim() !== "" && name.trim() !== "" && email.trim() !== "") {

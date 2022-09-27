@@ -14,6 +14,8 @@ export default async function boardFunctions() {
 
 	const newProject = document.getElementById("criar-quadro");
 	newProject.addEventListener("click", async (e) => {
+		const colaborators = document.getElementById("projeto--membros");
+		colaborators.classList.remove("hidden");
 		await fillProjectMenu(e);
 		console.log("entrou");
 	});
@@ -172,7 +174,7 @@ function modalFunctions() {
 
 	changeEmailButton.addEventListener("click", async (e) => {
 		const request = await changeEmail();
-		// alert(request);
+		alert(request);
 	});
 }
 

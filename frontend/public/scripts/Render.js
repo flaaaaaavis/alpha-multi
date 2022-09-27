@@ -8,6 +8,7 @@ export default class Render {
 	static renderColumnCount = 1;
 	static addCardCount = 1;
 
+	/* Cria o projeto */
 	static async createBoard(
 		columnNum = 3,
 		name,
@@ -50,6 +51,7 @@ export default class Render {
 		}
 	}
 
+	/* Cria uma nova coluna */
 	static async createColumn(send, columnName = "Nova coluna", id) {
 		console.log(id);
 		this.renderColumnCount = 1;
@@ -160,6 +162,7 @@ export default class Render {
 		this.columnCount++;
 	}
 
+	/* Carrega uma coluna que ja existe */
 	static async renderColumn(columnElement) {
 		this.columnCount = columnElement.ordem;
 		const board = document.querySelector(".quadro");
@@ -254,6 +257,7 @@ export default class Render {
 		this.columnCount++;
 	}
 
+	/* Carrega as informações de cada tarefa */
 	static async renderData(data) {
 		data.columns.forEach(async (column) => {
 			const task = await Api.getTaskByCategory(column.id);

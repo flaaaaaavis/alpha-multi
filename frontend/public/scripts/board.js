@@ -57,7 +57,6 @@ ws.addEventListener("message", ({ data }) => {
 
 	switch (dados.tipo) {
 		case "conexão":
-			console.log(dados);
 			const notifications = document.querySelector(".notifications");
 			const notificationUser = document.getElementById(
 				"notifications-username"
@@ -68,83 +67,96 @@ ws.addEventListener("message", ({ data }) => {
 				notifications.classList.add("hidden");
 			}, 5000);
 			break;
-		case "arrastando tarefa":
-			card = document.getElementById(`${dados.id}`);
-			card.classList.add("arrastando");
-			break;
-		case "apagar coluna":
-			console.log(dados);
-			const apagar = document.getElementById(dados.id);
-			apagar.remove();
-			break;
-		case "mover tarefa":
-			moveCard(dados);
-			break;
-		case "nova coluna":
-			console.log(dados);
-			Render.renderColumn(dados);
-			break;
-		case "nova tarefa":
-			const target = document.querySelector(
-				`#${dados.local} .adicionar-card`
-			);
-			CardCreator.renderCard(target.id, dados);
-			break;
-		case "mudança de nome - card":
-			card = document.querySelector(`#tarefa-${dados.id} .nome__card`);
-			card.innerText = dados.nome;
-			break;
-		case "mudança de nome - coluna":
-			console.log(dados);
-			const coluna = document.querySelector(`#${dados.id} header input`);
-			coluna.value = dados.nome;
-			CardCreator.fillAllSelects();
-			break;
+
 		case "mudança de nome - quadro":
 			const quadro = document.getElementById("nome-projeto");
 			const menuProject = document.getElementById(`projeto-${sala}`);
 			menuProject.innerText = dados.nome;
 			quadro.value = dados.nome;
 			break;
+
+		case "excluir projeto":
+			localStorage.removeItem("@dm-kanban:id");
+			alert(dados.mensagem);
+			location.reload();
+
+		case "nova coluna":
+			Render.renderColumn(dados);
+			break;
+
+		case "apagar coluna":
+			const apagar = document.getElementById(dados.id);
+			apagar.remove();
+			break;
+
+		case "mudança de nome - coluna":
+			const coluna = document.querySelector(`#${dados.id} header input`);
+			coluna.value = dados.nome;
+			CardCreator.fillAllSelects();
+			break;
+
+		case "nova tarefa":
+			const target = document.querySelector(
+				`#${dados.local} .adicionar-card`
+			);
+			CardCreator.renderCard(target.id, dados);
+			break;
+
+		case "arrastando tarefa":
+			card = document.getElementById(`${dados.id}`);
+			card.classList.add("arrastando");
+			break;
+
+		case "mover tarefa":
+			moveCard(dados);
+			break;
+
+		case "mudança de nome - card":
+			card = document.querySelector(`#tarefa-${dados.id} .nome__card`);
+			card.innerText = dados.nome;
+			break;
+
 		case "mudança de conteudo - card":
 			card = document.querySelector(`#tarefa-${dados.id} p`);
 			card.innerText = dados.conteudo;
 			break;
+
 		case "excluir card":
 			card = document.getElementById(`tarefa-${dados.id}`);
 			card.remove();
 			break;
+
 		case "editando tarefa":
 			console.log(dados.id);
 			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.add("editavel");
 			break;
+
 		case "fechar modal":
 			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.remove("editavel");
 			break;
+
 		case "adicionar membro":
 			console.log(dados);
 			break;
+
 		case "excluir membro":
-			console.log(dados);
 			if (dados.id == user.usuario.id) {
 				removeUser();
 			}
 			break;
+
 		case "mudança de membros - card":
 			const membros = document.getElementById(
 				`colaboradores-${dados.id}`
 			);
 			membros.value = JSON.stringify(dados.membros);
 			break;
-		case "excluir projeto":
-			localStorage.removeItem("@dm-kanban:id");
-			alert(dados.mensagem);
-			location.reload();
 	}
 });
 
+/* Remove um usuário do projeto */
 function removeUser() {
 	alert("você foi removido desse projeto!");
 	localStorage.removeItem("@dm-kanban:id");
@@ -152,6 +164,7 @@ function removeUser() {
 	location.reload();
 }
 
+/* Move os cards pelo modal */
 function moveCard(data) {
 	console.log(data);
 	const card = document.getElementById(data.id);
@@ -169,6 +182,7 @@ function moveCard(data) {
 	}
 }
 
+/* Edita as informações do menu */
 function editMenuInfo() {
 	const username = document.getElementById("user-username");
 	username.innerText = user.usuario.usuario;
@@ -226,6 +240,7 @@ async function getProjects() {
 	}
 }
 
+/* Opções controle do menu */
 function menuControl() {
 	let menu = document.getElementById("sidebar-menu");
 	const openButton = document.getElementById("menu--button__open");
@@ -239,6 +254,7 @@ function menuControl() {
 	}
 }
 
+/* Renderiza os projetos na tela */
 async function renderProjects(project, categories) {
 	menuControl();
 	const colaborators = document.getElementById("projeto--membros");
@@ -269,6 +285,7 @@ async function renderProjects(project, categories) {
 	Render.renderData(board);
 }
 
+/* Pega todos os membros do projeto */
 async function getMembers(project) {
 	const body = {
 		id: project,
@@ -336,6 +353,7 @@ async function getMembers(project) {
 	return membersInfo;
 }
 
+/* Adiciona um usuário ao projeto */
 async function addMemberToProject() {
 	const input = document.getElementById("adicionar-participante").value;
 	const email = validateEmail(input);
@@ -365,6 +383,7 @@ async function addMemberToProject() {
 	}
 }
 
+/* Botão de adicionar membro */
 const addMemberButton = document.getElementById("add-participante-button");
 addMemberButton.addEventListener("click", (e) => {
 	e.preventDefault();
@@ -374,6 +393,7 @@ addMemberButton.addEventListener("click", (e) => {
 await getProjects();
 boardFunctions();
 
+/* Recarrega um projeto aberto */
 async function recoverSession() {
 	const categories = await Api.getCategoryByProject(openProject);
 	renderProjects(openProject, categories);
@@ -383,6 +403,7 @@ if (openProject) {
 	recoverSession();
 }
 
+/* Valida o email */
 function validateEmail(email) {
 	const re = /\S+@\S+\.\S+/;
 	return re.test(email);
