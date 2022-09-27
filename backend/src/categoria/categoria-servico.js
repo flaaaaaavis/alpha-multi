@@ -46,7 +46,10 @@ export const CategoryService = {
 	async deleteCategoria(id) {
 		try {
 			const data = await pool.query(
-				`DELETE FROM colunas WHERE id = ${id}`
+				`
+				DELETE FROM tarefas WHERE coluna_id = ${id};
+				DELETE FROM colunas WHERE id = ${id};
+				`
 			);
 			return data.rows;
 		} catch (e) {

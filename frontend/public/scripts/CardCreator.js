@@ -117,8 +117,10 @@ export default class CardCreator {
 	}
 
 	static async renderCard(target, incomingCard) {
+		console.log(target, incomingCard);
 		const targetButton = document.getElementById(target);
 		const parent = targetButton.parentElement;
+		console.log(parent);
 
 		const card = document.createElement("div");
 

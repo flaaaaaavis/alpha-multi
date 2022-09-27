@@ -49,45 +49,6 @@ ws.addEventListener("error", (e) => {
 	ws.close();
 });
 
-/* async function fillProjectMenu(e) {
-	e.preventDefault();
-	let nome = document.getElementById("input-quadro").value;
-	menuControl();
-	if (nome.trim() == "") {
-		nome = "Novo quadro";
-	}
-
-	const project = {
-		nome: nome,
-		adm: user.usuario.id,
-	};
-	const projectId = await Api.createProject(project);
-	localStorage.setItem("@dm-kanban:id", projectId);
-	udpateSala();
-	const projectList = document.getElementById("lista-de-projetos");
-	const item = document.createElement("li");
-	item.className = "your-boards__item";
-	const listButton = document.createElement("button");
-	listButton.value = projectId;
-	listButton.innerText = nome.trim();
-	listButton.addEventListener("click", async (e) => {
-		console.log("clicado");
-		e.preventDefault();
-		const categories = await Api.getCategoryByProject(listButton.value);
-		console.log(categories);
-		renderProjects(project, categories);
-	});
-
-	item.append(listButton);
-	projectList.append(item);
-
-	ws.send(
-		JSON.stringify({ tipo: "conexão", room: projectId, sala: projectId })
-	);
-	Render.createBoard(3, nome, projectId);
-	getProjects();
-} */
-
 /* Respostas do websocket */
 
 ws.addEventListener("message", ({ data }) => {
@@ -120,11 +81,13 @@ ws.addEventListener("message", ({ data }) => {
 			moveCard(dados);
 			break;
 		case "nova coluna":
+			console.log(dados);
 			Render.createColumn(false, "nova coluna", dados.sala);
 			break;
 		case "nova tarefa":
-			const target = document.querySelector(`#${dados.botao}`);
-			console.log(target);
+			const target = document.querySelector(
+				`#${dados.local} .adicionar-card`
+			);
 			CardCreator.renderCard(target.id, dados);
 			break;
 		case "mudança de nome - card":
@@ -156,7 +119,6 @@ ws.addEventListener("message", ({ data }) => {
 			card.classList.add("editavel");
 			break;
 		case "fechar modal":
-			console.log(dados.id);
 			card = document.getElementById(`tarefa-${dados.id}`);
 			card.classList.remove("editavel");
 			break;

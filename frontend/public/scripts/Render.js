@@ -51,6 +51,7 @@ export default class Render {
 	}
 
 	static async createColumn(send, columnName = "Nova coluna", id) {
+		console.log(id);
 		this.renderColumnCount = 1;
 		const body = {
 			projeto_id: id,
@@ -114,6 +115,7 @@ export default class Render {
 				const change = {
 					id: column.value,
 				};
+				console.log(column.value);
 				const request = await Api.deleteCategory(change, column.value);
 				console.log(request);
 				column.remove();
@@ -216,6 +218,7 @@ export default class Render {
 				const change = {
 					id: column.value,
 				};
+				console.log(column.value);
 				const request = await Api.deleteCategory(change, column.value);
 				console.log(request);
 				column.remove();
