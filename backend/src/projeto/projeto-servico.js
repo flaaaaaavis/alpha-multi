@@ -96,8 +96,9 @@ export const ProjectService = {
 
 	async deleteUsuarioProjeto(usuario_id, projeto_id) {
 		try {
+			console.log("99", usuario_id, projeto_id);
 			const data = await pool.query(
-				`DELETE FROM projetos_usuarios WHERE usuario_id = ${usuario_id} AND projeto_id = ${projeto_id} LIMIT 1`
+				`DELETE FROM projetos_usuarios WHERE usuario_id = '${usuario_id}' AND projeto_id = '${projeto_id}'`
 			);
 			return data;
 		} catch (e) {

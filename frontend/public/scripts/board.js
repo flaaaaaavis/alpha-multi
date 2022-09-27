@@ -225,7 +225,6 @@ async function getProjects() {
 
 		uniqueIds.forEach(async (project) => {
 			const newProject2 = await Api.getProjectbyId(project);
-			console.log(newProject2);
 			if (newProject2.erro) {
 				return false;
 			}
@@ -269,6 +268,8 @@ async function renderProjects(project, categories) {
 	const colaborators = document.getElementById("projeto--membros");
 	colaborators.classList.remove("hidden");
 	const fullProject = await Api.getProjectbyId(project);
+	console.log(fullProject);
+	localStorage.setItem("@dm-kanban:adm", fullProject.adm);
 	const projectMembers = await getMembers(project);
 	let tasksArray = [];
 	const board = {
@@ -304,6 +305,7 @@ async function getMembers(project) {
 	const members = await Api.getUsersByProject(body);
 	members.projetos.forEach(async (member) => {
 		const info = await Api.getUserById(member.usuario_id);
+		console.log(info);
 		membersInfo.push(info);
 		projectMembers.push(info);
 		const item = document.createElement("li");
@@ -312,10 +314,37 @@ async function getMembers(project) {
 		span.innerText = info.usuario;
 		span.title = info.email;
 		const button = document.createElement("button");
+		button.value = info.id;
 		const img = document.createElement("img");
 		img.src = "../assets/icons/close.png";
 		img.alt = "Excluir participante";
 		button.append(img);
+
+		button.addEventListener("click", async (e) => {
+			e.preventDefault();
+			const adm = localStorage.getItem("@dm-kanban:adm");
+			if (adm != user.usuario.id) {
+				alert(
+					"Somente o criador do projeto pode excluir membros do projeto"
+				);
+			}
+			if (adm == button.value) {
+				return alert("Você não pode se excluir do projeto");
+			}
+
+			const body = {
+				usuario_id: button.value,
+				projeto_id: localStorage.getItem("@dm-kanban:id"),
+			};
+			if (
+				confirm(
+					"Tem certeza que deseja excluir esse membro do projeto?"
+				) == true
+			) {
+				const request = await Api.removeUserFromProject(body);
+				alert(request.mensagem);
+			}
+		});
 		item.append(span, button);
 		list.append(item);
 	});

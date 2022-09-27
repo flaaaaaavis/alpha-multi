@@ -138,9 +138,9 @@ ProjectRouter.route("/membros")
 			usuario_id,
 			projeto_id
 		);
-
+		console.log(dbRes);
 		if (dbRes) {
-			res.status(201).json(dbRes);
+			res.status(201).json({ mensagem: "Membro removido com sucesso" });
 		} else {
 			res.status(500).json({ message: "Internal Server Error" });
 		}
