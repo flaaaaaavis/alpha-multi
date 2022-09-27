@@ -20,6 +20,11 @@ registerBtn.addEventListener("click", async (e) => {
 		erro.innerText = "As senhas não são iguais";
 		return false;
 	}
+	if (password.trim().length() < 6) {
+		const erro = document.getElementById("erro");
+		erro.innerText = "A senha deve possuir ao menos 6 digitos";
+		return false;
+	}
 	if (password.trim() !== "" && name.trim() !== "" && email.trim() !== "") {
 		const user = {
 			usuario: name.trim(),

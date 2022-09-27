@@ -47,7 +47,7 @@ export const ProjectService = {
 		try {
 			const projetos = await redis.hgetall(`projeto:${projeto_id}`);
 			const id = uuidv4();
-			const query = `INSERT INTO projetos (id, nome, adm, data_criacao, ultimo_acesso) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) RETURNING *`;
+			const query = `INSERT INTO projetos (id, nome, adm, data_criacao, ultimo_acesso, deletado) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false) RETURNING *`;
 			const values = [id, projeto.nome, projeto.adm];
 			const data = await pool.query(query, values);
 			await redis.hmset(`projeto:${id}`, data.rows[0]);
