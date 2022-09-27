@@ -159,17 +159,17 @@ export default class Render {
 	}
 
 	static async renderColumn(columnElement) {
-		this.columnCount = columnElement.contagem;
+		this.columnCount = columnElement.ordem;
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
-		column.id = `${columnElement.id}`;
-		column.value = columnElement.value;
+		column.id = `coluna-${columnElement.id}`;
+		column.value = columnElement.id;
 
 		const columnOrder = document.createElement("input");
 		columnOrder.type = "hidden";
-		columnOrder.value = columnElement.contagem;
-		columnOrder.id = `coluna-${columnElement.value}-ordem`;
+		columnOrder.value = columnElement.ordem;
+		columnOrder.id = `coluna-${columnElement.id}-ordem`;
 
 		column.addEventListener("drop", (event) => {
 			DragAndDrop.onDrop(event);
