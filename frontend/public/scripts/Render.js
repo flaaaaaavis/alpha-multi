@@ -150,6 +150,7 @@ export default class Render {
 			sala: sala,
 			tipo: "nova coluna",
 			id: column.id,
+			value: column.value,
 			contagem: this.columnCount,
 		};
 		if (send) {
@@ -158,17 +159,17 @@ export default class Render {
 	}
 
 	static async renderColumn(columnElement) {
-		this.columnCount = columnElement.ordem;
+		this.columnCount = columnElement.contagem;
 		const board = document.querySelector(".quadro");
 		const column = document.createElement("div");
 		column.className = "coluna";
-		column.id = `coluna-${columnElement.id}`;
-		column.value = columnElement.id;
+		column.id = `${columnElement.id}`;
+		column.value = columnElement.value;
 
 		const columnOrder = document.createElement("input");
 		columnOrder.type = "hidden";
-		columnOrder.value = columnElement.ordem;
-		columnOrder.id = `coluna-${columnElement.id}-ordem`;
+		columnOrder.value = columnElement.contagem;
+		columnOrder.id = `coluna-${columnElement.value}-ordem`;
 
 		column.addEventListener("drop", (event) => {
 			DragAndDrop.onDrop(event);

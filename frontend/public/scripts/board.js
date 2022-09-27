@@ -82,7 +82,7 @@ ws.addEventListener("message", ({ data }) => {
 			break;
 		case "nova coluna":
 			console.log(dados);
-			Render.renderColumn(false, "nova coluna", dados.sala);
+			Render.renderColumn(dados);
 			break;
 		case "nova tarefa":
 			const target = document.querySelector(
