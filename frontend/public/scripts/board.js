@@ -126,6 +126,12 @@ ws.addEventListener("message", ({ data }) => {
 		case "adicionar membro":
 			console.log(dados);
 			break;
+		case "excluir membro":
+			console.log(dados);
+			if (dados.id == user.usuario.id) {
+				removeUser();
+			}
+			break;
 		case "mudança de membros - card":
 			const membros = document.getElementById(
 				`colaboradores-${dados.id}`
@@ -138,6 +144,13 @@ ws.addEventListener("message", ({ data }) => {
 			location.reload();
 	}
 });
+
+function removeUser() {
+	alert("você foi removido desse projeto!");
+	localStorage.removeItem("@dm-kanban:id");
+	localStorage.getItem("@dm-kanban:adm");
+	location.reload();
+}
 
 function moveCard(data) {
 	console.log(data);
@@ -307,6 +320,12 @@ async function getMembers(project) {
 			) {
 				const request = await Api.removeUserFromProject(body);
 				item.remove();
+				const del = {
+					tipo: "excluir membro",
+					id: button.value,
+					sala: localStorage.getItem("@dm-kanban:id"),
+				};
+				ws.send(JSON.stringify(del));
 				alert(request.mensagem);
 			}
 		});
