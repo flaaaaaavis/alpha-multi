@@ -100,11 +100,12 @@
 									id="add-projetos"
 								>
 									<form>
+										<label for="name">Criar quadro</label>
 										<input
 											type="text"
-											name=""
+											name="name"
 											id="input-quadro"
-											placeholder="Novo quadro"
+											placeholder="Nome do quadro"
 										/>
 										<button id="criar-quadro">Criar</button>
 									</form>
@@ -151,11 +152,12 @@
 										id="add-member-form"
 									>
 										<form id="add-part-form">
+											<label for="email">Adicionar participante</label>
 											<input
 												type="email"
-												name=""
+												name="email"
 												id="adicionar-participante"
-												placeholder="Adicionar participante"
+												placeholder="E-mail"
 											/>
 											<button
 												id="add-participante-button"
@@ -227,6 +229,17 @@
 						<li>
 							<select class="card-modal__move">
 								<option value="">Mover para</option>
+							</select>
+						</li>
+						<li>
+							<select class="card-modal__color">
+								<option value="">Mudar cor</option>
+								<option value="blue">Azul</option>
+								<option value="green">Verde</option>
+								<option value="yellow">Amarelo</option>
+								<option value="orange">Laranja</option>
+								<option value="pink0">Rosa claro</option>
+								<option value="pink1">Rosa</option>
 							</select>
 						</li>
 						<li>
